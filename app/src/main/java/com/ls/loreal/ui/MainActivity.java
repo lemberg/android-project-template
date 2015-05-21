@@ -1,4 +1,6 @@
-package com.ls.loreal;
+package com.ls.loreal.ui;
+
+import com.ls.loreal.R;
 
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
