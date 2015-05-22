@@ -1,0 +1,10 @@
+<resources>
+    <string name="create_table_stub_items">
+        create table stub_items(
+        _id string primary key,
+        imageURL string,
+        description string,
+        isFavorite integer
+        )
+    </string>
+</resources>
