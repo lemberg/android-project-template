@@ -1,4 +1,4 @@
-package com.ls.loreal.model;
+package com.ls.druplaproject.model;
 
 import com.android.volley.Network;
 import com.android.volley.RequestQueue;
@@ -10,9 +10,9 @@ import com.android.volley.toolbox.HurlStack;
 import com.ls.drupal.DrupalClient;
 import com.ls.http.base.BaseRequest;
 import com.ls.http.base.ResponseData;
-import com.ls.loreal.LorealConfig;
-import com.ls.loreal.model.managers.LoginManager;
-import com.ls.loreal.model.managers.StubItemManager;
+import com.ls.druplaproject.ApplicationConfig;
+import com.ls.druplaproject.model.managers.LoginManager;
+import com.ls.druplaproject.model.managers.StubItemManager;
 
 import android.content.Context;
 import android.content.pm.PackageInfo;
@@ -99,7 +99,7 @@ public class Model {
     {
         loginManager = new LoginManager();
         queue = createNewQueue(context);
-        client = new DrupalClient(LorealConfig.BASE_URL,queue, BaseRequest.RequestFormat.JSON,loginManager);
+        client = new DrupalClient(ApplicationConfig.BASE_URL,queue, BaseRequest.RequestFormat.JSON,loginManager);
 
         stubManager = new StubItemManager(client);
     }
@@ -157,7 +157,7 @@ public class Model {
 
         Network network = new BasicNetwork(stack);
 
-        RequestQueue queue = new RequestQueue(new DiskBasedCache(cacheDir, LorealConfig.CACHE_DISK_USAGE_BYTES), network,1);
+        RequestQueue queue = new RequestQueue(new DiskBasedCache(cacheDir, ApplicationConfig.CACHE_DISK_USAGE_BYTES), network,1);
         queue.start();
 
         return queue;

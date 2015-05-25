@@ -1,7 +1,7 @@
-package com.ls.loreal.model.data.dao;
+package com.ls.druplaproject.model.data.dao;
 
-import com.ls.loreal.model.data.base.AbstractDAO;
-import com.ls.loreal.model.data.vo.StubItemVO;
+import com.ls.druplaproject.model.data.base.AbstractDAO;
+import com.ls.druplaproject.model.data.vo.StubItemVO;
 
 import android.content.ContentValues;
 import android.database.Cursor;

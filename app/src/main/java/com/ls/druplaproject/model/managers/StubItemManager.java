@@ -1,9 +1,9 @@
-package com.ls.loreal.model.managers;
+package com.ls.druplaproject.model.managers;
 
 import com.ls.drupal.DrupalClient;
-import com.ls.loreal.model.data.dao.StubItemDAO;
-import com.ls.loreal.model.data.vo.StubItemVO;
-import com.ls.loreal.model.responses.StubItemResponse;
+import com.ls.druplaproject.model.data.dao.StubItemDAO;
+import com.ls.druplaproject.model.data.vo.StubItemVO;
+import com.ls.druplaproject.model.responses.StubItemResponse;
 
 import android.os.Bundle;
 

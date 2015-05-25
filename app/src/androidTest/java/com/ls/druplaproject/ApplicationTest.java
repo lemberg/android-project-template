@@ -1,4 +1,4 @@
-package com.ls.loreal;
+package com.ls.druplaproject;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

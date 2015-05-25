@@ -1,9 +1,9 @@
-package com.ls.loreal;
+package com.ls.druplaproject;
 
 /**
  * Created on 21.05.2015.
  */
-public class LorealConfig {
+public class ApplicationConfig {
     //TODO: place all important constants (or utility methods) here
 
     public final static String BASE_URL = "http://test.server.com";

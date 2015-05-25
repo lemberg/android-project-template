@@ -1,9 +1,9 @@
-package com.ls.loreal.model.responses;
+package com.ls.druplaproject.model.responses;
 
 import com.ls.drupal.AbstractDrupalArrayEntity;
 import com.ls.drupal.DrupalClient;
 import com.ls.http.base.BaseRequest;
-import com.ls.loreal.model.data.vo.StubItemVO;
+import com.ls.druplaproject.model.data.vo.StubItemVO;
 
 import java.util.Map;
 

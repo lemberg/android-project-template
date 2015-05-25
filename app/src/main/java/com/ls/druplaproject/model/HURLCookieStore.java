@@ -1,4 +1,4 @@
-package com.ls.loreal.model;
+package com.ls.druplaproject.model;
 
 import android.content.Context;
 import android.content.SharedPreferences;

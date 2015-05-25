@@ -1,6 +1,6 @@
-package com.ls.loreal.model.data.vo;
+package com.ls.druplaproject.model.data.vo;
 
-import com.ls.loreal.model.data.base.AbstractVO;
+import com.ls.druplaproject.model.data.base.AbstractVO;
 
 /**
  * Created on 22.05.2015.

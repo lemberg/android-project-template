@@ -1,4 +1,4 @@
-package com.ls.loreal.model.data.base;
+package com.ls.druplaproject.model.data.base;
 
 public class AbstractVO<IdClass>
 {

@@ -1,8 +1,8 @@
-package com.ls.loreal.model.managers;
+package com.ls.druplaproject.model.managers;
 
 import com.ls.drupal.AbstractBaseDrupalEntity;
 import com.ls.drupal.DrupalClient;
-import com.ls.loreal.model.data.base.DatabaseFacade;
+import com.ls.druplaproject.model.data.base.DatabaseFacade;
 
 /**
  * Created on 25.05.2015. Use for database-based storage only

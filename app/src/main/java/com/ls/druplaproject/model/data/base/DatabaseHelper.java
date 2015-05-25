@@ -1,7 +1,7 @@
-package com.ls.loreal.model.data.base;
+package com.ls.druplaproject.model.data.base;
 
 
-import com.ls.loreal.R;
+import com.ls.druplaproject.R;
 
 import android.content.Context;
 import android.content.res.Resources;

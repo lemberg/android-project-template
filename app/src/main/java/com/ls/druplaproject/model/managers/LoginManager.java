@@ -1,11 +1,11 @@
-package com.ls.loreal.model.managers;
+package com.ls.druplaproject.model.managers;
 
 import com.android.volley.RequestQueue;
 import com.ls.drupal.login.ILoginManager;
 import com.ls.http.base.BaseRequest;
 import com.ls.http.base.RequestConfig;
 import com.ls.http.base.ResponseData;
-import com.ls.loreal.LorealConfig;
+import com.ls.druplaproject.ApplicationConfig;
 
 /**
  * Created on 22.05.2015.
@@ -18,7 +18,7 @@ public class LoginManager implements ILoginManager {
         config.setResponseFormat(BaseRequest.ResponseFormat.JSON);
 //        Use to add custom response class to be parsed;
 //        config.setResponseClassSpecifier(SomeClass.class);
-        BaseRequest loginRequest = new BaseRequest(BaseRequest.RequestMethod.POST, LorealConfig.LOGIN_URL,config);
+        BaseRequest loginRequest = new BaseRequest(BaseRequest.RequestMethod.POST, ApplicationConfig.LOGIN_URL,config);
         loginRequest.addPostParameter("username",userName);
         loginRequest.addGetParameter("password",password);
         ResponseData loginResponseData = loginRequest.performRequest(true, queue);

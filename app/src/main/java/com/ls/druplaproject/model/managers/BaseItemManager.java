@@ -1,4 +1,4 @@
-package com.ls.loreal.model.managers;
+package com.ls.druplaproject.model.managers;
 
 import com.ls.drupal.AbstractBaseDrupalEntity;
 import com.ls.drupal.DrupalClient;

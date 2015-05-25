@@ -1,11 +1,11 @@
-package com.ls.loreal.ui;
+package com.ls.druplaproject.ui;
 
 import com.ls.http.base.ResponseData;
-import com.ls.loreal.R;
-import com.ls.loreal.model.Model;
-import com.ls.loreal.model.data.vo.StubItemVO;
-import com.ls.loreal.model.managers.BaseItemManager;
-import com.ls.loreal.model.managers.StubItemManager;
+import com.ls.druplaproject.R;
+import com.ls.druplaproject.model.Model;
+import com.ls.druplaproject.model.data.vo.StubItemVO;
+import com.ls.druplaproject.model.managers.BaseItemManager;
+import com.ls.druplaproject.model.managers.StubItemManager;
 
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
