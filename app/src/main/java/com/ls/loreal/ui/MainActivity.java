@@ -10,19 +10,21 @@ import com.ls.loreal.model.managers.StubItemManager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 
+import java.util.List;
+
 
 public class MainActivity extends ActionBarActivity {
 
-    private BaseItemManager.OnDataFetchCompleteListener listener = new BaseItemManager.OnDataFetchCompleteListener<StubItemVO>()
+    private BaseItemManager.OnDataFetchCompleteListener listener = new BaseItemManager.OnDataFetchCompleteListener<List<StubItemVO>>()
     {
 
         @Override
-        public void onDataFetchComplete(StubItemVO result, ResponseData data, Object requestTag) {
+        public void onDataFetchComplete(List<StubItemVO> result, ResponseData data, Object requestTag) {
             //TODO: display data
         }
 
         @Override
-        public void onDataFetchFailed(StubItemVO result, ResponseData data, Object requestTag) {
+        public void onDataFetchFailed(List<StubItemVO> result, ResponseData data, Object requestTag) {
             //TODO: display loading error
         }
     };

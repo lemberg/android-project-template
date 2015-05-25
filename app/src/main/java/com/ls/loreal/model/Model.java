@@ -79,6 +79,10 @@ public class Model {
         return cookieStore;
     }
 
+    public StubItemManager getStubManager() {
+        return stubManager;
+    }
+
     /**
      * NOTE: login is performed in synchroneus way so you must never call it from UI thread.
      * @param userName

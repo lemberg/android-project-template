@@ -16,9 +16,9 @@ public abstract class SynchrondizedDatabaseManager<ClassToManage, FetchRequestTo
     @Override
     protected final boolean storeResponse(ClassToManage response, Object tag) {
         DatabaseFacade facade = DatabaseFacade.instance();
-        facade.open();
         synchronized (facade) {
             try {
+                facade.open();
                 facade.beginTransactions();
                 boolean result = synchronizedStoreResponse(response, tag);
                 if (result) {
@@ -37,6 +37,7 @@ public abstract class SynchrondizedDatabaseManager<ClassToManage, FetchRequestTo
         DatabaseFacade facade = DatabaseFacade.instance();
         synchronized (facade) {
             try {
+                facade.open();
                 ClassToManage result = synchronizeddRetoreResponse(tag);
                 return result;
             } finally {

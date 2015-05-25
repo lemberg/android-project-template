@@ -5,7 +5,7 @@
         imageURL string,
         description string,
         isFavorite integer,
-        pager_id string
+        page_id string
         )
     </string>
 </resources>

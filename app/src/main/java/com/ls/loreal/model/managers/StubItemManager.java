@@ -35,7 +35,7 @@ public class StubItemManager extends SynchrondizedDatabaseManager<List<StubItemV
 
     @Override
     protected StubItemResponse getEntityToFetch(DrupalClient client, Bundle requestParams) {
-        String requestId = getReqeustIdFromTag(getIdFromBundle(requestParams));
+        String requestId = getIdFromBundle(requestParams);
         StubItemResponse response =  new StubItemResponse(client);
         response.setPageId(requestId);
         return response;
@@ -78,7 +78,7 @@ public class StubItemManager extends SynchrondizedDatabaseManager<List<StubItemV
 
     private String getTagFromBundle(Bundle bundle)
     {
-        return TAG_PREFIX+ getIdFromBundle(bundle);
+        return TAG_PREFIX + getIdFromBundle(bundle);
     }
 
     private String getReqeustIdFromTag(Object tag)
