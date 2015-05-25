@@ -9,6 +9,7 @@ public class StubItemVO extends AbstractVO<String> {
     private String imageURL;
     private String description;
     private Boolean isFavorite;
+    private String pageId;
 
     public String getImageURL() {
         return imageURL;
@@ -32,5 +33,13 @@ public class StubItemVO extends AbstractVO<String> {
 
     public void setIsFavorite(Boolean isFavorite) {
         this.isFavorite = isFavorite;
+    }
+
+    public String getPageId() {
+        return pageId;
+    }
+
+    public void setPageId(String pageId) {
+        this.pageId = pageId;
     }
 }

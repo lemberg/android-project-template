@@ -10,9 +10,9 @@ import com.android.volley.toolbox.HurlStack;
 import com.ls.drupal.DrupalClient;
 import com.ls.http.base.BaseRequest;
 import com.ls.http.base.ResponseData;
-import com.ls.loreal.LorealApplication;
 import com.ls.loreal.LorealConfig;
 import com.ls.loreal.model.managers.LoginManager;
+import com.ls.loreal.model.managers.StubItemManager;
 
 import android.content.Context;
 import android.content.pm.PackageInfo;
@@ -31,14 +31,27 @@ import java.net.CookieStore;
  * Created on 21.05.2015.
  */
 public class Model {
-    private static class ModelHolder
+
+    private static Model instance;
+    public static Model instance(Context theContext)
     {
-        static Model instance = new Model();
+        if (instance == null)
+        {
+            instance = new Model(theContext);
+        }
+
+        return instance;
     }
 
-    public final static Model instance()
+
+    public static Model instance()
     {
-        return ModelHolder.instance;
+        if (instance == null)
+        {
+            throw new IllegalStateException("Called method on uninitialized database facade");
+        }
+
+        return instance;
     }
 
     private DrupalClient client;
@@ -47,7 +60,7 @@ public class Model {
     private RequestQueue queue;
 
     //Managers
-
+    private StubItemManager stubManager;
 
 
     public DrupalClient getClient() {
@@ -78,14 +91,17 @@ public class Model {
     }
 
 
-    private Model()
+    private Model(Context context)
     {
-        Context context = LorealApplication.getSharedContext();
         loginManager = new LoginManager();
-        client = new DrupalClient(LorealConfig.BASE_URL,queue, BaseRequest.RequestFormat.JSON,loginManager);
         queue = createNewQueue(context);
+        client = new DrupalClient(LorealConfig.BASE_URL,queue, BaseRequest.RequestFormat.JSON,loginManager);
+
+        stubManager = new StubItemManager(client);
     }
 
+
+    //Initialization
 
     private RequestQueue createNewQueue(Context context)
     {
@@ -142,5 +158,7 @@ public class Model {
 
         return queue;
     }
+
+
 
 }

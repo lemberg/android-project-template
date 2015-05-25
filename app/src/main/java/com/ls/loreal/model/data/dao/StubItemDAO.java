@@ -6,6 +6,8 @@ import com.ls.loreal.model.data.vo.StubItemVO;
 import android.content.ContentValues;
 import android.database.Cursor;
 
+import java.util.List;
+
 /**
  * Created on 22.05.2015.
  */
@@ -16,6 +18,14 @@ public class StubItemDAO extends AbstractDAO<StubItemVO,String> {
     private final static String COLUMN_IMAGE_URL = "imageURL";
     private final static String COLUMN_DESCRIPTION = "description";
     private final static String COLUMN_FAVORITE = "isFavorite";
+    private final static String COLUMN_PAGE_ID = "page_id";
+
+    public List<StubItemVO> readItemsForPageId(String pageId)
+    {
+        String condition = COLUMN_PAGE_ID +"=?";
+        return getData(condition,new String[]{pageId});
+
+    }
 
     @Override
     protected String getSearchCondition() {
@@ -43,6 +53,7 @@ public class StubItemDAO extends AbstractDAO<StubItemVO,String> {
         theValues.put(COLUMN_IMAGE_URL,theObj.getImageURL());
         theValues.put(COLUMN_DESCRIPTION,theObj.getDescription());
         theValues.put(COLUMN_FAVORITE,getIntFromBool(theObj.isFavorite()));
+        theValues.put(COLUMN_PAGE_ID,theObj.getPageId());
     }
 
     @Override
@@ -56,13 +67,14 @@ public class StubItemDAO extends AbstractDAO<StubItemVO,String> {
         int columnURL = theCursor.getColumnIndex(COLUMN_IMAGE_URL);
         int columndDescription = theCursor.getColumnIndex(COLUMN_DESCRIPTION);
         int columnFavorite = theCursor.getColumnIndex(COLUMN_FAVORITE);
+        int columnPageId = theCursor.getColumnIndex(COLUMN_PAGE_ID);
 
         StubItemVO item = new StubItemVO();
         item.setId(theCursor.getString(columnId));
         item.setImageURL(theCursor.getString(columnURL));
         item.setDescription(theCursor.getString(columndDescription));
         item.setIsFavorite(getBoolFromInt(theCursor.getInt(columnFavorite)));
-
+        item.setPageId(theCursor.getString(columnPageId));
         return item;
     }
 }

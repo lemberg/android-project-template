@@ -4,7 +4,8 @@
         _id string primary key,
         imageURL string,
         description string,
-        isFavorite integer
+        isFavorite integer,
+        pager_id string
         )
     </string>
 </resources>
