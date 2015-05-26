@@ -1,10 +1,11 @@
 package com.ls.druplaproject.ui;
 
 import com.ls.druplaproject.R;
-import com.ls.http.base.ResponseData;
 import com.ls.druplaproject.model.Model;
 import com.ls.druplaproject.model.data.vo.StubItemVO;
 import com.ls.druplaproject.model.managers.BaseItemManager;
+import com.ls.http.base.ResponseData;
+import com.ls.util.L;
 import com.ls.util.image.DrupalImageView;
 
 import android.content.Context;
@@ -34,14 +35,17 @@ public class StubItemAdapter extends BaseAdapter {
 
         @Override
         public void onDataFetchComplete(List<StubItemVO> result, ResponseData data, Object requestTag) {
+            mOnLoad = false;
             mCanLoadMore = true;
             mItems.addAll(result);
             mPagesLoaded++;
+            notifyDataSetChanged();
         }
 
         @Override
         public void onDataFetchFailed(List<StubItemVO> result, ResponseData data, Object requestTag) {
             mCanLoadMore = false;
+            mOnLoad = false;
         }
     };
 

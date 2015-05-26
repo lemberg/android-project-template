@@ -21,7 +21,7 @@ public class DrupalApplication extends Application{
         DatabaseFacade.instance(sharedContext);
         Model.instance(sharedContext);
         //Setting client is optional: you can perform this action in case is autentication is required in order to load images
-        DrupalImageView.setupSharedClient(Model.instance().getClient());
+//        DrupalImageView.setupSharedClient(Model.instance().getClient());
     }
 
     public static Context getSharedContext() {

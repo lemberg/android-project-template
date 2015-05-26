@@ -48,7 +48,15 @@ public class StubItemManager extends SynchrondizedDatabaseManager<List<StubItemV
 
     @Override
     protected List<StubItemVO> readResponseFromRequest(StubItemResponse request, Object tag) {
-        return new ArrayList<>(request);
+        if(request != null && !request.isEmpty()) {
+            for(StubItemVO item:request)
+            {
+                item.setPageId(request.getPageId());
+            }
+            return new ArrayList<>(request);
+        }else{
+            return null;
+        }
     }
 
     @Override

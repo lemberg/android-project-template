@@ -82,14 +82,14 @@ public abstract class BaseItemManager<ClassToManage, FetchRequestToManage extend
                 return;
             }
         }
-        restoreData(data, tag);
+        restoreData(data, tag, data.getStatusCode() == HttpURLConnection.HTTP_NOT_MODIFIED);
     }
 
     protected void applyDataUpdateFailed(FetchRequestToManage entity, Object tag, ResponseData data) {
-        restoreData(data, tag);
+        restoreData(data, tag,false);
     }
 
-    private void restoreData(final ResponseData data, final Object tag) {
+    private void restoreData(final ResponseData data, final Object tag,final boolean successful) {
         new AsyncTask<Void,Void,ClassToManage>()
         {
 
@@ -100,7 +100,7 @@ public abstract class BaseItemManager<ClassToManage, FetchRequestToManage extend
 
             @Override
             protected void onPostExecute(ClassToManage classToManage) {
-                notifyListeners(classToManage, data, tag, false);
+                notifyListeners(classToManage, data, tag, successful);
             }
         }.execute();
     }

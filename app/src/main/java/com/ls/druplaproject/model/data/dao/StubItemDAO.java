@@ -2,6 +2,7 @@ package com.ls.druplaproject.model.data.dao;
 
 import com.ls.druplaproject.model.data.base.AbstractDAO;
 import com.ls.druplaproject.model.data.vo.StubItemVO;
+import com.ls.util.L;
 
 import android.content.ContentValues;
 import android.database.Cursor;
@@ -24,7 +25,6 @@ public class StubItemDAO extends AbstractDAO<StubItemVO,String> {
     {
         String condition = COLUMN_PAGE_ID +"=?";
         return getData(condition,new String[]{pageId});
-
     }
 
     @Override

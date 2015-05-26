@@ -26,10 +26,6 @@ public class StubItemResponse extends AbstractDrupalArrayEntity<StubItemVO> {
 
     public void setPageId(String pageId) {
         this.pageId = pageId;
-        for(StubItemVO item:this)
-        {
-            item.setPageId(pageId);
-        }
     }
 
     @Override
