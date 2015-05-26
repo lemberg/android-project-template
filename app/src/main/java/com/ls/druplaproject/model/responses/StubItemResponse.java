@@ -34,7 +34,7 @@ public class StubItemResponse extends AbstractDrupalArrayEntity<StubItemVO> {
 
     @Override
     protected String getPath() {
-        return "stub/item/path/"+pageId;
+        return "demos/Loreal/stub_page_"+pageId+".txt";
     }
 
     @Override

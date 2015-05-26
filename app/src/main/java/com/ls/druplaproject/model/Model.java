@@ -48,7 +48,7 @@ public class Model {
     {
         if (instance == null)
         {
-            throw new IllegalStateException("Called method on uninitialized database facade");
+            throw new IllegalStateException("Called method on uninitialized model");
         }
 
         return instance;

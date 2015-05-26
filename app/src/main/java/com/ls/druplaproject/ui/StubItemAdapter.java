@@ -35,6 +35,8 @@ public class StubItemAdapter extends BaseAdapter {
         @Override
         public void onDataFetchComplete(List<StubItemVO> result, ResponseData data, Object requestTag) {
             mCanLoadMore = true;
+            mItems.addAll(result);
+            mPagesLoaded++;
         }
 
         @Override
@@ -98,5 +100,16 @@ public class StubItemAdapter extends BaseAdapter {
             String pageId = Integer.toString(mPagesLoaded);
             Model.instance().getStubManager().pullPage(pageId);
         }
+    }
+
+    public void anableDataLoad()
+    {
+        Model.instance().getStubManager().addDataFetchCompleteListener(listener);
+        loadNextPage();
+    }
+
+    public void disavleDataLoad()
+    {
+        Model.instance().getStubManager().removeDataFetchCompleteListener(listener);
     }
 }
