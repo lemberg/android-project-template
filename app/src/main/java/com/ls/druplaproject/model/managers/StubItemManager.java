@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * Created on 22.05.2015.
  */
-public class StubItemManager extends SynchrondizedDatabaseManager<List<StubItemVO>,StubItemResponse>{
+public class StubItemManager extends SynchrondizedDatabaseManager<List<StubItemVO>,StubItemResponse,Bundle,String>{
 
     private final static String PAGE_ID_KEY = "page_ID";
     private final static String TAG_PREFIX = "stub_item_id:";
@@ -47,7 +47,7 @@ public class StubItemManager extends SynchrondizedDatabaseManager<List<StubItemV
     }
 
     @Override
-    protected List<StubItemVO> readResponseFromRequest(StubItemResponse request, Object tag) {
+    protected List<StubItemVO> readResponseFromRequest(StubItemResponse request, String tag) {
         if(request != null && !request.isEmpty()) {
             for(StubItemVO item:request)
             {
@@ -60,14 +60,14 @@ public class StubItemManager extends SynchrondizedDatabaseManager<List<StubItemV
     }
 
     @Override
-    protected boolean synchronizedStoreResponse(List<StubItemVO> response, Object tag) {
+    protected boolean synchronizedStoreResponse(List<StubItemVO> response, String tag) {
         List<StubItemVO> items = new ArrayList<>(response);
         dao.saveData(items);
         return true;
     }
 
     @Override
-    protected List<StubItemVO> synchronizeddRetoreResponse(Object tag) {
+    protected List<StubItemVO> synchronizeddRetoreResponse(String tag) {
         String requestId = getReqeustIdFromTag(tag);
         return  dao.readItemsForPageId(requestId);
     }
@@ -89,8 +89,8 @@ public class StubItemManager extends SynchrondizedDatabaseManager<List<StubItemV
         return TAG_PREFIX + getIdFromBundle(bundle);
     }
 
-    private String getReqeustIdFromTag(Object tag)
+    private String getReqeustIdFromTag(String tag)
     {
-        return ((String)tag).substring(TAG_PREFIX.length());
+        return tag.substring(TAG_PREFIX.length());
     }
 }

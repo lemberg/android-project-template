@@ -7,14 +7,14 @@ import com.ls.druplaproject.model.data.base.DatabaseFacade;
 /**
  * Created on 25.05.2015. Use for database-based storage only
  */
-public abstract class SynchrondizedDatabaseManager<ClassToManage, FetchRequestToManage extends AbstractBaseDrupalEntity> extends BaseItemManager<ClassToManage, FetchRequestToManage> {
+public abstract class SynchrondizedDatabaseManager<ClassToManage, FetchRequestToManage extends AbstractBaseDrupalEntity,ParametersClass,TagClass> extends BaseItemManager<ClassToManage, FetchRequestToManage,ParametersClass,TagClass> {
 
     protected SynchrondizedDatabaseManager(DrupalClient client) {
         super(client);
     }
 
     @Override
-    protected final boolean storeResponse(ClassToManage response, Object tag) {
+    protected final boolean storeResponse(ClassToManage response, TagClass tag) {
         DatabaseFacade facade = DatabaseFacade.instance();
         synchronized (facade) {
             try {
@@ -33,7 +33,7 @@ public abstract class SynchrondizedDatabaseManager<ClassToManage, FetchRequestTo
     }
 
     @Override
-    protected ClassToManage restoreResponse(Object tag) {
+    protected ClassToManage restoreResponse(TagClass tag) {
         DatabaseFacade facade = DatabaseFacade.instance();
         synchronized (facade) {
             try {
@@ -46,7 +46,7 @@ public abstract class SynchrondizedDatabaseManager<ClassToManage, FetchRequestTo
         }
     }
 
-    protected abstract boolean synchronizedStoreResponse(ClassToManage response, Object tag);
+    protected abstract boolean synchronizedStoreResponse(ClassToManage response, TagClass tag);
 
-    protected abstract ClassToManage synchronizeddRetoreResponse(Object tag);
+    protected abstract ClassToManage synchronizeddRetoreResponse(TagClass tag);
 }
