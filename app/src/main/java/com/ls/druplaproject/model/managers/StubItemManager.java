@@ -62,6 +62,8 @@ public class StubItemManager extends SynchrondizedDatabaseManager<List<StubItemV
     @Override
     protected boolean synchronizedStoreResponse(List<StubItemVO> response, String tag) {
         List<StubItemVO> items = new ArrayList<>(response);
+        String requestId = getReqeustIdFromTag(tag);
+        dao.removeItemsForPageId(requestId);
         dao.saveData(items);
         return true;
     }

@@ -24,9 +24,9 @@ public abstract class SynchrondizedDatabaseManager<ClassToManage, FetchRequestTo
                 if (result) {
                     facade.setTransactionSuccesfull();
                 }
-                facade.endTransactions();
                 return result;
             } finally {
+                facade.endTransactions();
                 facade.close();
             }
         }

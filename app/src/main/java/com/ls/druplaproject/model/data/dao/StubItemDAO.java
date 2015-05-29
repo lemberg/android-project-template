@@ -27,6 +27,12 @@ public class StubItemDAO extends AbstractDAO<StubItemVO,String> {
         return getData(condition,new String[]{pageId});
     }
 
+    public int removeItemsForPageId(String pageId)
+    {
+        String condition = COLUMN_PAGE_ID +"=?";
+        return deleteData(condition,new String[]{pageId},false);
+    }
+
     @Override
     protected String getSearchCondition() {
         return COLUMN_ID +" = ?";
