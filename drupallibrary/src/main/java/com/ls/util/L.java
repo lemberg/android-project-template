@@ -22,9 +22,9 @@
 
 package com.ls.util;
 
-import com.ls.drupal.BuildConfig;
-
 import android.util.Log;
+
+import com.ls.drupal.BuildConfig;
 
 public final class L {
 

@@ -25,8 +25,6 @@ package com.ls.http.base;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Response;
 import com.android.volley.toolbox.HttpHeaderParser;
-import com.ls.http.base.ResponseData;
-import com.ls.http.base.ResponseHandler;
 
 import android.support.annotation.NonNull;
 import android.text.TextUtils;

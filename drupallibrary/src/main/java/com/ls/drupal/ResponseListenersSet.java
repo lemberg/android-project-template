@@ -23,7 +23,6 @@
 package com.ls.drupal;
 
 import com.android.volley.Request;
-import com.ls.util.L;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -50,6 +49,11 @@ public class ResponseListenersSet {
     {
         boolean result = false;
         List<ListenerHolder> listenersList = listeners.get(request);
+
+        if(listener== null)
+        {
+            return true;
+        }
 
         if(listenersList == null)
         {
