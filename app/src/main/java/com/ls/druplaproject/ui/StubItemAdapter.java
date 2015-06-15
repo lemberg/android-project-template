@@ -36,17 +36,23 @@ public class StubItemAdapter extends BaseAdapter {
         public void onDataFetchComplete(List<StubItemVO> result, ResponseData data, String requestTag) {
             mOnLoad = false;
             mCanLoadMore = true;
-            mItems.addAll(result);
-            mPagesLoaded++;
-            notifyDataSetChanged();
+            applydataUpdate(result);
         }
 
         @Override
         public void onDataFetchFailed(List<StubItemVO> result, ResponseData data, String requestTag) {
             mCanLoadMore = false;
             mOnLoad = false;
+            applydataUpdate(result);
         }
     };
+
+    private void applydataUpdate(List<StubItemVO> result)
+    {
+        mItems.addAll(result);
+        mPagesLoaded++;
+        notifyDataSetChanged();
+    }
 
     public StubItemAdapter(Context theContext)
     {
