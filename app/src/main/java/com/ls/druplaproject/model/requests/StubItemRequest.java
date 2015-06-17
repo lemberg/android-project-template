@@ -1,4 +1,4 @@
-package com.ls.druplaproject.model.responses;
+package com.ls.druplaproject.model.requests;
 
 import com.ls.drupal.AbstractDrupalArrayEntity;
 import com.ls.drupal.DrupalClient;
@@ -10,13 +10,13 @@ import java.util.Map;
 /**
  * Created on 22.05.2015.
  */
-public class StubItemResponse extends AbstractDrupalArrayEntity<StubItemVO> {
+public class StubItemRequest extends AbstractDrupalArrayEntity<StubItemVO> {
 
     private final static int PAGE_SIZE = 5;
 
     private String pageId;
 
-    public StubItemResponse(DrupalClient client) {
+    public StubItemRequest(DrupalClient client) {
         super(client, PAGE_SIZE);
     }
 

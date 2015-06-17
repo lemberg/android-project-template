@@ -3,7 +3,7 @@ package com.ls.druplaproject.model.managers;
 import com.ls.drupal.DrupalClient;
 import com.ls.druplaproject.model.data.dao.StubItemDAO;
 import com.ls.druplaproject.model.data.vo.StubItemVO;
-import com.ls.druplaproject.model.responses.StubItemResponse;
+import com.ls.druplaproject.model.requests.StubItemRequest;
 
 import android.os.Bundle;
 
@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * Created on 22.05.2015.
  */
-public class StubItemManager extends SynchrondizedDatabaseManager<List<StubItemVO>,StubItemResponse,Bundle,String>{
+public class StubItemManager extends SynchrondizedDatabaseManager<List<StubItemVO>,StubItemRequest,Bundle,String>{
 
     private final static String PAGE_ID_KEY = "page_ID";
     private final static String TAG_PREFIX = "stub_item_id:";
@@ -34,9 +34,9 @@ public class StubItemManager extends SynchrondizedDatabaseManager<List<StubItemV
     }
 
     @Override
-    protected StubItemResponse getEntityToFetch(DrupalClient client, Bundle requestParams) {
+    protected StubItemRequest getEntityToFetch(DrupalClient client, Bundle requestParams) {
         String requestId = getIdFromBundle(requestParams);
-        StubItemResponse response =  new StubItemResponse(client);
+        StubItemRequest response =  new StubItemRequest(client);
         response.setPageId(requestId);
         return response;
     }
@@ -47,7 +47,7 @@ public class StubItemManager extends SynchrondizedDatabaseManager<List<StubItemV
     }
 
     @Override
-    protected List<StubItemVO> readResponseFromRequest(StubItemResponse request, String tag) {
+    protected List<StubItemVO> readResponseFromRequest(StubItemRequest request, String tag) {
         if(request != null && !request.isEmpty()) {
             for(StubItemVO item:request)
             {
