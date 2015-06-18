@@ -30,7 +30,7 @@ public class StubItemRequest extends AbstractDrupalArrayEntity<StubItemVO> {
 
     @Override
     protected String getPath() {
-        return "demos/Loreal/stub_page_"+pageId+".txt";
+        return "demos/DrupalTemplate/stub_page_"+pageId+".txt";
     }
 
     @Override
