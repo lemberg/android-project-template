@@ -1,6 +1,6 @@
 ### Description
 
-# android-project-template
+# android-drupal-project-template
 
 Was designed to work with
 [Drupal Android SDK](http://drupalsdk.com)
