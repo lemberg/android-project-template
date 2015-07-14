@@ -1,6 +1,9 @@
 ### Description
 
-[Drupal 8 iOS & Android SDKs](http://drupalsdk.com)
+# android-project-template
+
+Was designed to work with
+[Drupal Android SDK](http://drupalsdk.com)
 
 Lemberg Drupal SDK is a library for native **Android** applications to communicate with **Drupal** web servers.
 
@@ -69,3 +72,4 @@ SOFTWARE.
 [Sample]:https://github.com/lemberg/d8androidsdk/wiki/Sample
 [License]:https://github.com/lemberg/d8androidsdk/wiki/License
 [Gradle, please]:http://gradleplease.appspot.com/
+
