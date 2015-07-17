@@ -35,13 +35,11 @@ public class StubItemAdapter extends BaseAdapter {
         @Override
         public void onDataFetchComplete(List<StubItemVO> result, ResponseData data, String requestTag) {
             mOnLoad = false;
-            mCanLoadMore = true;
             applydataUpdate(result);
         }
 
         @Override
         public void onDataFetchFailed(List<StubItemVO> result, ResponseData data, String requestTag) {
-            mCanLoadMore = false;
             mOnLoad = false;
             applydataUpdate(result);
         }
@@ -49,9 +47,14 @@ public class StubItemAdapter extends BaseAdapter {
 
     private void applydataUpdate(List<StubItemVO> result)
     {
-        mItems.addAll(result);
-        mPagesLoaded++;
-        notifyDataSetChanged();
+        if(result != null &&!result.isEmpty()){
+            mCanLoadMore = true;
+            mItems.addAll(result);
+            mPagesLoaded++;
+            notifyDataSetChanged();
+        }else{
+            mCanLoadMore = false;
+        }
     }
 
     public StubItemAdapter(Context theContext)
