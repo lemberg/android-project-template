@@ -1,1 +1,2 @@
 include ':app', 'drupallibrary'
+project(':drupallibrary').projectDir = new File('libraries/drupallibrary')

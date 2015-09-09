@@ -20,36 +20,64 @@
  *   SOFTWARE.
  */
 
-package com.ls.http.base.handler.multipart;
+package com.ls.http.base;
 
-import org.apache.http.entity.ContentType;
-import org.apache.http.entity.mime.content.ContentBody;
-import org.apache.http.entity.mime.content.InputStreamBody;
+import com.ls.http.base.ICharsetItem;
+import com.ls.http.base.IPostableItem;
 
-import java.io.InputStream;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
-/**
- * Created on 17.04.2015.
- */
-public class StreamMultipartEntityPart implements IMultiPartEntityPart {
+import java.io.UnsupportedEncodingException;
 
-    private InputStream value;
+public abstract class RequestHandler
+{
+	protected final String DEFAULT_CHARSET = "utf-8";
+	
+	protected Object object;
+	
+	public abstract String stringBodyFromItem();
 
-    public StreamMultipartEntityPart(InputStream value)
-    {
-        this.value = value;
+    public abstract String getBodyContentType(String defaultCharset);
+
+    public abstract byte[]getBody(String defaultCharset) throws UnsupportedEncodingException;
+	
+	public RequestHandler()
+	{
+
+	}
+	
+	protected boolean implementsPostableInterface()
+	{
+		return object instanceof IPostableItem;
+	}
+	
+	protected String getCharset(@Nullable String defaultCharset)
+	{
+		String charset = null;
+		if(object instanceof ICharsetItem)
+		{
+			charset =  ((ICharsetItem)object).getCharset();
+		}
+		
+		if(charset == null)
+		{		
+			charset = defaultCharset;;
+		}
+		
+		if(charset == null)
+		{		
+			charset = DEFAULT_CHARSET;
+		}
+		return charset;
+	}
+
+    public Object getObject() {
+        return object;
     }
 
-    public InputStream getValue() {
-        return value;
+    public void setObject(Object object) {
+        this.object = object;
     }
 
-    public void setValue(InputStream value) {
-        this.value = value;
-    }
-
-    @Override
-    public ContentBody getContentBody() {
-        return new InputStreamBody(this.value, ContentType.DEFAULT_BINARY);
-    }
 }

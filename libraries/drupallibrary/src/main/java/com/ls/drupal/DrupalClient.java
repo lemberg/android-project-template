@@ -555,7 +555,7 @@ public class DrupalClient implements OnResponseListener {
                     synchronized (listeners) {
                         List<ResponseListenersSet.ListenerHolder> listenerList = listeners.getListenersForRequest(request);
 
-                        if (theListener == null || (listenerList != null && listenerList.contains(theListener))) {
+                        if (theListener == null || (listenerList != null &&  holderListContainsListener(listenerList,theListener))) {
                             if (listenerList != null) {
                                 listeners.removeListenersForRequest(request);
                                 for (ResponseListenersSet.ListenerHolder holder : listenerList) {
@@ -571,6 +571,25 @@ public class DrupalClient implements OnResponseListener {
                 return false;
             }
         });
+    }
+
+    protected static boolean holderListContainsListener( List<ResponseListenersSet.ListenerHolder> listenerList,OnResponseListener theListener)
+    {
+        if(theListener == null)
+        {
+            return false;
+        }
+
+        boolean listContainsListener = false;
+        for(ResponseListenersSet.ListenerHolder holder:listenerList)
+        {
+            if(theListener.equals(holder.getListener()))
+            {
+                listContainsListener = true;
+            }
+        }
+
+        return listContainsListener;
     }
 
     // Manage request progress

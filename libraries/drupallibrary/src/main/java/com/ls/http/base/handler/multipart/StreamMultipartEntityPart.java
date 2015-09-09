@@ -20,15 +20,38 @@
  *   SOFTWARE.
  */
 
-package com.ls.http.base;
+package com.ls.http.base.handler.multipart;
 
-import com.android.volley.NetworkResponse;
-import com.android.volley.Response;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.mime.content.ContentBody;
+import org.apache.http.entity.mime.content.FileBody;
+import org.apache.http.entity.mime.content.InputStreamBody;
 
+import java.io.File;
+import java.io.InputStream;
 
-public abstract class ResponseHandler
-{
-    protected abstract String getAcceptValueType();
+/**
+ * Created on 17.04.2015.
+ */
+public class StreamMultipartEntityPart implements IMultiPartEntityPart {
 
-    protected abstract Response<ResponseData> parseNetworkResponse(NetworkResponse response,Object responseClassSpecifier);
+    private InputStream value;
+
+    public StreamMultipartEntityPart(InputStream value)
+    {
+        this.value = value;
+    }
+
+    public InputStream getValue() {
+        return value;
+    }
+
+    public void setValue(InputStream value) {
+        this.value = value;
+    }
+
+    @Override
+    public ContentBody getContentBody() {
+        return new InputStreamBody(this.value, ContentType.DEFAULT_BINARY);
+    }
 }
