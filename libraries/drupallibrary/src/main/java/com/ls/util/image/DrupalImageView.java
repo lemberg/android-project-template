@@ -22,13 +22,11 @@
 
 package com.ls.util.image;
 
-import com.android.volley.VolleyError;
 import com.ls.drupal.AbstractBaseDrupalEntity;
 import com.ls.drupal.DrupalClient;
 import com.ls.drupal.DrupalImageEntity;
 import com.ls.drupal.R;
 import com.ls.http.base.ResponseData;
-import com.ls.util.L;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -242,6 +240,10 @@ public class DrupalImageView extends ImageView {
     {
         if(this.imageContainer != null)
         {
+            if(imageLoadingListener != null)
+            {
+                imageLoadingListener.onImageLoadingStarted(DrupalImageView.this, this.imageContainer.url);
+            }
             this.imageContainer.loadImage(getInternalImageLoadingListenerForContainer(this.imageContainer));
         }
     }
@@ -373,7 +375,8 @@ public class DrupalImageView extends ImageView {
         }
     }
 
-    public static interface ImageLoadingListener{
+    public interface ImageLoadingListener{
+        void onImageLoadingStarted(DrupalImageView view, String imageURL);
         void onImageLoadingComplete(DrupalImageView view, Drawable image);
         void onImageLoadingFailed(DrupalImageView view,ResponseData data);
         void onImageLoadingCancelled(DrupalImageView view,String path);
