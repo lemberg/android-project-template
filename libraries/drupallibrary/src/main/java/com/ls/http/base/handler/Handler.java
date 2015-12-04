@@ -22,7 +22,6 @@
 
 package com.ls.http.base.handler;
 
-import com.ls.http.base.BaseByteResponseHandler;
 import com.ls.http.base.BaseRequest;
 import com.ls.http.base.ResponseHandler;
 import com.ls.http.base.RequestHandler;

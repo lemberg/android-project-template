@@ -40,7 +40,6 @@ import android.text.TextUtils;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -98,7 +97,6 @@ public class BaseRequest extends Request<ResponseData> {
     private final Object errorResponseClasSpecifier;
     private RequestHandler requestHandler;
     private ResponseHandler responseHandler;
-    private ResponseHandler errorResponseHandler;
     private ResponseData result;
     private OnResponseListener responseListener;
     private boolean smartComparisonEnabled = false;

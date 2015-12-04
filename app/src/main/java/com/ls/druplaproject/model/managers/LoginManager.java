@@ -1,7 +1,7 @@
 package com.ls.druplaproject.model.managers;
 
 import com.android.volley.RequestQueue;
-import com.ls.drupal.login.ILoginManager;
+import com.ls.http.base.login.ILoginManager;
 import com.ls.http.base.BaseRequest;
 import com.ls.http.base.RequestConfig;
 import com.ls.http.base.ResponseData;

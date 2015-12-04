@@ -26,13 +26,11 @@ package com.ls.drupal;
 
 import com.google.gson.annotations.Expose;
 
-import com.android.volley.VolleyError;
 import com.ls.http.base.BaseRequest;
 import com.ls.http.base.BaseRequest.RequestMethod;
 import com.ls.http.base.ICharsetItem;
 import com.ls.http.base.RequestConfig;
 import com.ls.http.base.ResponseData;
-import com.ls.util.L;
 import com.ls.util.internal.ObjectComparator;
 import com.ls.util.internal.ObjectComparator.Snapshot;
 import com.ls.util.internal.VolleyResponseUtils;
@@ -80,7 +78,7 @@ public abstract class AbstractBaseDrupalEntity implements DrupalClient.OnRespons
 
 
 	/**	 
-	 * @param method is instance od {@link com.ls.http.base.BaseRequest.RequestMethod} enum, this method is called for. it can be "GET", "POST", "PUT" ,"PATCH" or "DELETE".
+	 * @param method is instance od {@link BaseRequest.RequestMethod} enum, this method is called for. it can be "GET", "POST", "PUT" ,"PATCH" or "DELETE".
 	 * @return parameters for the request method specified. In case if collection is passed as map entry value - all entities will be added under corresponding key. Object.toString will be called otherwise.
 	 */
 	protected abstract Map<String, Object> getItemRequestGetParameters(RequestMethod method);
@@ -92,7 +90,7 @@ public abstract class AbstractBaseDrupalEntity implements DrupalClient.OnRespons
     Object getManagedData();
 
     /**
-     * @param method is instance od {@link com.ls.http.base.BaseRequest.RequestMethod} enum, this method is called for. it can be "GET", "POST", "PUT" ,"PATCH" or "DELETE".
+     * @param method is instance od {@link BaseRequest.RequestMethod} enum, this method is called for. it can be "GET", "POST", "PUT" ,"PATCH" or "DELETE".
      * @return headers for the request method specified.
      */
     protected Map<String, String> getItemRequestHeaders(RequestMethod method){
@@ -350,7 +348,7 @@ public abstract class AbstractBaseDrupalEntity implements DrupalClient.OnRespons
 	}
 
     /**
-     * @param method is instance of {@link com.ls.http.base.BaseRequest.RequestMethod} enum, this method is called for. it can be "GET", "POST", "PUT" ,"PATCH" or "DELETE".
+     * @param method is instance of {@link BaseRequest.RequestMethod} enum, this method is called for. it can be "GET", "POST", "PUT" ,"PATCH" or "DELETE".
      * @return the format entity will be serialized to. You can override this method in order to customize return. If null returned - default client format will be performed.
      */
     protected BaseRequest.RequestFormat getItemRequestFormat(RequestMethod method){
@@ -358,7 +356,7 @@ public abstract class AbstractBaseDrupalEntity implements DrupalClient.OnRespons
     };
 
     /**
-     * @param method is instance of {@link com.ls.http.base.BaseRequest.RequestMethod} enum, this method is called for. it can be "GET", "POST", "PUT" ,"PATCH" or "DELETE".
+     * @param method is instance of {@link BaseRequest.RequestMethod} enum, this method is called for. it can be "GET", "POST", "PUT" ,"PATCH" or "DELETE".
      * @return the format response entity will be formatted to. You can override this method in order to customize return. If null returned - default client format will be performed.
      */
     protected BaseRequest.ResponseFormat getItemResponseFormat(RequestMethod method){
@@ -366,7 +364,7 @@ public abstract class AbstractBaseDrupalEntity implements DrupalClient.OnRespons
     };
 
     /**
-     * @param method is instance of {@link com.ls.http.base.BaseRequest.RequestMethod} enum, this method is called for. it can be "GET", "POST", "PUT" ,"PATCH" or "DELETE".
+     * @param method is instance of {@link BaseRequest.RequestMethod} enum, this method is called for. it can be "GET", "POST", "PUT" ,"PATCH" or "DELETE".
      * @return Class or Type, returned as parsedError field of ResultData object, can be null if you don't need one.
      */
     protected Object getItemErrorResponseClassSpecifier(RequestMethod method){
