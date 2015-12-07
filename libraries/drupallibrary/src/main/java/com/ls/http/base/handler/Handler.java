@@ -40,6 +40,12 @@ public class Handler {
     protected static final String CONTENT_TYPE_CHARSET_PREFIX = "; charset=";
 
     public static RequestHandler getRequestHandlerForFormat(BaseRequest.RequestFormat requestFormat) {
+
+        if(requestFormat == null)
+        {
+            requestFormat = BaseRequest.RequestFormat.TEXT;
+        }
+
         switch (requestFormat) {
             case XML:
                 return new XMLRequestHandler();
@@ -58,6 +64,11 @@ public class Handler {
 
     public static ResponseHandler getResponseHandlerForFormat(BaseRequest.ResponseFormat responseFormat)
     {
+        if(responseFormat == null)
+        {
+            responseFormat = BaseRequest.ResponseFormat.TEXT;
+        }
+
         switch (responseFormat) {
             case XML:
                 return new XMLResponseHandler();
@@ -69,6 +80,8 @@ public class Handler {
                 return new JSONHALResponseHandler();
             case BYTE:
                 return new PlainByteReponseHandler();
+            case IMAGE:
+                return new ImageReponseHandler();
             default: {
                 throw new IllegalArgumentException("Unrecognised request responseFormat:"+responseFormat.name());
             }

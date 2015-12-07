@@ -2,7 +2,6 @@ package com.ls.druplaproject;
 
 import com.ls.druplaproject.model.Model;
 import com.ls.druplaproject.model.data.base.DatabaseFacade;
-import com.ls.util.image.DrupalImageView;
 
 import android.app.Application;
 import android.content.Context;

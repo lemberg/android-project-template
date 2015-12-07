@@ -5,7 +5,7 @@ import com.ls.druplaproject.model.Model;
 import com.ls.druplaproject.model.data.vo.StubItemVO;
 import com.ls.druplaproject.model.managers.BaseItemManager;
 import com.ls.http.base.ResponseData;
-import com.ls.util.image.DrupalImageView;
+import com.ls.util.image.LSImageView;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -98,7 +98,7 @@ public class StubItemAdapter extends BaseAdapter {
 
         StubItemVO item = getItem(position);
 
-        DrupalImageView imageView = (DrupalImageView)convertView.findViewById(R.id.image_view);
+        LSImageView imageView = (LSImageView)convertView.findViewById(R.id.image_view);
         imageView.setImageWithURL(item.getImageURL());
 
         TextView text = (TextView)convertView.findViewById(R.id.textView);

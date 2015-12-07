@@ -20,12 +20,8 @@
  *   SOFTWARE.
  */
 
-package com.ls.util.image;
+package com.ls.drupal;
 
-import com.ls.drupal.AbstractBaseDrupalEntity;
-import com.ls.drupal.DrupalClient;
-import com.ls.drupal.DrupalImageEntity;
-import com.ls.drupal.R;
 import com.ls.http.base.ResponseData;
 
 import android.content.Context;
@@ -35,7 +31,9 @@ import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 
+@Deprecated
 /**
+ * Class is deprecated, use {@link com.ls.util.image.LSImageView}
  * Created on 22.04.2015.
  */
 public class DrupalImageView extends ImageView {
@@ -93,19 +91,19 @@ public class DrupalImageView extends ImageView {
         if (this.isInEditMode()) {
             return;
         }
-        TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.DrupalImageView);
+        TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.LSImageView);
 
-        Drawable noImageDrawable = array.getDrawable(R.styleable.DrupalImageView_noImageResource);
+        Drawable noImageDrawable = array.getDrawable(R.styleable.LSImageView_noImageResource);
         if (noImageDrawable != null) {
             this.setNoImageDrawable(noImageDrawable);
         }
 
-        String imagePath = array.getString(R.styleable.DrupalImageView_srcPath);
+        String imagePath = array.getString(R.styleable.LSImageView_srcPath);
         if (!TextUtils.isEmpty(imagePath)) {
             this.setImageWithURL(imagePath);
         }
 
-        this.fixedBounds = array.getBoolean(R.styleable.DrupalImageView_fixedBounds,false);
+        this.fixedBounds = array.getBoolean(R.styleable.LSImageView_fixedBounds,false);
 
         array.recycle();
     }

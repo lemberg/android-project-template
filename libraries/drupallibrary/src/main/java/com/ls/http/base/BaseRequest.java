@@ -46,7 +46,7 @@ import java.util.Map;
 public class BaseRequest extends Request<ResponseData> {
     protected static String ACCEPT_HEADER_KEY = "Accept";
 
-    public static enum RequestMethod {
+    public enum RequestMethod {
         GET(Method.GET), POST(Method.POST), PATCH(Method.PATCH), DELETE(Method.DELETE), PUT(Method.PUT), HEAD(Method.HEAD), OPTIONS(Method.OPTIONS), TRACE(Method.TRACE);
         final private int methodCode;
 
@@ -55,7 +55,7 @@ public class BaseRequest extends Request<ResponseData> {
         }
     }
 
-    public static enum RequestFormat {
+    public enum RequestFormat {
         JSON, XML, JSON_HAL, TEXT,
         /**
          *  Note: Multipart entity serializer is checking if non-transient field implements {@link com.ls.http.base.handler.multipart.IMultiPartEntityPart} interface if so
@@ -74,9 +74,9 @@ public class BaseRequest extends Request<ResponseData> {
         }
     } ;
 
-    public static enum ResponseFormat {
-        JSON, XML, JSON_HAL, TEXT, BYTE
-    } ;
+    public enum ResponseFormat {
+        JSON, XML, JSON_HAL, TEXT, BYTE, IMAGE
+    }
 
     private final RequestFormat requestFormat;
     private final ResponseFormat responseFormat;
@@ -201,7 +201,7 @@ public class BaseRequest extends Request<ResponseData> {
         }
     }
 
-    public static interface OnResponseListener {
+    public interface OnResponseListener {
 
         void onResponseReceived(ResponseData data, BaseRequest request);
 
@@ -366,6 +366,9 @@ public class BaseRequest extends Request<ResponseData> {
         return getParameters;
     }
 
+    /**
+     * @param getParameters in case if collection is passed as map entry value - all entities will be added under corresponding key. Object.toString will be called otherwise.
+     */
     public void setGetParameters(Map<String, Object> getParameters) {
         this.getParameters = getParameters;
     }

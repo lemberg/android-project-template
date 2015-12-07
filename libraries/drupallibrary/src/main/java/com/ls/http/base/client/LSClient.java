@@ -59,7 +59,7 @@ public class LSClient implements OnResponseListener {
 
     private DuplicateRequestPolicy duplicateRequestPolicy = DuplicateRequestPolicy.ATTACH;
 
-    public static interface OnResponseListener {
+    public interface OnResponseListener {
 
         void onResponseReceived(ResponseData data, Object tag);
 

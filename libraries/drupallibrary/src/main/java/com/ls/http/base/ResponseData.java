@@ -41,6 +41,11 @@ public class ResponseData {
 		return data;
 	}
 
+	void setData(Object data)
+	{
+		this.data = data;
+	}
+
 	public Map<String, String> getHeaders() {
 		return headers;
 	}

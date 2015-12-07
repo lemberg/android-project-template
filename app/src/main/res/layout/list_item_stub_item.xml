@@ -3,7 +3,8 @@
               android:orientation="horizontal"
               android:layout_width="match_parent"
               android:layout_height="match_parent">
-    <com.ls.util.image.DrupalImageView android:layout_width="40dp"
+    <com.ls.util.image.LSImageView
+            android:layout_width="40dp"
                                        android:layout_height="40dp"
             android:id="@+id/image_view"/>
     <TextView
