@@ -23,7 +23,7 @@ public class BaseRequestBuilder
     private Map<String, Object> mGetParameters;
     private Object mObjectToPost;
 
-    private Object mResponseClasSpecifier;
+    private Object mResponseClassSpecifier;
     private Object mErrorResponseClasSpecifier;
 
     public BaseRequest create()
@@ -35,7 +35,7 @@ public class BaseRequestBuilder
         config.setResponseFormat(mResponseFormat);
         config.setErrorResponseClassSpecifier(mErrorResponseClasSpecifier);
         config.setRequestFormat(mRequestFormat);
-        config.setResponseClassSpecifier(mResponseClasSpecifier);
+        config.setResponseClassSpecifier(mResponseClassSpecifier);
 
         BaseRequest request = new BaseRequest(mRequestMethod,mRequestURL,config);
         request.setObjectToPost(mObjectToPost);
@@ -61,18 +61,30 @@ public class BaseRequestBuilder
         return this;
     }
 
+    /**
+     * @param requestFormat format of POST body serialization, used to form post data from {@link #setObjectToPost(Object) setObjectToPost}
+     * @return
+     */
     public BaseRequestBuilder setRequestFormat(BaseRequest.RequestFormat requestFormat)
     {
         this.mRequestFormat = requestFormat;
         return this;
     }
 
+    /**
+     * @param responseFormat format of response body, used to define correct deserializer for server response
+     * @return
+     */
     public BaseRequestBuilder setResponseFormat(BaseRequest.ResponseFormat responseFormat)
     {
         this.mResponseFormat = responseFormat;
         return this;
     }
 
+    /**
+     * @param defaultCharset used to define charset for serializer/deserializer
+     * @return
+     */
     public BaseRequestBuilder setDefaultCharset(String defaultCharset)
     {
         this.mDefaultCharset = defaultCharset;
@@ -163,18 +175,28 @@ public class BaseRequestBuilder
         return this;
     }
 
+    /**
+     * @param objectToPost Object to be serialized to post body.
+     * @return
+     */
     public BaseRequestBuilder setObjectToPost(Object objectToPost)
     {
         this.mObjectToPost = objectToPost;
         return this;
     }
 
-    public BaseRequestBuilder setResponseClasSpecifier(Object responseClasSpecifier)
+    /**
+     * @param responseClassSpecifier  Class or Type, returned as parsedErrorResponse field of ResultData object, can be null if you don't need one.
+     */
+    public BaseRequestBuilder setResponseClassSpecifier(Object responseClassSpecifier)
     {
-        this.mResponseClasSpecifier = responseClasSpecifier;
+        this.mResponseClassSpecifier = responseClassSpecifier;
         return this;
     }
 
+    /**
+     * @param errorResponseClasSpecifier  Class or Type, returned as error field of ResultData object, can be null if you don't need one.
+     */
     public BaseRequestBuilder setErrorResponseClasSpecifier(Object errorResponseClasSpecifier)
     {
         this.mErrorResponseClasSpecifier = errorResponseClasSpecifier;

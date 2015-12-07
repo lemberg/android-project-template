@@ -72,7 +72,7 @@ public class RequestConfig {
     }
 
     /**
-     * @param responseClassSpecifier  Class or Type, returned as data field of ResultData object, can be null if you don't need one.
+     * @param responseClassSpecifier  Class or Type, returned as parsedErrorResponse field of ResultData object, can be null if you don't need one.
      */
     public void setResponseClassSpecifier(Object responseClassSpecifier) {
         this.responseClassSpecifier = responseClassSpecifier;
