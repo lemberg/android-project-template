@@ -1,9 +1,9 @@
-package com.ls.druplaproject.ui;
+package com.ls.templateproject.ui;
 
-import com.ls.druplaproject.R;
-import com.ls.druplaproject.model.Model;
-import com.ls.druplaproject.model.data.vo.StubItemVO;
-import com.ls.druplaproject.model.managers.BaseItemManager;
+import com.ls.templateproject.R;
+import com.ls.templateproject.model.Model;
+import com.ls.templateproject.model.data.vo.StubItemVO;
+import com.ls.templateproject.model.managers.BaseItemManager;
 import com.ls.http.base.ResponseData;
 import com.ls.util.image.LSImageView;
 

@@ -1,7 +1,7 @@
-package com.ls.druplaproject.model.managers;
+package com.ls.templateproject.model.managers;
 
 import com.android.volley.RequestQueue;
-import com.ls.druplaproject.ApplicationConfig;
+import com.ls.templateproject.ApplicationConfig;
 import com.ls.http.base.BaseRequest;
 import com.ls.http.base.RequestConfig;
 import com.ls.http.base.ResponseData;

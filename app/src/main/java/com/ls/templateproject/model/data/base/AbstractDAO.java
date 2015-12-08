@@ -1,4 +1,4 @@
-package com.ls.druplaproject.model.data.base;
+package com.ls.templateproject.model.data.base;
 
 import android.content.ContentValues;
 import android.database.Cursor;

@@ -1,4 +1,4 @@
-package com.ls.druplaproject.model;
+package com.ls.templateproject.model;
 
 import android.content.Context;
 import android.content.SharedPreferences;

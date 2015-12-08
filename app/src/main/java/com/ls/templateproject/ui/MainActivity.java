@@ -1,6 +1,6 @@
-package com.ls.druplaproject.ui;
+package com.ls.templateproject.ui;
 
-import com.ls.druplaproject.R;
+import com.ls.templateproject.R;
 
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;

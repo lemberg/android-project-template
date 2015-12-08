@@ -1,4 +1,4 @@
-package com.ls.druplaproject;
+package com.ls.templateproject;
 
 /**
  * Created on 21.05.2015.

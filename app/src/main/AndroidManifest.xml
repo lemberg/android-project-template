@@ -8,13 +8,13 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 
     <application
-            android:name="com.ls.druplaproject.DrupalApplication"
+            android:name="com.ls.templateproject.TemplateApplication"
             android:allowBackup="true"
             android:icon="@mipmap/ic_launcher"
             android:label="@string/app_name"
             android:theme="@style/AppTheme">
         <activity
-                android:name="com.ls.druplaproject.ui.MainActivity"
+                android:name="com.ls.templateproject.ui.MainActivity"
                 android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>

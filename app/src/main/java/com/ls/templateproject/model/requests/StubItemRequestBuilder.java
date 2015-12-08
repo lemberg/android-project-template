@@ -1,9 +1,9 @@
-package com.ls.druplaproject.model.requests;
+package com.ls.templateproject.model.requests;
 
 import com.google.gson.reflect.TypeToken;
 
-import com.ls.druplaproject.ApplicationConfig;
-import com.ls.druplaproject.model.data.vo.StubItemVO;
+import com.ls.templateproject.ApplicationConfig;
+import com.ls.templateproject.model.data.vo.StubItemVO;
 import com.ls.http.base.BaseRequest;
 import com.ls.http.base.BaseRequestBuilder;
 

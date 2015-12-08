@@ -1,6 +1,6 @@
-package com.ls.druplaproject.model.managers;
+package com.ls.templateproject.model.managers;
 
-import com.ls.druplaproject.model.data.base.DatabaseFacade;
+import com.ls.templateproject.model.data.base.DatabaseFacade;
 import com.ls.http.base.client.LSClient;
 
 /**

@@ -1,4 +1,4 @@
-package com.ls.druplaproject;
+package com.ls.templateproject;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

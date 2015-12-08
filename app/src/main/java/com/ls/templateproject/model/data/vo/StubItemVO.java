@@ -1,6 +1,6 @@
-package com.ls.druplaproject.model.data.vo;
+package com.ls.templateproject.model.data.vo;
 
-import com.ls.druplaproject.model.data.base.AbstractVO;
+import com.ls.templateproject.model.data.base.AbstractVO;
 
 /**
  * Created on 22.05.2015.

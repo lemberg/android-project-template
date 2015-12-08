@@ -1,7 +1,7 @@
-package com.ls.druplaproject.model.data.base;
+package com.ls.templateproject.model.data.base;
 
 
-import com.ls.druplaproject.R;
+import com.ls.templateproject.R;
 
 import android.content.Context;
 import android.content.res.Resources;

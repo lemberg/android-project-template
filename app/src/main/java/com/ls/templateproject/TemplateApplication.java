@@ -1,7 +1,7 @@
-package com.ls.druplaproject;
+package com.ls.templateproject;
 
-import com.ls.druplaproject.model.Model;
-import com.ls.druplaproject.model.data.base.DatabaseFacade;
+import com.ls.templateproject.model.Model;
+import com.ls.templateproject.model.data.base.DatabaseFacade;
 
 import android.app.Application;
 import android.content.Context;
@@ -9,7 +9,7 @@ import android.content.Context;
 /**
  * Created on 21.05.2015.
  */
-public class DrupalApplication extends Application{
+public class TemplateApplication extends Application{
 
     private static  Context sharedContext;
 

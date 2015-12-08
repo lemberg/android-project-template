@@ -1,8 +1,8 @@
-package com.ls.druplaproject.model.managers;
+package com.ls.templateproject.model.managers;
 
-import com.ls.druplaproject.model.data.dao.StubItemDAO;
-import com.ls.druplaproject.model.data.vo.StubItemVO;
-import com.ls.druplaproject.model.requests.StubItemRequestBuilder;
+import com.ls.templateproject.model.data.dao.StubItemDAO;
+import com.ls.templateproject.model.data.vo.StubItemVO;
+import com.ls.templateproject.model.requests.StubItemRequestBuilder;
 import com.ls.http.base.BaseRequest;
 import com.ls.http.base.ResponseData;
 import com.ls.http.base.client.LSClient;
