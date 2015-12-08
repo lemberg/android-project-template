@@ -30,11 +30,11 @@ import java.net.CookiePolicy;
 import java.net.CookieStore;
 
 /**
- * Created on 21.05.2015. Class is unused and represented just as an option
+ * Created on 21.05.2015.
+ * Class is unused and represented just as sample you may use drupal-based model if you like it
  */
 public class DrupalModel
 {
-
     private static DrupalModel instance;
     public static DrupalModel instance(Context theContext)
     {
