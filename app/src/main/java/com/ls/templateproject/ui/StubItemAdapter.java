@@ -1,9 +1,9 @@
 package com.ls.templateproject.ui;
 
 import com.ls.templateproject.R;
-import com.ls.templateproject.model.Model;
+import com.ls.templateproject.model.plain.Model;
 import com.ls.templateproject.model.data.vo.StubItemVO;
-import com.ls.templateproject.model.managers.BaseItemManager;
+import com.ls.templateproject.model.plain.managers.BaseItemManager;
 import com.ls.http.base.ResponseData;
 import com.ls.util.image.LSImageView;
 

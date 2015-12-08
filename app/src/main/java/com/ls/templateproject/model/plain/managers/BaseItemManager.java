@@ -1,4 +1,4 @@
-package com.ls.templateproject.model.managers;
+package com.ls.templateproject.model.plain.managers;
 
 import com.ls.http.base.BaseRequest;
 import com.ls.http.base.ResponseData;

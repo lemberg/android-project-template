@@ -1,4 +1,4 @@
-package com.ls.templateproject.model.managers;
+package com.ls.templateproject.model.plain.managers;
 
 import com.ls.templateproject.model.data.base.DatabaseFacade;
 import com.ls.http.base.client.LSClient;

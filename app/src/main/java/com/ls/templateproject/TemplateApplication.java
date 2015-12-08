@@ -1,6 +1,6 @@
 package com.ls.templateproject;
 
-import com.ls.templateproject.model.Model;
+import com.ls.templateproject.model.plain.Model;
 import com.ls.templateproject.model.data.base.DatabaseFacade;
 
 import android.app.Application;

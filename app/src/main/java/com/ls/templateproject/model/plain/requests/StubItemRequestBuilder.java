@@ -1,4 +1,4 @@
-package com.ls.templateproject.model.requests;
+package com.ls.templateproject.model.plain.requests;
 
 import com.google.gson.reflect.TypeToken;
 

@@ -1,4 +1,4 @@
-package com.ls.templateproject.model;
+package com.ls.templateproject.model.plain;
 
 import com.android.volley.Network;
 import com.android.volley.RequestQueue;
@@ -8,8 +8,9 @@ import com.android.volley.toolbox.HttpClientStack;
 import com.android.volley.toolbox.HttpStack;
 import com.android.volley.toolbox.HurlStack;
 import com.ls.templateproject.ApplicationConfig;
-import com.ls.templateproject.model.managers.LoginManager;
-import com.ls.templateproject.model.managers.StubItemManager;
+import com.ls.templateproject.model.HURLCookieStore;
+import com.ls.templateproject.model.plain.managers.LoginManager;
+import com.ls.templateproject.model.plain.managers.StubItemManager;
 import com.ls.http.base.ResponseData;
 import com.ls.http.base.client.LSClient;
 

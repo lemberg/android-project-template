@@ -1,11 +1,9 @@
-package com.ls.templateproject.model.managers;
+package com.ls.templateproject.model.drupal.managers;
 
+import com.ls.drupal.DrupalClient;
 import com.ls.templateproject.model.data.dao.StubItemDAO;
 import com.ls.templateproject.model.data.vo.StubItemVO;
-import com.ls.templateproject.model.requests.StubItemRequestBuilder;
-import com.ls.http.base.BaseRequest;
-import com.ls.http.base.ResponseData;
-import com.ls.http.base.client.LSClient;
+import com.ls.templateproject.model.drupal.requests.StubItemRequest;
 
 import android.os.Bundle;
 
@@ -15,13 +13,13 @@ import java.util.List;
 /**
  * Created on 22.05.2015.
  */
-public class StubItemManager extends SynchrondizedDatabaseManager<List<StubItemVO>,Bundle,String>{
+public class StubItemManager extends SynchrondizedDatabaseManager<List<StubItemVO>,StubItemRequest,Bundle,String>{
 
     private final static String PAGE_ID_KEY = "page_ID";
     private final static String TAG_PREFIX = "stub_item_id:";
     private StubItemDAO dao ;
 
-    public StubItemManager(LSClient client) {
+    public StubItemManager(DrupalClient client) {
         super(client);
         dao = new StubItemDAO();
     }
@@ -36,12 +34,11 @@ public class StubItemManager extends SynchrondizedDatabaseManager<List<StubItemV
     }
 
     @Override
-    protected BaseRequest getFetchRequest(LSClient client, Bundle requestParams) {
+    protected StubItemRequest getEntityToFetch(DrupalClient client, Bundle requestParams) {
         String requestId = getIdFromBundle(requestParams);
-
-        StubItemRequestBuilder builder =  new StubItemRequestBuilder();
-        builder.setPageId(requestId);
-        return builder.create();
+        StubItemRequest response =  new StubItemRequest(client);
+        response.setPageId(requestId);
+        return response;
     }
 
     @Override
@@ -50,14 +47,13 @@ public class StubItemManager extends SynchrondizedDatabaseManager<List<StubItemV
     }
 
     @Override
-    protected List<StubItemVO> readResponseFromRequest(BaseRequest request,ResponseData data, String tag) {
-        List<StubItemVO> items = (List<StubItemVO>)data.getData();
-        if(request != null && !items.isEmpty()) {
-            for(StubItemVO item:items)
+    protected List<StubItemVO> readResponseFromRequest(StubItemRequest request, String tag) {
+        if(request != null && !request.isEmpty()) {
+            for(StubItemVO item:request)
             {
-                item.setPageId(getReqeustIdFromTag(tag));
+                item.setPageId(request.getPageId());
             }
-            return items;
+            return new ArrayList<>(request);
         }else{
             return null;
         }

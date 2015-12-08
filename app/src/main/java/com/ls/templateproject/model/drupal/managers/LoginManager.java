@@ -1,11 +1,12 @@
-package com.ls.templateproject.model.managers;
+package com.ls.templateproject.model.drupal.managers;
 
 import com.android.volley.RequestQueue;
-import com.ls.templateproject.ApplicationConfig;
+import com.ls.http.base.login.ILoginManager;
 import com.ls.http.base.BaseRequest;
 import com.ls.http.base.RequestConfig;
 import com.ls.http.base.ResponseData;
-import com.ls.http.base.login.ILoginManager;
+import com.ls.templateproject.ApplicationConfig;
+
 
 /**
  * Created on 22.05.2015.
