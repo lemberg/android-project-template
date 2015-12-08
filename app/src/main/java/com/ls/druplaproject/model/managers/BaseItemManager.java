@@ -1,8 +1,9 @@
 package com.ls.druplaproject.model.managers;
 
 import com.ls.drupal.AbstractBaseDrupalEntity;
-import com.ls.drupal.DrupalClient;
+import com.ls.http.base.BaseRequest;
 import com.ls.http.base.ResponseData;
+import com.ls.http.base.client.LSClient;
 import com.ls.util.ObserverHolder;
 
 import android.os.AsyncTask;
@@ -12,47 +13,50 @@ import java.net.HttpURLConnection;
 /**
  * Created on 22.05.2015.
  */
-public abstract class BaseItemManager<ClassToManage, FetchRequestToManage extends AbstractBaseDrupalEntity,ParametersClass,TagClass> {
+public abstract class BaseItemManager<ClassToManage, ParametersClass,TagClass> {
 
-    private DrupalClient client;
+    private LSClient client;
     private ObserverHolder<OnDataFetchCompleteListener<ClassToManage,TagClass>> listeners;
 
-    protected abstract FetchRequestToManage getEntityToFetch(DrupalClient client, ParametersClass requestParams);
+    protected abstract BaseRequest getFetchRequest(LSClient client, ParametersClass requestParams);
 
     protected abstract TagClass getEntityRequestTag(ParametersClass params);
 
-    protected abstract ClassToManage readResponseFromRequest(FetchRequestToManage request, TagClass tag);
+    protected abstract ClassToManage readResponseFromRequest(BaseRequest request,ResponseData data, TagClass tag);
 
     protected abstract boolean storeResponse(ClassToManage response, TagClass tag);
 
     protected abstract ClassToManage restoreResponse(TagClass tag);
 
-    private AbstractBaseDrupalEntity.OnEntityRequestListener updateResponceListener = new AbstractBaseDrupalEntity.OnEntityRequestListener() {
+    private LSClient.OnResponseListener updateResponceListener = new LSClient.OnResponseListener() {
         @Override
-        public void onRequestCompleted(AbstractBaseDrupalEntity entity, Object tag, ResponseData data) {
-            applyDataUpdateComplete((FetchRequestToManage) entity, (TagClass) tag, data);
+        public void onResponseReceived(BaseRequest request,ResponseData data, Object tag)
+        {
+            applyDataUpdateComplete(request, (TagClass) tag, data);
         }
 
         @Override
-        public void onRequestFailed(AbstractBaseDrupalEntity entity, Object tag, ResponseData data) {
-            applyDataUpdateFailed((FetchRequestToManage) entity,(TagClass) tag, data);
+        public void onError(BaseRequest request,ResponseData data, Object tag)
+        {
+            applyDataUpdateFailed(request,(TagClass) tag, data);
         }
 
         @Override
-        public void onRequestCanceled(AbstractBaseDrupalEntity entity, Object tag) {
+        public void onCancel(BaseRequest request,Object tag)
+        {
 
         }
     };
 
-    protected BaseItemManager(DrupalClient client) {
+    protected BaseItemManager(LSClient client) {
         this.client = client;
         this.listeners = new ObserverHolder<>();
     }
 
     public TagClass fetchData(ParametersClass requestParams) {
-        FetchRequestToManage request = getEntityToFetch(this.client, requestParams);
+        BaseRequest request = getFetchRequest(this.client, requestParams);
         TagClass tag = getEntityRequestTag(requestParams);
-        request.pullFromServer(false, tag, updateResponceListener);
+        this.client.performRequest(request,tag,updateResponceListener,false);
         return tag;
     }
 
@@ -65,9 +69,9 @@ public abstract class BaseItemManager<ClassToManage, FetchRequestToManage extend
     }
 
 
-    protected void applyDataUpdateComplete(final FetchRequestToManage entity, final TagClass tag, final ResponseData data) {
+    protected void applyDataUpdateComplete(final BaseRequest entity, final TagClass tag, final ResponseData data) {
         if (data.getStatusCode() == HttpURLConnection.HTTP_OK) {
-            final ClassToManage response = readResponseFromRequest(entity, tag);
+            final ClassToManage response = readResponseFromRequest(entity,data, tag);
             if (response != null) {
                 notifyListeners(response, data, tag, true);
                 new AsyncTask<Void, Void, Void>() {
@@ -84,7 +88,7 @@ public abstract class BaseItemManager<ClassToManage, FetchRequestToManage extend
         restoreData(data, tag, data.getStatusCode() == HttpURLConnection.HTTP_NOT_MODIFIED);
     }
 
-    protected void applyDataUpdateFailed(FetchRequestToManage entity, TagClass tag, ResponseData data) {
+    protected void applyDataUpdateFailed(BaseRequest entity, TagClass tag, ResponseData data) {
         restoreData(data, tag,false);
     }
 

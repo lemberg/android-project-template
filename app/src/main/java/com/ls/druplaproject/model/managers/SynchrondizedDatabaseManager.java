@@ -1,15 +1,14 @@
 package com.ls.druplaproject.model.managers;
 
-import com.ls.drupal.AbstractBaseDrupalEntity;
-import com.ls.drupal.DrupalClient;
 import com.ls.druplaproject.model.data.base.DatabaseFacade;
+import com.ls.http.base.client.LSClient;
 
 /**
  * Created on 25.05.2015. Use for database-based storage only
  */
-public abstract class SynchrondizedDatabaseManager<ClassToManage, FetchRequestToManage extends AbstractBaseDrupalEntity,ParametersClass,TagClass> extends BaseItemManager<ClassToManage, FetchRequestToManage,ParametersClass,TagClass> {
+public abstract class SynchrondizedDatabaseManager<ClassToManage,ParametersClass,TagClass> extends BaseItemManager<ClassToManage, ParametersClass,TagClass> {
 
-    protected SynchrondizedDatabaseManager(DrupalClient client) {
+    protected SynchrondizedDatabaseManager(LSClient client) {
         super(client);
     }
 

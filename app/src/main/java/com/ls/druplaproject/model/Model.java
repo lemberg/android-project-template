@@ -13,6 +13,7 @@ import com.ls.http.base.ResponseData;
 import com.ls.druplaproject.ApplicationConfig;
 import com.ls.druplaproject.model.managers.LoginManager;
 import com.ls.druplaproject.model.managers.StubItemManager;
+import com.ls.http.base.client.LSClient;
 
 import android.content.Context;
 import android.content.pm.PackageInfo;
@@ -54,7 +55,7 @@ public class Model {
         return instance;
     }
 
-    private DrupalClient client;
+    private LSClient client;
     private LoginManager loginManager;
     private CookieStore cookieStore;
     private RequestQueue queue;
@@ -63,7 +64,7 @@ public class Model {
     private StubItemManager stubManager;
 
 
-    public DrupalClient getClient() {
+    public LSClient getClient() {
         return client;
     }
 
@@ -99,7 +100,7 @@ public class Model {
     {
         loginManager = new LoginManager();
         queue = createNewQueue(context);
-        client = new DrupalClient(ApplicationConfig.BASE_URL,queue, BaseRequest.RequestFormat.JSON,loginManager);
+        client = new LSClient(queue,loginManager);
 
         stubManager = new StubItemManager(client);
     }

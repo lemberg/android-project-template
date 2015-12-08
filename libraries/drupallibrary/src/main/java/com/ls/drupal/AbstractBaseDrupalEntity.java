@@ -215,7 +215,7 @@ public abstract class AbstractBaseDrupalEntity implements DrupalClient.OnRespons
 	// OnResponseListener methods
 	
 	@Override
-	public void onResponseReceived(ResponseData data, Object tag)
+	public void onResponseReceived(BaseRequest request,ResponseData data, Object tag)
 	{		
 		DrupalEntityTag entityTag = (DrupalEntityTag)tag;
 		if (entityTag.consumeResponse)
@@ -231,7 +231,7 @@ public abstract class AbstractBaseDrupalEntity implements DrupalClient.OnRespons
 	}
 	
 	@Override
-	public void onError(ResponseData data, Object tag)
+	public void onError(BaseRequest request,ResponseData data, Object tag)
 	{
 		DrupalEntityTag entityTag = (DrupalEntityTag)tag;
 		if(entityTag.listener != null)
@@ -246,7 +246,7 @@ public abstract class AbstractBaseDrupalEntity implements DrupalClient.OnRespons
 	}
 
 	@Override
-	public void onCancel(Object tag)
+	public void onCancel(BaseRequest request,Object tag)
 	{
 		DrupalEntityTag entityTag = (DrupalEntityTag)tag;
 		if(entityTag.listener != null)

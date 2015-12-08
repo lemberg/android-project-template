@@ -61,11 +61,11 @@ public class LSClient implements OnResponseListener {
 
     public interface OnResponseListener {
 
-        void onResponseReceived(ResponseData data, Object tag);
+        void onResponseReceived(BaseRequest request,ResponseData data, Object tag);
 
-        void onError(ResponseData data, Object tag);
+        void onError(BaseRequest request,ResponseData data, Object tag);
 
-        void onCancel(Object tag);
+        void onCancel(BaseRequest request,Object tag);
     }
 
     /**
@@ -167,7 +167,7 @@ public class LSClient implements OnResponseListener {
         }else{
             if(skipDuplicateRequestListeners && listener != null)
             {
-                listener.onCancel(tag);
+                listener.onCancel(request,tag);
             }
             return null;
         }
@@ -184,34 +184,34 @@ public class LSClient implements OnResponseListener {
     private ResponseData performRequestLoginRestoreAsynchrounous(final BaseRequest request, Object tag, final OnResponseListener listener) {
         final OnResponseListener loginRestoreResponseListener = new OnResponseListener() {
             @Override
-            public void onResponseReceived(ResponseData data, Object tag) {
+            public void onResponseReceived(BaseRequest request,ResponseData data, Object tag) {
                 if (listener != null) {
-                    listener.onResponseReceived(data, tag);
+                    listener.onResponseReceived(request,data, tag);
                 }
             }
 
             @Override
-            public void onError(ResponseData data, Object tag) {
+            public void onError(BaseRequest request,ResponseData data, Object tag) {
                 if (VolleyResponseUtils.isAuthError(data.getError())) {
                     if (loginManager.canRestoreLogin()) {
                         new RestoreLoginAttemptTask(request, listener, tag, data).execute();
                     } else {
                         loginManager.onLoginRestoreFailed();
                         if (listener != null) {
-                            listener.onError(data, tag);
+                            listener.onError(request,data, tag);
                         }
                     }
                 } else {
                     if (listener != null) {
-                        listener.onError(data, tag);
+                        listener.onError(request,data, tag);
                     }
                 }
             }
 
             @Override
-            public void onCancel(Object tag) {
+            public void onCancel(BaseRequest request,Object tag) {
                 if (listener != null) {
-                    listener.onCancel(tag);
+                    listener.onCancel(request,tag);
                 }
             }
         };
@@ -222,31 +222,31 @@ public class LSClient implements OnResponseListener {
     private ResponseData performRequestLoginRestoreSynchrounous(final BaseRequest request, Object tag, final OnResponseListener listener) {
         final OnResponseListener loginRestoreResponseListener = new OnResponseListener() {
             @Override
-            public void onResponseReceived(ResponseData data, Object tag) {
+            public void onResponseReceived(BaseRequest request,ResponseData data, Object tag) {
                 if (listener != null) {
-                    listener.onResponseReceived(data, tag);
+                    listener.onResponseReceived(request,data, tag);
                 }
             }
 
             @Override
-            public void onError(ResponseData data, Object tag) {
+            public void onError(BaseRequest request,ResponseData data, Object tag) {
                 if (VolleyResponseUtils.isAuthError(data.getError())) {
                     if (!loginManager.canRestoreLogin()) {
                         if (listener != null) {
-                            listener.onError(data, tag);
+                            listener.onError(request,data, tag);
                         }
                     }
                 } else {
                     if (listener != null) {
-                        listener.onError(data, tag);
+                        listener.onError(request,data, tag);
                     }
                 }
             }
 
             @Override
-            public void onCancel(Object tag) {
+            public void onCancel(BaseRequest request,Object tag) {
                 if (listener != null) {
-                    listener.onCancel(tag);
+                    listener.onCancel(request,tag);
                 }
             }
         };
@@ -258,7 +258,7 @@ public class LSClient implements OnResponseListener {
                 if (restored) {
                     result = performRequestNoLoginRestore(request, tag, new OnResponseAuthListenerDecorator(listener), true);
                 } else {
-                    listener.onError(result, tag);
+                    listener.onError(request,result, tag);
                 }
             } else {
                 loginManager.onLoginRestoreFailed();
@@ -332,7 +332,7 @@ public class LSClient implements OnResponseListener {
             this.onRequestComplete();
             if (listenerList != null) {
                 for (ResponseListenersSet.ListenerHolder holder : listenerList) {
-                    holder.getListener().onResponseReceived(data, holder.getTag());
+                    holder.getListener().onResponseReceived(request,data, holder.getTag());
                 }
             }
         }
@@ -346,7 +346,7 @@ public class LSClient implements OnResponseListener {
             this.onRequestComplete();
             if (listenerList != null) {
                 for (ResponseListenersSet.ListenerHolder holder : listenerList) {
-                    holder.getListener().onError(data, holder.getTag());
+                    holder.getListener().onError(request,data, holder.getTag());
                 }
             }
         }
@@ -417,7 +417,7 @@ public class LSClient implements OnResponseListener {
                             if (listenerList != null) {
                                 listeners.removeListenersForRequest(request);
                                 for (ResponseListenersSet.ListenerHolder holder : listenerList) {
-                                    holder.getListener().onCancel(holder.getTag());
+                                    holder.getListener().onCancel((BaseRequest) request, holder.getTag());
                                 }
                                 LSClient.this.onRequestComplete();
                             }
@@ -494,26 +494,26 @@ public class LSClient implements OnResponseListener {
         }
 
         @Override
-        public void onResponseReceived(ResponseData data, Object tag) {
+        public void onResponseReceived(BaseRequest request,ResponseData data, Object tag) {
             if (listener != null) {
-                this.listener.onResponseReceived(data, tag);
+                this.listener.onResponseReceived(request,data, tag);
             }
         }
 
         @Override
-        public void onError(ResponseData data, Object tag) {
+        public void onError(BaseRequest request,ResponseData data, Object tag) {
             if (VolleyResponseUtils.isAuthError(data.getError())) {
                 loginManager.onLoginRestoreFailed();
             }
             if (listener != null) {
-                this.listener.onError(data, tag);
+                this.listener.onError(request,data, tag);
             }
         }
 
         @Override
-        public void onCancel(Object tag) {
+        public void onCancel(BaseRequest request,Object tag) {
             if (listener != null) {
-                this.listener.onCancel(tag);
+                this.listener.onCancel(request,tag);
             }
         }
     }
@@ -541,7 +541,7 @@ public class LSClient implements OnResponseListener {
                     if (restored) {
                         performRequestNoLoginRestore(request, tag, new OnResponseAuthListenerDecorator(listener), false);
                     } else {
-                        listener.onError(originData, tag);
+                        listener.onError(request,originData, tag);
                     }
                 }
             }.start();

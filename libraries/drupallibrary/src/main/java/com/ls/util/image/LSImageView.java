@@ -352,7 +352,7 @@ public class LSImageView extends ImageView
         }
 
         @Override
-        public void onResponseReceived(ResponseData data, Object tag)
+        public void onResponseReceived(BaseRequest request,ResponseData data, Object tag)
         {
             Drawable image = (Drawable) data.getData();
             if (checkCurrentURL()) {
@@ -366,7 +366,7 @@ public class LSImageView extends ImageView
         }
 
         @Override
-        public void onError(ResponseData data, Object tag)
+        public void onError(BaseRequest request,ResponseData data, Object tag)
         {
             if (checkCurrentURL()) {
                 applyNoImageDrawableIfNeeded();
@@ -377,7 +377,7 @@ public class LSImageView extends ImageView
         }
 
         @Override
-        public void onCancel(Object tag)
+        public void onCancel(BaseRequest request,Object tag)
         {
             if (checkCurrentURL()) {
                 applyNoImageDrawableIfNeeded();
