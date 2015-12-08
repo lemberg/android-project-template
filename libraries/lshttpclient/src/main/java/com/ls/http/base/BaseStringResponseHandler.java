@@ -34,33 +34,40 @@ import java.lang.reflect.Type;
 import java.util.HashMap;
 
 
-public abstract class BaseByteResponseHandler extends ResponseHandler
+public abstract class BaseStringResponseHandler extends ResponseHandler
 {
+    protected abstract Object itemFromResponse(@NonNull String response, @NonNull Class<?> theClass);
+    protected abstract Object itemFromResponse(@NonNull String response, @NonNull Type theType);
 
-    /**
-     * No specifier class supported yet. Just byte[] is returned
-     * @param response
-     * @param theSpecifier
-     * @return
-     */
-    protected Object itemFromResponseWithSpecifier(NetworkResponse response, Object theSpecifier)
+    protected Object itemFromResponseWithSpecifier(String response, Object theSpecifier)
 	{
 		Object result = null;
-		if(response != null && response.data != null && response.data.length > 0)
+		if(response != null && theSpecifier != null)
 		{
-			result = response.data;
+			if(theSpecifier instanceof Class<?>)
+			{
+                result = itemFromResponse(response, (Class<?>)theSpecifier);
+			}else if(theSpecifier instanceof Type){
+                result = itemFromResponse(response, (Type)theSpecifier);
+			}else{
+				throw new IllegalArgumentException("You have to specify Class<?> or Type instance");
+			}
 		}
 		return result;
 	}
 
     protected Response<ResponseData> parseNetworkResponse(NetworkResponse response,Object responseClassSpecifier)
     {
+        String resultStr = parseResponseString(response);
         ResponseData responseData = new ResponseData();
-
-        responseData.data = this.itemFromResponseWithSpecifier(response, responseClassSpecifier);
 
         responseData.statusCode = response.statusCode;
         responseData.headers = new HashMap<String, String>(response.headers);
+
+        if(!TextUtils.isEmpty(resultStr))
+        {
+            responseData.data = this.itemFromResponseWithSpecifier(resultStr, responseClassSpecifier);
+        }
 
         Response<ResponseData> result = Response.success(responseData, HttpHeaderParser.parseCacheHeaders(response));
 
@@ -69,4 +76,15 @@ public abstract class BaseByteResponseHandler extends ResponseHandler
         return result;
     };
 
+    protected String parseResponseString(NetworkResponse response) {
+        String parsed = null;
+        if(response.data != null) {
+            try {
+                parsed = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
+            } catch (UnsupportedEncodingException e) {
+                parsed = new String(response.data);
+            }
+        }
+        return parsed;
+    }
 }

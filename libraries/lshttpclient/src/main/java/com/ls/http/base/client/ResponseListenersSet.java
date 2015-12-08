@@ -23,8 +23,6 @@
 package com.ls.http.base.client;
 
 import com.android.volley.Request;
-import com.ls.drupal.DrupalClient;
-import com.ls.util.L;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -47,7 +45,7 @@ public class ResponseListenersSet {
      * @param listener listener to register for request
      * @return true if new request was registered, false otherwise
      */
-    public boolean registerListenerForRequest(Request request,DrupalClient.OnResponseListener listener,Object tag,boolean skipDuplicateRequestListeners)
+    public boolean registerListenerForRequest(Request request,LSClient.OnResponseListener listener,Object tag,boolean skipDuplicateRequestListeners)
     {
         boolean result = false;
 
@@ -106,15 +104,15 @@ public class ResponseListenersSet {
 
     public static class ListenerHolder
     {
-        private DrupalClient.OnResponseListener listener;
+        private LSClient.OnResponseListener listener;
         private Object tag;
-        public ListenerHolder(DrupalClient.OnResponseListener listener, Object tag)
+        public ListenerHolder(LSClient.OnResponseListener listener, Object tag)
         {
             this.listener = listener;
             this.tag = tag;
         }
 
-        public DrupalClient.OnResponseListener getListener() {
+        public LSClient.OnResponseListener getListener() {
             return listener;
         }
 

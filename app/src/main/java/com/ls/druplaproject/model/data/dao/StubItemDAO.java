@@ -2,7 +2,6 @@ package com.ls.druplaproject.model.data.dao;
 
 import com.ls.druplaproject.model.data.base.AbstractDAO;
 import com.ls.druplaproject.model.data.vo.StubItemVO;
-import com.ls.util.L;
 
 import android.content.ContentValues;
 import android.database.Cursor;

@@ -1,8 +1,6 @@
 package com.ls.druplaproject.ui;
 
 import com.ls.druplaproject.R;
-import com.ls.druplaproject.model.Model;
-import com.ls.druplaproject.model.managers.StubItemManager;
 
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;

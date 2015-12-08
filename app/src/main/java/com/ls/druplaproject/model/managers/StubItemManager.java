@@ -1,6 +1,5 @@
 package com.ls.druplaproject.model.managers;
 
-import com.ls.drupal.DrupalClient;
 import com.ls.druplaproject.model.data.dao.StubItemDAO;
 import com.ls.druplaproject.model.data.vo.StubItemVO;
 import com.ls.druplaproject.model.requests.StubItemRequestBuilder;

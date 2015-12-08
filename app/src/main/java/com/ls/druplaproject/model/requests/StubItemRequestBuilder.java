@@ -2,17 +2,13 @@ package com.ls.druplaproject.model.requests;
 
 import com.google.gson.reflect.TypeToken;
 
-import com.ls.drupal.AbstractDrupalArrayEntity;
-import com.ls.drupal.DrupalClient;
 import com.ls.druplaproject.ApplicationConfig;
-import com.ls.http.base.BaseRequest;
 import com.ls.druplaproject.model.data.vo.StubItemVO;
+import com.ls.http.base.BaseRequest;
 import com.ls.http.base.BaseRequestBuilder;
 
 import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created on 22.05.2015.

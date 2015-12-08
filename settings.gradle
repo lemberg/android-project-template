@@ -1,2 +1,3 @@
-include ':app', 'drupallibrary'
+include ':app', 'drupallibrary','lshttpclient'
 project(':drupallibrary').projectDir = new File('libraries/drupallibrary')
+project(':lshttpclient').projectDir = new File('libraries/lshttpclient')

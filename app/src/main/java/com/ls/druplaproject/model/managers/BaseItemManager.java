@@ -1,6 +1,5 @@
 package com.ls.druplaproject.model.managers;
 
-import com.ls.drupal.AbstractBaseDrupalEntity;
 import com.ls.http.base.BaseRequest;
 import com.ls.http.base.ResponseData;
 import com.ls.http.base.client.LSClient;

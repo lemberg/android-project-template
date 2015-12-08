@@ -22,7 +22,7 @@
 
 package com.ls.util;
 
-import com.ls.drupal.BuildConfig;
+import com.ls.httpclient.BuildConfig;
 
 import android.util.Log;
 

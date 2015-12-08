@@ -7,12 +7,10 @@ import com.android.volley.toolbox.DiskBasedCache;
 import com.android.volley.toolbox.HttpClientStack;
 import com.android.volley.toolbox.HttpStack;
 import com.android.volley.toolbox.HurlStack;
-import com.ls.drupal.DrupalClient;
-import com.ls.http.base.BaseRequest;
-import com.ls.http.base.ResponseData;
 import com.ls.druplaproject.ApplicationConfig;
 import com.ls.druplaproject.model.managers.LoginManager;
 import com.ls.druplaproject.model.managers.StubItemManager;
+import com.ls.http.base.ResponseData;
 import com.ls.http.base.client.LSClient;
 
 import android.content.Context;

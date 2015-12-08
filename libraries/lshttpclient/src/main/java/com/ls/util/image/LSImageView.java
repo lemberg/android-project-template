@@ -22,8 +22,7 @@
 
 package com.ls.util.image;
 
-import com.ls.drupal.AbstractBaseDrupalEntity;
-import com.ls.drupal.R;
+import com.ls.httpclient.R;
 import com.ls.http.base.BaseRequest;
 import com.ls.http.base.BaseRequestBuilder;
 import com.ls.http.base.ResponseData;
