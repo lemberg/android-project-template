@@ -39,8 +39,7 @@ public class StubItemManager extends SynchrondizedDatabaseManager<List<StubItemV
     protected BaseRequest getFetchRequest(LSClient client, Bundle requestParams) {
         String requestId = getIdFromBundle(requestParams);
 
-        StubItemRequestBuilder builder =  new StubItemRequestBuilder();
-        builder.setPageId(requestId);
+        StubItemRequestBuilder builder =  new StubItemRequestBuilder(requestId);
         return builder.create();
     }
 

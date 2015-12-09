@@ -15,32 +15,17 @@ import java.util.List;
  */
 public class StubItemRequestBuilder extends BaseRequestBuilder
 {
+    private String pageId;
 
-    public StubItemRequestBuilder()
+    public StubItemRequestBuilder(String pageId)
     {
+        this.pageId = pageId;
         setRequestMethod(BaseRequest.RequestMethod.GET);
         setResponseFormat(BaseRequest.ResponseFormat.JSON);
         Type listType = new TypeToken<List<StubItemVO>>(){}.getType();
         setResponseClassSpecifier(listType);
-    }
-
-    @Override
-    public BaseRequest create()
-    {
         setRequestURL(getPath());
-        return super.create();
     }
-
-    private String pageId;
-
-    public String getPageId() {
-        return pageId;
-    }
-
-    public void setPageId(String pageId) {
-        this.pageId = pageId;
-    }
-
 
     protected String getPath() {
         return ApplicationConfig.BASE_URL+"/demos/DrupalTemplate/stub_page_"+pageId+".txt";
