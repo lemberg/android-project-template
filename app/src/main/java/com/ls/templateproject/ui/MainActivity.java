@@ -1,13 +1,15 @@
 package com.ls.templateproject.ui;
 
 import com.ls.templateproject.R;
+import com.ls.templateproject.ui.base.BaseActivity;
 
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.widget.ListView;
 
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends BaseActivity
+{
 
     private StubItemAdapter adapter;
 
