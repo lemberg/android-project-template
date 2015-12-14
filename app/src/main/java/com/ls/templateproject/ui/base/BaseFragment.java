@@ -1,6 +1,6 @@
 package com.ls.templateproject.ui.base;
 
-import com.ls.templateproject.ui.resultfix.ActivityResultFixFragment;
+import com.ls.templateproject.ui.base.resultfix.ActivityResultFixFragment;
 
 /**
  * Created on 11.12.2015.

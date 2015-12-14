@@ -1,6 +1,7 @@
-package com.ls.templateproject.ui.resultfix;
+package com.ls.templateproject.ui.base.resultfix;
 
 import com.ls.http.base.BaseRequest;
+import com.ls.templateproject.ui.base.callbacks.CallbackFragment;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -15,7 +16,7 @@ import java.util.List;
  * Provides workaround for nested fragment's activity execution for result issue
  * NOTE: parent activity must be inherited from corresponding {@link ActivityResultFixActivity}
  */
-public class ActivityResultFixFragment extends Fragment
+public class ActivityResultFixFragment extends CallbackFragment
 {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
