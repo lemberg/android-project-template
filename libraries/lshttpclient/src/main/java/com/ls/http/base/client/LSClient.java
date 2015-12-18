@@ -63,7 +63,7 @@ public class LSClient implements OnResponseListener {
 
         void onResponseReceived(BaseRequest request,ResponseData data, Object tag);
 
-        void onError(BaseRequest request,ResponseData data, Object tag);
+        void onError(@NonNull BaseRequest request, @Nullable ResponseData data, @Nullable Object tag);
 
         void onCancel(BaseRequest request,Object tag);
     }
