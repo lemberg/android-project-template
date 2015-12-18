@@ -36,6 +36,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.widget.ImageView;
@@ -113,26 +114,28 @@ public class LSImageView extends ImageView {
         array.recycle();
     }
 
-    public void setImageWithURL(String imagePath) {
+    public void setImageWithURL(@Nullable String imagePath) {
         if (this.isInEditMode()) {
             return;
-        }
-
-        LSClient client = this.getClient();
-        if (client == null) {
-            throw new IllegalStateException(
-                    "No DrupalClient set. Please provide local or shared DrupalClient to perform loading");
         }
 
         if (this.imageContainer != null && this.imageContainer.url.equals(imagePath)) {
             return;
         }
 
-        this.setImageDrawable(null);//cancels loading automatically
+        this.setImageDrawable(null);
         this.applyNoImageDrawableIfNeeded();
 
+
+        // null URL means no image
         if (TextUtils.isEmpty(imagePath)) {
             return;
+        }
+
+        final LSClient client = this.getClient();
+        if (client == null) {
+            throw new IllegalStateException(
+                    "No DrupalClient set. Please provide local or shared DrupalClient to perform loading");
         }
 
         this.imageContainer = new ImageContainer(this, imagePath, client);
