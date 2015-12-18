@@ -1,13 +1,14 @@
 package com.ls.templateproject.ui;
 
-import com.ls.templateproject.R;
-import com.ls.templateproject.model.plain.Model;
-import com.ls.templateproject.model.data.vo.StubItemVO;
-import com.ls.templateproject.model.plain.managers.BaseItemManager;
 import com.ls.http.base.ResponseData;
+import com.ls.templateproject.R;
+import com.ls.templateproject.model.data.vo.StubItemVO;
+import com.ls.templateproject.model.plain.Model;
+import com.ls.templateproject.model.plain.managers.BaseItemManager;
 import com.ls.util.image.LSImageView;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,46 +21,47 @@ import java.util.List;
 /**
  * Created on 25.05.2015.
  */
-public class StubItemAdapter extends BaseAdapter {
+public final class StubItemAdapter extends BaseAdapter {
+
     private final static int PRE_LOADING_PAGE_OFFSET = 4;
 
-    private List<StubItemVO> mItems;
+    private final List<StubItemVO> mItems = new ArrayList<>();
+    private final LayoutInflater mInflater;
+
     private int mPagesLoaded;
     private boolean mCanLoadMore;
     private boolean mOnLoad;
-    private final LayoutInflater mInflater;
 
-    private BaseItemManager.OnDataFetchCompleteListener listener = new BaseItemManager.OnDataFetchCompleteListener<List<StubItemVO>,String>()
-    {
+    private BaseItemManager.OnDataFetchCompleteListener<List<StubItemVO>, String> listener
+            = new BaseItemManager.OnDataFetchCompleteListener<List<StubItemVO>, String>() {
 
         @Override
-        public void onDataFetchComplete(List<StubItemVO> result, ResponseData data, String requestTag) {
+        public void onDataFetchComplete(List<StubItemVO> result, ResponseData data,
+                String requestTag) {
             mOnLoad = false;
-            applydataUpdate(result);
+            applyDataUpdate(result);
         }
 
         @Override
-        public void onDataFetchFailed(List<StubItemVO> result, ResponseData data, String requestTag) {
+        public void onDataFetchFailed(List<StubItemVO> result, ResponseData data,
+                String requestTag) {
             mOnLoad = false;
-            applydataUpdate(result);
+            applyDataUpdate(result);
         }
     };
 
-    private void applydataUpdate(List<StubItemVO> result)
-    {
-        if(result != null &&!result.isEmpty()){
+    private void applyDataUpdate(List<StubItemVO> result) {
+        if (result != null && !result.isEmpty()) {
             mCanLoadMore = true;
             mItems.addAll(result);
             mPagesLoaded++;
             notifyDataSetChanged();
-        }else{
+        } else {
             mCanLoadMore = false;
         }
     }
 
-    public StubItemAdapter(Context theContext)
-    {
-        mItems = new ArrayList<>();
+    public StubItemAdapter(@NonNull final Context theContext) {
         mCanLoadMore = true;
         mOnLoad = false;
         mPagesLoaded = 0;
@@ -73,10 +75,9 @@ public class StubItemAdapter extends BaseAdapter {
 
     @Override
     public StubItemVO getItem(int position) {
-        if(position < mItems.size())
-        {
+        if (position < mItems.size()) {
             return mItems.get(position);
-        }else {
+        } else {
             return null;
         }
     }
@@ -93,15 +94,15 @@ public class StubItemAdapter extends BaseAdapter {
         }
 
         if (convertView == null) {
-            convertView = mInflater.inflate(R.layout.list_item_stub_item, null);
+            convertView = mInflater.inflate(R.layout.list_item_stub_item, parent, false);
         }
 
-        StubItemVO item = getItem(position);
+        final StubItemVO item = getItem(position);
 
-        LSImageView imageView = (LSImageView)convertView.findViewById(R.id.image_view);
+        final LSImageView imageView = (LSImageView) convertView.findViewById(R.id.image_view);
         imageView.setImageWithURL(item.getImageURL());
 
-        TextView text = (TextView)convertView.findViewById(R.id.textView);
+        final TextView text = (TextView) convertView.findViewById(R.id.textView);
         text.setText(item.getDescription());
         return convertView;
     }
@@ -114,14 +115,12 @@ public class StubItemAdapter extends BaseAdapter {
         }
     }
 
-    public void anableDataLoad()
-    {
+    public void enableDataLoad() {
         Model.instance().getStubManager().addDataFetchCompleteListener(listener);
         loadNextPage();
     }
 
-    public void disavleDataLoad()
-    {
+    public void disableDataLoad() {
         Model.instance().getStubManager().removeDataFetchCompleteListener(listener);
     }
 }
