@@ -9,6 +9,8 @@ android {
         targetSdkVersion Integer.parseInt(project.TARGET_SDK_VERSION)
         versionCode Integer.parseInt(project.VERSION_CODE)
         versionName project.VERSION_NAME
+
+        multiDexEnabled true
     }
     buildTypes {
         release {
@@ -20,7 +22,7 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.android.support:appcompat-v7:22.0.0'
+    compile 'com.android.support:appcompat-v7:23.1.1'
     compile project(':drupallibrary')
     compile project(':lshttpclient')
 }
