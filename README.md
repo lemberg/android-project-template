@@ -1,38 +1,34 @@
-### Description
+The purpose of the template is to provide Lemberg engineer with very solid project fundamentals that are proven of several projects.
 
-# android-drupal-project-template
+Template contains recommended:
 
-Was designed to work with
-[Drupal Android SDK](http://drupalsdk.com)
+- general structure
+- networking approach
+- initial UI structure
+- set of utility classes
 
-Lemberg Drupal SDK is a library for native **Android** applications to communicate with **Drupal** web servers.
+More specific list of supported feature can be found here:
 
-Currently library is [using google volley] and [gson] libraries for communication with server and object serialization/deserialization.
+- 1
+- 2
+- 3
 
-Main purpose of this library is to make communication with Drupal 8 - based servers as easy and intuitive as possible.
+### How to use?
+Main advice points that you should keep in mind:
 
-1. Synchronous and asynchronous requests
-2. Flexible object serialization / deserialization
-3. API can calculate object differences to perform patch requests
-4. Simple entities request
+- change 1
+- change 2
+- change 3
+- don’t forget to …
 
-### Wiki
+### Projects
+In the following list we will describe perfect projects for our template:
+project with a sidebar that loads text and graphical content in a form of a list
+etc
 
-* [Home]
-* [Integration]
-* [User Guide]
-* [Sample]
-* [License]
+### Limitations
+Our template contains couple of limitations that will be improved in nearest future:
 
-### Integration
-
-The lib **soon will be available** on Maven Central, you can find it with [Gradle, please].
-
-```
-dependencies {
-    compile 'com.ls.drupal:library:1.0.0'
-}
-```
 
 ### Contributions
 
