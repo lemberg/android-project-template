@@ -1,4 +1,4 @@
-The purpose of the template is to provide Lemberg engineer with very solid project fundamentals that are proven of several projects.
+The purpose of the template is to provide Lemberg Engineers with very solid project fundamentals that are proven on several projects.
 
 Template contains recommended:
 
@@ -14,7 +14,7 @@ More specific list of supported feature can be found here:
 - 3
 
 ### How to use?
-Main advice points that you should keep in mind:
+Main advice points that you should keep in mind while using the project:
 
 - change 1
 - change 2
@@ -29,6 +29,9 @@ etc
 ### Limitations
 Our template contains couple of limitations that will be improved in nearest future:
 
+- 1
+- 2
+- 3
 
 ### Contributions
 
@@ -60,12 +63,4 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ```
 
-[using google volley]:https://android.googlesource.com/platform/frameworks/volley
-[gson]:https://code.google.com/p/google-gson/
-[Home]:https://github.com/lemberg/d8androidsdk/wiki
-[Integration]:https://github.com/lemberg/d8androidsdk/wiki/Integration
-[User Guide]:https://github.com/lemberg/d8androidsdk/wiki/User-Guide
-[Sample]:https://github.com/lemberg/d8androidsdk/wiki/Sample
-[License]:https://github.com/lemberg/d8androidsdk/wiki/License
-[Gradle, please]:http://gradleplease.appspot.com/
 
