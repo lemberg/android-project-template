@@ -42,7 +42,7 @@ If you want to contribute to this library make sure you send pull request to **d
 ```
 The MIT License (MIT)
 
-Copyright (c) 2014 Lemberg Solutions Limited
+Copyright (c) 2016 Lemberg Solutions Ltd
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
