@@ -4,12 +4,9 @@ import com.ls.templateproject.R;
 import com.ls.templateproject.ui.base.BaseActivity;
 
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
-import android.widget.ListView;
+import android.widget.AbsListView;
 
-
-public class MainActivity extends BaseActivity
-{
+public final class MainActivity extends BaseActivity {
 
     private StubItemAdapter adapter;
 
@@ -20,21 +17,18 @@ public class MainActivity extends BaseActivity
         initViews();
     }
 
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if(adapter != null)
-        {
-            adapter.disavleDataLoad();
+        if (adapter != null) {
+            adapter.disableDataLoad();
         }
     }
 
-    private void initViews()
-    {
+    private void initViews() {
         adapter = new StubItemAdapter(this);
-        ((ListView)this.findViewById(R.id.list_view)).setAdapter(adapter);
-        adapter.anableDataLoad();
+        ((AbsListView) this.findViewById(R.id.list_view)).setAdapter(adapter);
+        adapter.enableDataLoad();
     }
 
 }

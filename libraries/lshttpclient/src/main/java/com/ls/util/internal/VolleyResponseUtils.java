@@ -34,12 +34,17 @@ import com.android.volley.toolbox.HttpClientStack;
 import com.android.volley.toolbox.HttpStack;
 import com.android.volley.toolbox.HurlStack;
 
+import org.apache.http.client.HttpClient;
+import org.apache.http.impl.client.DefaultHttpClient;
+
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.http.AndroidHttpClient;
 import android.os.Build;
 import android.os.Environment;
+import android.support.annotation.NonNull;
 
 import java.io.File;
 import java.net.HttpURLConnection;
@@ -48,6 +53,7 @@ import java.net.HttpURLConnection;
  * Created by Lemberg-i5 on 07.10.2014.
  */
 public class VolleyResponseUtils {
+
     public static boolean isNetworkingError(VolleyError volleyError)
     {
         if (volleyError.networkResponse == null) {
@@ -77,49 +83,26 @@ public class VolleyResponseUtils {
         return newRequestQueue(context,null,-1);
     }
 
-
     public static RequestQueue newRequestQueue(Context context, HttpStack stack,int maxDiskCacheSizeBytes) {
 
-        File cacheDir;
-
-        String state = Environment.getExternalStorageState();
-        if (Environment.MEDIA_MOUNTED.equals(state)) {
-            cacheDir = new File(context.getExternalCacheDir(), "volley");
-        } else {
-            cacheDir = new File(context.getCacheDir(), "volley");
-        }
-
-        String userAgent = "volley/0";
-        try {
-            String packageName = context.getPackageName();
-            PackageInfo info = context.getPackageManager().getPackageInfo(packageName, 0);
-            userAgent = packageName + "/" + info.versionCode;
-        } catch (PackageManager.NameNotFoundException e) {
-        }
+        final VolleyHelperFactory.IVolleyHelper helper = VolleyHelperFactory.newHelper();
+        final File cacheDir = helper.getBestCacheDir(context);
 
         if (stack == null) {
-            if (Build.VERSION.SDK_INT >= 9) {
-                stack = new HurlStack();
-            } else {
-                // Prior to Gingerbread, HttpUrlConnection was unreliable.
-                // See: http://android-developers.blogspot.com/2011/09/androids-http-clients.html
-                stack = new HttpClientStack(AndroidHttpClient.newInstance(userAgent));
-            }
+            stack = helper.createHttpStack(context);
         }
 
-        Network network = new BasicNetwork(stack);
+        final Network network = new BasicNetwork(stack);
 
         final DiskBasedCache diskCache;
-        if(maxDiskCacheSizeBytes<0)
-        {
+        if (maxDiskCacheSizeBytes < 0) {
             diskCache = new DiskBasedCache(cacheDir);
-        }else{
+        } else {
             diskCache = new DiskBasedCache(cacheDir, maxDiskCacheSizeBytes);
         }
-        RequestQueue queue = new RequestQueue(diskCache, network,1);
 
+        final RequestQueue queue = new RequestQueue(diskCache, network,1);
         queue.start();
-
         return queue;
     }
 }
