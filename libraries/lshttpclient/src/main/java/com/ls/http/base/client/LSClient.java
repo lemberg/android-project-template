@@ -50,11 +50,12 @@ import java.util.List;
 public class LSClient implements OnResponseListener {
     public enum DuplicateRequestPolicy {ALLOW,ATTACH,REJECT}
 
+    @NonNull
+    private final ResponseListenersSet listeners = new ResponseListenersSet();
 
     private RequestQueue mDefaultQueue;
     private RequestQueue mContentResolverQueue;
 
-    private ResponseListenersSet listeners;
     private String defaultCharset;
 
     private ILoginManager loginManager;
@@ -66,11 +67,11 @@ public class LSClient implements OnResponseListener {
 
     public interface OnResponseListener {
 
-        void onResponseReceived(BaseRequest request,ResponseData data, Object tag);
+        void onResponseReceived(@NonNull BaseRequest request, @NonNull ResponseData data, @Nullable Object tag);
 
         void onError(@NonNull BaseRequest request, @Nullable ResponseData data, @Nullable Object tag);
 
-        void onCancel(BaseRequest request,Object tag);
+        void onCancel(@NonNull BaseRequest request, @Nullable Object tag);
     }
 
     /**
@@ -123,7 +124,6 @@ public class LSClient implements OnResponseListener {
      */
     @Deprecated
     public LSClient(@NonNull RequestQueue theQueue, @Nullable ILoginManager theLoginManager) {
-        this.listeners = new ResponseListenersSet();
         this.mDefaultQueue = theQueue;
 
         if (theLoginManager != null) {
@@ -140,7 +140,6 @@ public class LSClient implements OnResponseListener {
     public LSClient(@NonNull final Context context,
             @NonNull final RequestQueue theQueue,
             @Nullable final ILoginManager theLoginManager) {
-        this.listeners = new ResponseListenersSet();
         this.mDefaultQueue = theQueue;
         this.mContentResolverQueue = new ContentResolverRequestQueue(context);
         mContentResolverQueue.start();
@@ -231,15 +230,19 @@ public class LSClient implements OnResponseListener {
     private ResponseData performRequestLoginRestoreAsynchrounous(final BaseRequest request, Object tag, final OnResponseListener listener) {
         final OnResponseListener loginRestoreResponseListener = new OnResponseListener() {
             @Override
-            public void onResponseReceived(BaseRequest request,ResponseData data, Object tag) {
+            public void onResponseReceived(@NonNull final BaseRequest request,
+                    @NonNull final ResponseData data,
+                    @Nullable final Object tag) {
                 if (listener != null) {
                     listener.onResponseReceived(request,data, tag);
                 }
             }
 
             @Override
-            public void onError(BaseRequest request,ResponseData data, Object tag) {
-                if (VolleyResponseUtils.isAuthError(data.getError())) {
+            public void onError(@NonNull final BaseRequest request,
+                    @Nullable final ResponseData data,
+                    @Nullable final Object tag) {
+                if (data != null && VolleyResponseUtils.isAuthError(data.getError())) {
                     if (loginManager.canRestoreLogin()) {
                         new RestoreLoginAttemptTask(request, listener, tag, data).execute();
                     } else {
@@ -256,7 +259,8 @@ public class LSClient implements OnResponseListener {
             }
 
             @Override
-            public void onCancel(BaseRequest request,Object tag) {
+            public void onCancel(@NonNull final BaseRequest request,
+                    @Nullable final Object tag) {
                 if (listener != null) {
                     listener.onCancel(request,tag);
                 }
@@ -269,15 +273,19 @@ public class LSClient implements OnResponseListener {
     private ResponseData performRequestLoginRestoreSynchrounous(final BaseRequest request, Object tag, final OnResponseListener listener) {
         final OnResponseListener loginRestoreResponseListener = new OnResponseListener() {
             @Override
-            public void onResponseReceived(BaseRequest request,ResponseData data, Object tag) {
+            public void onResponseReceived(@NonNull final BaseRequest request,
+                    @NonNull final ResponseData data,
+                    @Nullable final Object tag) {
                 if (listener != null) {
-                    listener.onResponseReceived(request,data, tag);
+                    listener.onResponseReceived(request, data, tag);
                 }
             }
 
             @Override
-            public void onError(BaseRequest request,ResponseData data, Object tag) {
-                if (VolleyResponseUtils.isAuthError(data.getError())) {
+            public void onError(@NonNull final BaseRequest request,
+                    @Nullable final ResponseData data,
+                    @Nullable final Object tag) {
+                if (data != null && VolleyResponseUtils.isAuthError(data.getError())) {
                     if (!loginManager.canRestoreLogin()) {
                         if (listener != null) {
                             listener.onError(request,data, tag);
@@ -291,7 +299,8 @@ public class LSClient implements OnResponseListener {
             }
 
             @Override
-            public void onCancel(BaseRequest request,Object tag) {
+            public void onCancel(@NonNull final BaseRequest request,
+                    @Nullable final Object tag) {
                 if (listener != null) {
                     listener.onCancel(request,tag);
                 }
@@ -557,15 +566,19 @@ public class LSClient implements OnResponseListener {
         }
 
         @Override
-        public void onResponseReceived(BaseRequest request,ResponseData data, Object tag) {
+        public void onResponseReceived(@NonNull final BaseRequest request,
+                @NonNull final ResponseData data,
+                @Nullable final Object tag) {
             if (listener != null) {
                 this.listener.onResponseReceived(request,data, tag);
             }
         }
 
         @Override
-        public void onError(BaseRequest request,ResponseData data, Object tag) {
-            if (VolleyResponseUtils.isAuthError(data.getError())) {
+        public void onError(@NonNull final BaseRequest request,
+                @Nullable final ResponseData data,
+                @Nullable final Object tag) {
+            if (data != null && VolleyResponseUtils.isAuthError(data.getError())) {
                 loginManager.onLoginRestoreFailed();
             }
             if (listener != null) {
@@ -574,7 +587,8 @@ public class LSClient implements OnResponseListener {
         }
 
         @Override
-        public void onCancel(BaseRequest request,Object tag) {
+        public void onCancel(@NonNull final BaseRequest request,
+                @Nullable final Object tag) {
             if (listener != null) {
                 this.listener.onCancel(request,tag);
             }

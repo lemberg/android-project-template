@@ -360,7 +360,7 @@ public class LSImageView extends ImageView {
         }
 
         @Override
-        public void onResponseReceived(BaseRequest request, ResponseData data, Object tag) {
+        public void onResponseReceived(@NonNull BaseRequest request, @NonNull ResponseData data, @Nullable Object tag) {
             Drawable image = (Drawable) data.getData();
             if (checkCurrentURL()) {
                 superSetDrawableSkippingLayoutUpdate(image);
@@ -373,7 +373,7 @@ public class LSImageView extends ImageView {
         }
 
         @Override
-        public void onError(BaseRequest request, ResponseData data, Object tag) {
+        public void onError(@NonNull BaseRequest request, @Nullable ResponseData data, @Nullable Object tag) {
             if (checkCurrentURL()) {
                 applyNoImageDrawableIfNeeded();
             }
@@ -383,7 +383,7 @@ public class LSImageView extends ImageView {
         }
 
         @Override
-        public void onCancel(BaseRequest request, Object tag) {
+        public void onCancel(@NonNull BaseRequest request, @Nullable Object tag) {
             if (checkCurrentURL()) {
                 applyNoImageDrawableIfNeeded();
             }
