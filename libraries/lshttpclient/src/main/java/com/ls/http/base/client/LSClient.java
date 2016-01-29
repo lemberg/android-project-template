@@ -143,6 +143,7 @@ public class LSClient implements OnResponseListener {
         this.listeners = new ResponseListenersSet();
         this.mDefaultQueue = theQueue;
         this.mContentResolverQueue = new ContentResolverRequestQueue(context);
+        mContentResolverQueue.start();
 
         if (theLoginManager != null) {
             this.setLoginManager(theLoginManager);

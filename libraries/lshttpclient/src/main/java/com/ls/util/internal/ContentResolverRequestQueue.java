@@ -7,6 +7,7 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.ServerError;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.NoCache;
 import com.ls.util.L;
 
 import android.content.ContentResolver;
@@ -25,7 +26,7 @@ import java.io.InputStream;
 public class ContentResolverRequestQueue extends RequestQueue {
 
     public ContentResolverRequestQueue(@NonNull final Context context) {
-        super(null, new ContentResolverNetwork(context.getContentResolver()));
+        super(new NoCache(), new ContentResolverNetwork(context.getContentResolver()));
     }
 
     private static final class ContentResolverNetwork implements Network {
