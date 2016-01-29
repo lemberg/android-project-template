@@ -31,9 +31,12 @@ import com.ls.http.base.BaseRequest.OnResponseListener;
 import com.ls.http.base.ResponseData;
 import com.ls.http.base.login.AnonymousLoginManager;
 import com.ls.http.base.login.ILoginManager;
+import com.ls.util.internal.ContentResolverRequestQueue;
 import com.ls.util.internal.VolleyResponseUtils;
 
+import android.content.ContentResolver;
 import android.content.Context;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
@@ -48,7 +51,9 @@ public class LSClient implements OnResponseListener {
     public enum DuplicateRequestPolicy {ALLOW,ATTACH,REJECT}
 
 
-    private RequestQueue queue;
+    private RequestQueue mDefaultQueue;
+    private RequestQueue mContentResolverQueue;
+
     private ResponseListenersSet listeners;
     private String defaultCharset;
 
@@ -102,7 +107,7 @@ public class LSClient implements OnResponseListener {
      * @param theLoginManager contains user profile data and can update request parameters and headers in order to apply it.
      */
     public LSClient(@NonNull Context theContext, @Nullable ILoginManager theLoginManager) {
-        this(getDefaultQueue(theContext), theLoginManager);
+        this(theContext, getDefaultQueue(theContext), theLoginManager);
     }
 
     @NonNull
@@ -113,10 +118,31 @@ public class LSClient implements OnResponseListener {
     /**
      * @param theQueue        queue to execute requests. You can customize cache management, by setting custom queue
      * @param theLoginManager contains user profile data and can update request parameters and headers in order to apply it.
+     *
+     * @deprecated use {@link #LSClient(Context, ILoginManager)} instead
      */
+    @Deprecated
     public LSClient(@NonNull RequestQueue theQueue, @Nullable ILoginManager theLoginManager) {
         this.listeners = new ResponseListenersSet();
-        this.queue = theQueue;
+        this.mDefaultQueue = theQueue;
+
+        if (theLoginManager != null) {
+            this.setLoginManager(theLoginManager);
+        } else {
+            this.setLoginManager(new AnonymousLoginManager());
+        }
+    }
+
+    /**
+     * @param theQueue        queue to execute requests. You can customize cache management, by setting custom queue
+     * @param theLoginManager contains user profile data and can update request parameters and headers in order to apply it.
+     */
+    public LSClient(@NonNull final Context context,
+            @NonNull final RequestQueue theQueue,
+            @Nullable final ILoginManager theLoginManager) {
+        this.listeners = new ResponseListenersSet();
+        this.mDefaultQueue = theQueue;
+        this.mContentResolverQueue = new ContentResolverRequestQueue(context);
 
         if (theLoginManager != null) {
             this.setLoginManager(theLoginManager);
@@ -163,13 +189,33 @@ public class LSClient implements OnResponseListener {
 
         if(wasRegisterred||synchronous) {
             this.onNewRequestStarted();
-            return request.performRequest(synchronous, queue);
+            return request.performRequest(synchronous, getRequestQueueForRequest(request));
         }else{
             if(skipDuplicateRequestListeners && listener != null)
             {
                 listener.onCancel(request,tag);
             }
             return null;
+        }
+    }
+
+    @NonNull
+    private RequestQueue getRequestQueueForRequest(@NonNull final Request request) {
+        if (mDefaultQueue == null) {
+            throw new IllegalStateException("mDefaultQueue was not initialized");
+        }
+        if (mContentResolverQueue == null) {
+            return mDefaultQueue;
+        }
+        final Uri uri = Uri.parse(request.getUrl());
+        switch (uri.getScheme()) {
+            case ContentResolver.SCHEME_ANDROID_RESOURCE:
+            case ContentResolver.SCHEME_CONTENT:
+            case ContentResolver.SCHEME_FILE:
+                return mContentResolverQueue;
+
+            default:
+                return mDefaultQueue;
         }
     }
 
@@ -254,7 +300,7 @@ public class LSClient implements OnResponseListener {
         ResponseData result = performRequestNoLoginRestore(request, tag, loginRestoreResponseListener, true);
         if (VolleyResponseUtils.isAuthError(result.getError())) {
             if (loginManager.canRestoreLogin()) {
-                boolean restored = loginManager.restoreLoginData(queue);
+                boolean restored = loginManager.restoreLoginData(getRequestQueueForRequest(request));
                 if (restored) {
                     result = performRequestNoLoginRestore(request, tag, new OnResponseAuthListenerDecorator(listener), true);
                 } else {
@@ -287,14 +333,14 @@ public class LSClient implements OnResponseListener {
      * This request is always synchronous and has no callback
      */
     public final Object login(final String userName, final String password) {
-        return this.loginManager.login(userName, password, queue);
+        return this.loginManager.login(userName, password, mDefaultQueue);
     }
 
     /**
      * This request is always synchronous
      */
     public final void logout() {
-        this.loginManager.logout(queue);
+        this.loginManager.logout(mDefaultQueue);
     }
 
     /**
@@ -319,7 +365,7 @@ public class LSClient implements OnResponseListener {
      */
     public boolean restoreLogin() {
         if (this.loginManager.canRestoreLogin()) {
-            return this.loginManager.restoreLoginData(queue);
+            return this.loginManager.restoreLoginData(mDefaultQueue);
         }
         return false;
     }
@@ -346,7 +392,7 @@ public class LSClient implements OnResponseListener {
             this.onRequestComplete();
             if (listenerList != null) {
                 for (ResponseListenersSet.ListenerHolder holder : listenerList) {
-                    holder.getListener().onError(request,data, holder.getTag());
+                    holder.getListener().onError(request, data, holder.getTag());
                 }
             }
         }
@@ -406,18 +452,34 @@ public class LSClient implements OnResponseListener {
      * @param theTag      to cancel requests for, in case if null passed- all requests for given listener will be canceled
      */
     public void cancelAllRequestsForListener(final @Nullable OnResponseListener theListener, final @Nullable Object theTag) {
-        this.queue.cancelAll(new RequestQueue.RequestFilter() {
+        cancelAllRequestsForListener(mDefaultQueue, theListener, theTag);
+        cancelAllRequestsForListener(mContentResolverQueue, theListener, theTag);
+    }
+
+    /**
+     * Cancel all requests for given listener with tag
+     *
+     * @param theListener listener to cancel requests for in case if null passed- all requests for given tag will be canceled
+     * @param theTag      to cancel requests for, in case if null passed- all requests for given listener will be canceled
+     */
+    private void cancelAllRequestsForListener(@NonNull final RequestQueue requestQueue,
+            final @Nullable OnResponseListener theListener,
+            final @Nullable Object theTag) {
+        requestQueue.cancelAll(new RequestQueue.RequestFilter() {
             @Override
             public boolean apply(Request<?> request) {
                 if (theTag == null || theTag.equals(request.getTag())) {
                     synchronized (listeners) {
-                        List<ResponseListenersSet.ListenerHolder> listenerList = listeners.getListenersForRequest(request);
+                        List<ResponseListenersSet.ListenerHolder> listenerList = listeners
+                                .getListenersForRequest(request);
 
-                        if (theListener == null || (listenerList != null &&  holderListContainsListener(listenerList,theListener))) {
+                        if (theListener == null || (listenerList != null
+                                && holderListContainsListener(listenerList, theListener))) {
                             if (listenerList != null) {
                                 listeners.removeListenersForRequest(request);
                                 for (ResponseListenersSet.ListenerHolder holder : listenerList) {
-                                    holder.getListener().onCancel((BaseRequest) request, holder.getTag());
+                                    holder.getListener()
+                                            .onCancel((BaseRequest) request, holder.getTag());
                                 }
                                 LSClient.this.onRequestComplete();
                             }
@@ -537,7 +599,7 @@ public class LSClient implements OnResponseListener {
                 @Override
                 public void run() {
 
-                    boolean restored = loginManager.restoreLoginData(queue);
+                    boolean restored = loginManager.restoreLoginData(mDefaultQueue);
                     if (restored) {
                         performRequestNoLoginRestore(request, tag, new OnResponseAuthListenerDecorator(listener), false);
                     } else {
