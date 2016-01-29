@@ -29,12 +29,10 @@ public class DatabaseHelper
 
     private static List<String> getInitDatabaseQueris(final Resources theAppResources) {
         final List<String> queryList = new ArrayList<String>();
-     
 
         queryList.add(theAppResources.getString(R.string.create_table_stub_items));
         //TODO: add other tables here
 
-        
         return queryList;
     }
 

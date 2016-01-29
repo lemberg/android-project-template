@@ -29,61 +29,46 @@ import java.util.List;
  * Created by Lemberg-i5 on 07.10.2014.
  */
 public class ObserverHolder<ObserverClass> {
-    protected List<ObserverClass> observers;
 
-    public ObserverHolder()
-    {
-        observers = new LinkedList<ObserverClass>();
-    }
+    protected final List<ObserverClass> observers = new LinkedList<>();
 
     /**
-     *
-     * @param theObserver
      * @return false if observer was already registered
      */
-    public synchronized boolean registerObserver(ObserverClass theObserver)
-    {
+    public synchronized boolean registerObserver(ObserverClass theObserver) {
         boolean isAlreadyRegistered = false;
-        for(ObserverClass observer:observers)
-        {
-            if(observer==theObserver)
-            {
+        for (ObserverClass observer : observers) {
+            if (observer == theObserver) {
                 isAlreadyRegistered = true;
                 break;
             }
         }
 
-        if(!isAlreadyRegistered)
-        {
+        if (!isAlreadyRegistered) {
             this.observers.add(theObserver);
         }
         return !isAlreadyRegistered;
     }
 
-    public synchronized void unregisterObserver(ObserverClass theObserver)
-    {
+    public synchronized void unregisterObserver(ObserverClass theObserver) {
         this.observers.remove(theObserver);
     }
 
-    public synchronized void clearAll()
-    {
+    public synchronized void clearAll() {
         this.observers.clear();
     }
 
-    public synchronized void notifyAllObservers(ObserverNotifier<ObserverClass> notifier)
-    {
-        List<ObserverClass> observersCopy = new LinkedList<ObserverClass>(observers);
-        for(ObserverClass observer:observersCopy)
-        {
-            if(observer != null)
-            {
+    public synchronized void notifyAllObservers(ObserverNotifier<ObserverClass> notifier) {
+        final List<ObserverClass> observersCopy = new LinkedList<>(observers);
+        for (ObserverClass observer : observersCopy) {
+            if (observer != null) {
                 notifier.onNotify(observer);
             }
         }
     }
 
-   public static interface ObserverNotifier<ObserverClass>
-   {
-       public void onNotify(ObserverClass observer);
-   }
+    public interface ObserverNotifier<ObserverClass> {
+
+        void onNotify(ObserverClass observer);
+    }
 }

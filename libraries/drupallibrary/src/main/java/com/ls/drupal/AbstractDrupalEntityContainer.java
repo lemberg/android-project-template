@@ -27,33 +27,30 @@ import com.ls.http.base.ResponseData;
 import android.support.annotation.NonNull;
 
 /**
- * 
- * @author lemberg
- *
  * @param <T> class of container content
+ * @author lemberg
  */
-public abstract class AbstractDrupalEntityContainer<T> extends AbstractBaseDrupalEntity
-{		
-	transient private T data;
-	public AbstractDrupalEntityContainer(DrupalClient client,T theData)
-	{
-		super(client);
-		if(theData == null)
-		{
-			throw new IllegalArgumentException("Data object can't be null");
-		}
-		this.data = theData;
-	}	
+public abstract class AbstractDrupalEntityContainer<T> extends AbstractBaseDrupalEntity {
 
-	@SuppressWarnings("null")
-	public @NonNull T getManagedData()
-	{
-		return data;
-	}	
-	
-	@Override
-	protected void consumeObject(ResponseData entity)
-	{
-         AbstractBaseDrupalEntity.consumeObject(this.data, entity.getData());
-	}
+    transient private T data;
+
+    public AbstractDrupalEntityContainer(DrupalClient client, T theData) {
+        super(client);
+        if (theData == null) {
+            throw new IllegalArgumentException("Data object can't be null");
+        }
+        this.data = theData;
+    }
+
+    @SuppressWarnings("null")
+    public
+    @NonNull
+    T getManagedData() {
+        return data;
+    }
+
+    @Override
+    protected void consumeObject(ResponseData entity) {
+        AbstractBaseDrupalEntity.consumeObject(this.data, entity.getData());
+    }
 }

@@ -5,7 +5,6 @@ import com.ls.templateproject.ui.base.callbacks.FragmentCallbackActivity;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v7.app.ActionBarActivity;
 
 import java.util.List;
 
@@ -14,15 +13,15 @@ import java.util.List;
  * Provides workaround for nested fragment's activity execution for result issue
  * NOTE:child fragments must be inherited from corresponding {@link ActivityResultFixFragment}
  */
-public class ActivityResultFixActivity extends FragmentCallbackActivity
-{
+public class ActivityResultFixActivity extends FragmentCallbackActivity {
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         FragmentManager manager = getSupportFragmentManager();
         List<Fragment> fragements = manager.getFragments();
-        if(fragements != null) {
+        if (fragements != null) {
             for (Fragment fragment : fragements) {
-                if(fragment != null) {
+                if (fragment != null) {
                     fragment.onActivityResult(requestCode, resultCode, data);
                 }
             }

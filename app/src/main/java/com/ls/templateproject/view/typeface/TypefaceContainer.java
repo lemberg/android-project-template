@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class TypefaceContainer {
+
     private final static Map<String, Typeface> fonts = new HashMap<String, Typeface>();
 
     public final static String getFontPathFromName(final String theFontName) {

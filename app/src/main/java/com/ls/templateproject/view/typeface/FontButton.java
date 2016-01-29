@@ -21,7 +21,7 @@ public class FontButton extends Button implements TypefaceUtils.TypefaceHolder {
     }
 
     private void applyAttributes(AttributeSet attrs) {
-       TypefaceUtils.applyTypefaceAtts(attrs,this);
+        TypefaceUtils.applyTypefaceAtts(attrs, this);
     }
 
     @Override

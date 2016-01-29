@@ -6,39 +6,34 @@ import android.text.TextPaint;
 import android.text.style.MetricAffectingSpan;
 
 public class CustomFontTextSpan
-        extends MetricAffectingSpan
-{
+        extends MetricAffectingSpan {
+
     final Typeface customFont;
 
-    public CustomFontTextSpan(int theResId, final Context theContext)
-    {
+    public CustomFontTextSpan(int theResId, final Context theContext) {
         this.customFont = TypefaceContainer.getTypeface(theContext, theContext.getResources().getString(theResId));
     }
 
-    public CustomFontTextSpan(String family, final Context theContext)
-    {
+    public CustomFontTextSpan(String family, final Context theContext) {
         this.customFont = TypefaceContainer.getTypeface(theContext, family);
     }
 
     @Override
-    public void updateMeasureState(TextPaint p)
-    {
+    public void updateMeasureState(TextPaint p) {
         if (customFont != null) {
             p.setTypeface(customFont);
         }
     }
 
     @Override
-    public void updateDrawState(TextPaint tp)
-    {
+    public void updateDrawState(TextPaint tp) {
         if (customFont != null) {
             tp.setTypeface(customFont);
         }
     }
-    
+
     @Override
-    public MetricAffectingSpan getUnderlying()
-    {
+    public MetricAffectingSpan getUnderlying() {
         return this;
     }
 }

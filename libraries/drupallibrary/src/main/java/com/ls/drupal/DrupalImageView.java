@@ -40,8 +40,7 @@ public class DrupalImageView extends ImageView {
 
     private static DrupalClient sharedClient;
 
-    private static DrupalClient getSharedClient(Context context)
-    {
+    private static DrupalClient getSharedClient(Context context) {
         synchronized (DrupalImageView.class) {
             if (sharedClient == null) {
                 sharedClient = new DrupalClient(null, context);
@@ -53,10 +52,10 @@ public class DrupalImageView extends ImageView {
 
     /**
      * Use this method to provide default drupal client, used by all image views.
+     *
      * @param client to be used in order to load images.
      */
-    public static void setupSharedClient(DrupalClient client)
-    {
+    public static void setupSharedClient(DrupalClient client) {
         synchronized (DrupalImageView.class) {
             DrupalImageView.sharedClient = client;
         }
@@ -74,7 +73,7 @@ public class DrupalImageView extends ImageView {
 
     public DrupalImageView(Context context) {
         super(context);
-        initView(context,null);
+        initView(context, null);
     }
 
     public DrupalImageView(Context context, AttributeSet attrs) {
@@ -83,11 +82,10 @@ public class DrupalImageView extends ImageView {
 
     public DrupalImageView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        initView(context,attrs);
+        initView(context, attrs);
     }
 
-    public void initView(Context context, AttributeSet attrs)
-    {
+    public void initView(Context context, AttributeSet attrs) {
         if (this.isInEditMode()) {
             return;
         }
@@ -103,44 +101,38 @@ public class DrupalImageView extends ImageView {
             this.setImageWithURL(imagePath);
         }
 
-        this.fixedBounds = array.getBoolean(R.styleable.LSImageView_fixedBounds,false);
+        this.fixedBounds = array.getBoolean(R.styleable.LSImageView_fixedBounds, false);
 
         array.recycle();
     }
 
-    public void setImageWithURL(String imagePath)
-    {
+    public void setImageWithURL(String imagePath) {
         if (this.isInEditMode()) {
             return;
         }
 
         DrupalClient client = this.getClient();
-        if(client == null)
-        {
+        if (client == null) {
             throw new IllegalStateException("No DrupalClient set. Please provide local or shared DrupalClient to perform loading");
         }
 
-        if(this.imageContainer != null && this.imageContainer.url.equals(imagePath))
-        {
+        if (this.imageContainer != null && this.imageContainer.url.equals(imagePath)) {
             return;
         }
 
         this.setImageDrawable(null);
         this.applyNoImageDrawableIfNeeded();
 
-        if(TextUtils.isEmpty(imagePath))
-        {
+        if (TextUtils.isEmpty(imagePath)) {
             return;
         }
 
-        this.imageContainer = new ImageContainer(imagePath,client);
+        this.imageContainer = new ImageContainer(imagePath, client);
         this.startLoading();
     }
 
-    public String getImageURL()
-    {
-        if(this.imageContainer!= null)
-        {
+    public String getImageURL() {
+        if (this.imageContainer != null) {
             return this.imageContainer.url;
         }
         return null;
@@ -158,16 +150,16 @@ public class DrupalImageView extends ImageView {
      * Layout update skipping workaround
      */
     private boolean skipLayoutUpdate = false;
+
     /**
      * Layout update skipping workaround
      */
-    protected void superSetDrawableSkippingLayoutUpdate(Drawable drawable)
-    {
-        if(fixedBounds) {
+    protected void superSetDrawableSkippingLayoutUpdate(Drawable drawable) {
+        if (fixedBounds) {
             skipLayoutUpdate = true;
             superSetImageDrawable(drawable);
             skipLayoutUpdate = false;
-        }else{
+        } else {
             superSetImageDrawable(drawable);
         }
     }
@@ -177,14 +169,13 @@ public class DrupalImageView extends ImageView {
      */
     @Override
     public void requestLayout() {
-        if(!skipLayoutUpdate) {
+        if (!skipLayoutUpdate) {
             super.requestLayout();
         }
     }
 
     /**
      * Method is calling original ImageView setDrawable method directly
-     * @param drawable
      */
     protected void superSetImageDrawable(Drawable drawable) {
         super.setImageDrawable(drawable);
@@ -194,15 +185,13 @@ public class DrupalImageView extends ImageView {
         return noImageDrawable;
     }
 
-    public void setNoImageDrawableResource(int resource)
-    {
+    public void setNoImageDrawableResource(int resource) {
         this.setImageDrawable(this.getContext().getResources().getDrawable(resource));
     }
 
     public void setNoImageDrawable(Drawable noImageDrawable) {
-        if(this.noImageDrawable != noImageDrawable) {
-            if(this.getDrawable()==this.noImageDrawable)
-            {
+        if (this.noImageDrawable != noImageDrawable) {
+            if (this.getDrawable() == this.noImageDrawable) {
                 superSetImageDrawable(noImageDrawable);
             }
             this.noImageDrawable = noImageDrawable;
@@ -226,20 +215,15 @@ public class DrupalImageView extends ImageView {
         this.localClient = localClient;
     }
 
-    public void cancelLoading()
-    {
-        if(this.imageContainer != null)
-        {
+    public void cancelLoading() {
+        if (this.imageContainer != null) {
             this.imageContainer.cancelLoad();
         }
     }
 
-    public void startLoading()
-    {
-        if(this.imageContainer != null)
-        {
-            if(imageLoadingListener != null)
-            {
+    public void startLoading() {
+        if (this.imageContainer != null) {
+            if (imageLoadingListener != null) {
                 imageLoadingListener.onImageLoadingStarted(DrupalImageView.this, this.imageContainer.url);
             }
             this.imageContainer.loadImage(getInternalImageLoadingListenerForContainer(this.imageContainer));
@@ -272,112 +256,103 @@ public class DrupalImageView extends ImageView {
 //        this.startLoading();
 //    }
 
-    protected void applyNoImageDrawableIfNeeded()
-    {
-        if(this.getDrawable()==null)
-        {
+    protected void applyNoImageDrawableIfNeeded() {
+        if (this.getDrawable() == null) {
             superSetDrawableSkippingLayoutUpdate(noImageDrawable);
         }
     }
 
-    private DrupalClient getClient()
-    {
-        if(this.localClient != null)
-        {
+    private DrupalClient getClient() {
+        if (this.localClient != null) {
             return this.localClient;
         }
 
         return DrupalImageView.getSharedClient(this.getContext());
     }
 
-    private InternalImageLoadingListener getInternalImageLoadingListenerForContainer(ImageContainer container)
-    {
+    private InternalImageLoadingListener getInternalImageLoadingListenerForContainer(ImageContainer container) {
         return new InternalImageLoadingListener(container.url);
     }
 
-    private static class ImageContainer
-    {
+    private static class ImageContainer {
+
         DrupalImageEntity image;
         String url;
         DrupalClient client;
 
-        ImageContainer(String url,DrupalClient client)
-        {
+        ImageContainer(String url, DrupalClient client) {
             this.url = url;
             this.client = client;
             image = new DrupalImageEntity(client);
             image.setImagePath(url);
         }
 
-        void cancelLoad()
-        {
+        void cancelLoad() {
             image.cancellAllRequests();
         }
 
-        void loadImage(InternalImageLoadingListener listener)
-        {
-            if(image.getManagedData() == null) {
+        void loadImage(InternalImageLoadingListener listener) {
+            if (image.getManagedData() == null) {
                 image.pullFromServer(false, url, listener);
             }
         }
     }
 
-    private class InternalImageLoadingListener implements AbstractBaseDrupalEntity.OnEntityRequestListener
-    {
+    private class InternalImageLoadingListener implements AbstractBaseDrupalEntity.OnEntityRequestListener {
+
         private String acceptableURL;
-        InternalImageLoadingListener(String url)
-        {
+
+        InternalImageLoadingListener(String url) {
             this.acceptableURL = url;
         }
 
         @Override
         public void onRequestCompleted(AbstractBaseDrupalEntity entity, Object tag, ResponseData data) {
             Drawable image = ((DrupalImageEntity) entity).getManagedData();
-            if(checkCurrentURL())
-            {
+            if (checkCurrentURL()) {
                 superSetDrawableSkippingLayoutUpdate(image);
                 applyNoImageDrawableIfNeeded();
             }
 
-            if(imageLoadingListener != null)
-            {
-                imageLoadingListener.onImageLoadingComplete(DrupalImageView.this,image);
+            if (imageLoadingListener != null) {
+                imageLoadingListener.onImageLoadingComplete(DrupalImageView.this, image);
             }
         }
 
         @Override
         public void onRequestFailed(AbstractBaseDrupalEntity entity, Object tag, ResponseData data) {
-            if(checkCurrentURL()) {
+            if (checkCurrentURL()) {
                 applyNoImageDrawableIfNeeded();
             }
-            if(imageLoadingListener != null)
-            {
+            if (imageLoadingListener != null) {
                 imageLoadingListener.onImageLoadingFailed(DrupalImageView.this, data);
             }
         }
 
         @Override
         public void onRequestCanceled(AbstractBaseDrupalEntity entity, Object tag) {
-            if(checkCurrentURL()) {
+            if (checkCurrentURL()) {
                 applyNoImageDrawableIfNeeded();
             }
-            if(imageLoadingListener != null)
-            {
+            if (imageLoadingListener != null) {
                 imageLoadingListener.onImageLoadingCancelled(DrupalImageView.this, this.acceptableURL);
             }
         }
 
-        private boolean checkCurrentURL()
-        {
+        private boolean checkCurrentURL() {
             return imageContainer != null && imageContainer.url != null && imageContainer.url.equals(acceptableURL);
         }
     }
 
-    public interface ImageLoadingListener{
+    public interface ImageLoadingListener {
+
         void onImageLoadingStarted(DrupalImageView view, String imageURL);
+
         void onImageLoadingComplete(DrupalImageView view, Drawable image);
-        void onImageLoadingFailed(DrupalImageView view,ResponseData data);
-        void onImageLoadingCancelled(DrupalImageView view,String path);
+
+        void onImageLoadingFailed(DrupalImageView view, ResponseData data);
+
+        void onImageLoadingCancelled(DrupalImageView view, String path);
     }
 
 }

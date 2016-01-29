@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * Created on 22.05.2015.
  */
-public class StubItemDAO extends AbstractDAO<StubItemVO,String> {
+public class StubItemDAO extends AbstractDAO<StubItemVO, String> {
 
     private final static String TABLE_NAME = "stub_items";
     private final static String COLUMN_ID = "_id";
@@ -20,21 +20,19 @@ public class StubItemDAO extends AbstractDAO<StubItemVO,String> {
     private final static String COLUMN_FAVORITE = "isFavorite";
     private final static String COLUMN_PAGE_ID = "page_id";
 
-    public List<StubItemVO> readItemsForPageId(String pageId)
-    {
-        String condition = COLUMN_PAGE_ID +"=?";
-        return getData(condition,new String[]{pageId});
+    public List<StubItemVO> readItemsForPageId(String pageId) {
+        String condition = COLUMN_PAGE_ID + "=?";
+        return getData(condition, new String[]{pageId});
     }
 
-    public int removeItemsForPageId(String pageId)
-    {
-        String condition = COLUMN_PAGE_ID +"=?";
-        return deleteData(condition,new String[]{pageId},false);
+    public int removeItemsForPageId(String pageId) {
+        String condition = COLUMN_PAGE_ID + "=?";
+        return deleteData(condition, new String[]{pageId}, false);
     }
 
     @Override
     protected String getSearchCondition() {
-        return COLUMN_ID +" = ?";
+        return COLUMN_ID + " = ?";
     }
 
     @Override
@@ -49,16 +47,16 @@ public class StubItemDAO extends AbstractDAO<StubItemVO,String> {
 
     @Override
     protected void putObjectDataForSaving(ContentValues theValues, StubItemVO theObj) {
-        theValues.put(COLUMN_ID,theObj.getId());
-        putObjectDataForUpdate(theValues,theObj);
+        theValues.put(COLUMN_ID, theObj.getId());
+        putObjectDataForUpdate(theValues, theObj);
     }
 
     @Override
     protected void putObjectDataForUpdate(ContentValues theValues, StubItemVO theObj) {
-        theValues.put(COLUMN_IMAGE_URL,theObj.getImageURL());
-        theValues.put(COLUMN_DESCRIPTION,theObj.getDescription());
-        theValues.put(COLUMN_FAVORITE,getIntFromBool(theObj.isFavorite()));
-        theValues.put(COLUMN_PAGE_ID,theObj.getPageId());
+        theValues.put(COLUMN_IMAGE_URL, theObj.getImageURL());
+        theValues.put(COLUMN_DESCRIPTION, theObj.getDescription());
+        theValues.put(COLUMN_FAVORITE, getIntFromBool(theObj.isFavorite()));
+        theValues.put(COLUMN_PAGE_ID, theObj.getPageId());
     }
 
     @Override

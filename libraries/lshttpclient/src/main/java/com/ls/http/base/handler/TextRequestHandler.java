@@ -27,20 +27,17 @@ import com.ls.http.base.RequestHandler;
 
 import java.io.UnsupportedEncodingException;
 
-class TextRequestHandler extends RequestHandler
-{
+class TextRequestHandler extends RequestHandler {
 
-	@Override
-	public String stringBodyFromItem()
-	{
-		if(implementsPostableInterface())
-		{
-			IPostableItem item = (IPostableItem)this.object;
-			return item.toPlainText();
-		}else{
-			return this.object.toString();
-		}
-	}
+    @Override
+    public String stringBodyFromItem() {
+        if (implementsPostableInterface()) {
+            IPostableItem item = (IPostableItem) this.object;
+            return item.toPlainText();
+        } else {
+            return this.object.toString();
+        }
+    }
 
     @Override
     public String getBodyContentType(String defaultCharset) {

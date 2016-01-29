@@ -8,8 +8,8 @@ import java.util.Map;
 /**
  * Created on 07.12.2015.
  */
-public class BaseRequestBuilder
-{
+public class BaseRequestBuilder {
+
     private BaseRequest.RequestFormat mRequestFormat;
     private BaseRequest.ResponseFormat mResponseFormat;
 
@@ -26,10 +26,9 @@ public class BaseRequestBuilder
     private Object mResponseClassSpecifier;
     private Object mErrorResponseClasSpecifier;
 
-    public BaseRequest create()
-    {
-        Assert.assertNotNull("Request method must be provided",mRequestMethod);
-        Assert.assertNotNull("Request url must be provided",mRequestURL);
+    public BaseRequest create() {
+        Assert.assertNotNull("Request method must be provided", mRequestMethod);
+        Assert.assertNotNull("Request url must be provided", mRequestURL);
 
         RequestConfig config = new RequestConfig();
         config.setResponseFormat(mResponseFormat);
@@ -37,7 +36,7 @@ public class BaseRequestBuilder
         config.setRequestFormat(mRequestFormat);
         config.setResponseClassSpecifier(mResponseClassSpecifier);
 
-        BaseRequest request = new BaseRequest(mRequestMethod,mRequestURL,config);
+        BaseRequest request = new BaseRequest(mRequestMethod, mRequestURL, config);
         request.setObjectToPost(mObjectToPost);
         request.setDefaultCharset(mDefaultCharset);
         request.setGetParameters(mGetParameters);
@@ -49,126 +48,103 @@ public class BaseRequestBuilder
     }
 
 
-    public BaseRequestBuilder setRequestURL(String requestURL)
-    {
+    public BaseRequestBuilder setRequestURL(String requestURL) {
         this.mRequestURL = requestURL;
         return this;
     }
 
-    public BaseRequestBuilder setRequestMethod(BaseRequest.RequestMethod requestMethod)
-    {
+    public BaseRequestBuilder setRequestMethod(BaseRequest.RequestMethod requestMethod) {
         mRequestMethod = requestMethod;
         return this;
     }
 
     /**
      * @param requestFormat format of POST body serialization, used to form post data from {@link #setObjectToPost(Object) setObjectToPost}
-     * @return
      */
-    public BaseRequestBuilder setRequestFormat(BaseRequest.RequestFormat requestFormat)
-    {
+    public BaseRequestBuilder setRequestFormat(BaseRequest.RequestFormat requestFormat) {
         this.mRequestFormat = requestFormat;
         return this;
     }
 
     /**
      * @param responseFormat format of response body, used to define correct deserializer for server response
-     * @return
      */
-    public BaseRequestBuilder setResponseFormat(BaseRequest.ResponseFormat responseFormat)
-    {
+    public BaseRequestBuilder setResponseFormat(BaseRequest.ResponseFormat responseFormat) {
         this.mResponseFormat = responseFormat;
         return this;
     }
 
     /**
      * @param defaultCharset used to define charset for serializer/deserializer
-     * @return
      */
-    public BaseRequestBuilder setDefaultCharset(String defaultCharset)
-    {
+    public BaseRequestBuilder setDefaultCharset(String defaultCharset) {
         this.mDefaultCharset = defaultCharset;
         return this;
     }
 
-    public BaseRequestBuilder setRequestHeaders(Map<String, String> requestHeaders)
-    {
+    public BaseRequestBuilder setRequestHeaders(Map<String, String> requestHeaders) {
         this.mRequestHeaders = requestHeaders;
         return this;
     }
 
-    public BaseRequestBuilder addRequestHeaders(Map<String, String> requestHeaders)
-    {
-        if(this.mRequestHeaders == null)
-        {
-            this.mRequestHeaders = new HashMap<String,String>();
+    public BaseRequestBuilder addRequestHeaders(Map<String, String> requestHeaders) {
+        if (this.mRequestHeaders == null) {
+            this.mRequestHeaders = new HashMap<String, String>();
         }
 
         this.mRequestHeaders.putAll(requestHeaders);
         return this;
     }
 
-    public BaseRequestBuilder addRequestHeader(String key, String value)
-    {
-        if(this.mRequestHeaders == null)
-        {
-            this.mRequestHeaders = new HashMap<String,String>();
+    public BaseRequestBuilder addRequestHeader(String key, String value) {
+        if (this.mRequestHeaders == null) {
+            this.mRequestHeaders = new HashMap<String, String>();
         }
 
         this.mRequestHeaders.put(key, value);
         return this;
     }
 
-    public BaseRequestBuilder setPostParameters(Map<String, String> postParameters)
-    {
+    public BaseRequestBuilder setPostParameters(Map<String, String> postParameters) {
         this.mPostParameters = postParameters;
         return this;
     }
 
-    public BaseRequestBuilder addPostParameters(Map<String, String> postParameters)
-    {
-        if(this.mPostParameters == null)
-        {
-            this.mPostParameters = new HashMap<String,String>();
+    public BaseRequestBuilder addPostParameters(Map<String, String> postParameters) {
+        if (this.mPostParameters == null) {
+            this.mPostParameters = new HashMap<String, String>();
         }
 
         this.mPostParameters.putAll(postParameters);
         return this;
     }
 
-    public BaseRequestBuilder addPostParameter(String key, String value)
-    {
-        if(this.mPostParameters == null)
-        {
-            this.mPostParameters = new HashMap<String,String>();
+    public BaseRequestBuilder addPostParameter(String key, String value) {
+        if (this.mPostParameters == null) {
+            this.mPostParameters = new HashMap<String, String>();
         }
 
         this.mPostParameters.put(key, value);
         return this;
     }
 
-    public BaseRequestBuilder setGetParameters(Map<String, Object> getParameters)
-    {
+    public BaseRequestBuilder setGetParameters(Map<String, Object> getParameters) {
         this.mGetParameters = getParameters;
         return this;
     }
 
-    public BaseRequestBuilder addGetParameters(Map<String, String> getParameters)
-    {
-        if(this.mGetParameters == null)
-        {
-            this.mGetParameters = new HashMap<String,Object>();
+    public BaseRequestBuilder addGetParameters(Map<String, String> getParameters) {
+        if (this.mGetParameters == null) {
+            this.mGetParameters = new HashMap<String, Object>();
         }
 
         this.mGetParameters.putAll(getParameters);
         return this;
     }
 
-    public BaseRequestBuilder addGetParameter(String key, String value)
-    {
-        if(this.mGetParameters == null)
-        {
-            this.mGetParameters = new HashMap<String,Object>();
+    public BaseRequestBuilder addGetParameter(String key, String value) {
+        if (this.mGetParameters == null) {
+            this.mGetParameters = new HashMap<String, Object>();
         }
 
         this.mGetParameters.put(key, value);
@@ -177,28 +153,24 @@ public class BaseRequestBuilder
 
     /**
      * @param objectToPost Object to be serialized to post body.
-     * @return
      */
-    public BaseRequestBuilder setObjectToPost(Object objectToPost)
-    {
+    public BaseRequestBuilder setObjectToPost(Object objectToPost) {
         this.mObjectToPost = objectToPost;
         return this;
     }
 
     /**
-     * @param responseClassSpecifier  Class or Type, returned as parsedErrorResponse field of ResultData object, can be null if you don't need one.
+     * @param responseClassSpecifier Class or Type, returned as parsedErrorResponse field of ResultData object, can be null if you don't need one.
      */
-    public BaseRequestBuilder setResponseClassSpecifier(Object responseClassSpecifier)
-    {
+    public BaseRequestBuilder setResponseClassSpecifier(Object responseClassSpecifier) {
         this.mResponseClassSpecifier = responseClassSpecifier;
         return this;
     }
 
     /**
-     * @param errorResponseClasSpecifier  Class or Type, returned as error field of ResultData object, can be null if you don't need one.
+     * @param errorResponseClasSpecifier Class or Type, returned as error field of ResultData object, can be null if you don't need one.
      */
-    public BaseRequestBuilder setErrorResponseClasSpecifier(Object errorResponseClasSpecifier)
-    {
+    public BaseRequestBuilder setErrorResponseClasSpecifier(Object errorResponseClasSpecifier) {
         this.mErrorResponseClasSpecifier = errorResponseClasSpecifier;
         return this;
     }
