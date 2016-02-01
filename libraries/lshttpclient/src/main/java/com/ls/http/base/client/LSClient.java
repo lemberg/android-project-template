@@ -211,6 +211,7 @@ public class LSClient implements OnResponseListener {
             case ContentResolver.SCHEME_ANDROID_RESOURCE:
             case ContentResolver.SCHEME_CONTENT:
             case ContentResolver.SCHEME_FILE:
+            case ContentResolverRequestQueue.SCHEME_ASSETS:
                 return mContentResolverQueue;
 
             default:
