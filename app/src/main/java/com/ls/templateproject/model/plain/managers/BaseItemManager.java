@@ -6,6 +6,8 @@ import com.ls.http.base.client.LSClient;
 import com.ls.util.ObserverHolder;
 
 import android.os.AsyncTask;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import java.net.HttpURLConnection;
 
@@ -29,19 +31,24 @@ public abstract class BaseItemManager<ClassToManage, ParametersClass,TagClass> {
 
     private LSClient.OnResponseListener updateResponceListener = new LSClient.OnResponseListener() {
         @Override
-        public void onResponseReceived(BaseRequest request,ResponseData data, Object tag)
+        public void onResponseReceived(@NonNull final BaseRequest request,
+                @NonNull final ResponseData data,
+                @Nullable final Object tag)
         {
             applyDataUpdateComplete(request, (TagClass) tag, data);
         }
 
         @Override
-        public void onError(BaseRequest request,ResponseData data, Object tag)
+        public void onError(@NonNull final BaseRequest request,
+                @Nullable final ResponseData data,
+                @Nullable final Object tag)
         {
             applyDataUpdateFailed(request,(TagClass) tag, data);
         }
 
         @Override
-        public void onCancel(BaseRequest request,Object tag)
+        public void onCancel(@NonNull final BaseRequest request,
+                @Nullable final Object tag)
         {
 
         }

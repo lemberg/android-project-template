@@ -38,6 +38,7 @@ import com.ls.util.internal.VolleyResponseUtils;
 import junit.framework.Assert;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -46,23 +47,23 @@ import java.util.Map;
 
 public abstract class AbstractBaseDrupalEntity implements DrupalClient.OnResponseListener, ICharsetItem
 {
-	transient private DrupalClient drupalClient; 
+	transient private DrupalClient drupalClient;
 
 	transient private Snapshot snapshot;
 
 	/**
 	 * In case of request canceling - no method will be triggered.
-	 * 
+	 *
 	 * @author lemberg
-	 * 
+	 *
 	 */
 	public interface OnEntityRequestListener
 	{
 		void onRequestCompleted(AbstractBaseDrupalEntity entity, Object tag, ResponseData data);
 		void onRequestFailed(AbstractBaseDrupalEntity entity, Object tag, ResponseData data);
 		void onRequestCanceled(AbstractBaseDrupalEntity entity, Object tag);
-	}	
-			
+	}
+
 	/**
 	 * @return path to resource. Shouldn't include base URL(domain).
 	 */
@@ -70,14 +71,14 @@ public abstract class AbstractBaseDrupalEntity implements DrupalClient.OnRespons
 
 	/**
 	 * Called for post requests only
-	 * 
+	 *
 	 * @return post parameters to be published on server or null if default
 	 *         object serialization has to be performed.
 	 */
 	protected abstract Map<String, String> getItemRequestPostParameters();
 
 
-	/**	 
+	/**
 	 * @param method is instance od {@link BaseRequest.RequestMethod} enum, this method is called for. it can be "GET", "POST", "PUT" ,"PATCH" or "DELETE".
 	 * @return parameters for the request method specified. In case if collection is passed as map entry value - all entities will be added under corresponding key. Object.toString will be called otherwise.
 	 */
@@ -86,8 +87,8 @@ public abstract class AbstractBaseDrupalEntity implements DrupalClient.OnRespons
 	/** Get data object, used to perform perform get/post/patch/delete requests.
 	 * @return data object. Can implement {@link com.ls.http.base.IPostableItem} or {@link com.ls.http.base.IResponseItem} in order to handle json/xml serialization/deserialization manually.
 	 */
-	abstract @NonNull
-    Object getManagedData();
+	@NonNull
+	abstract Object getManagedData();
 
     /**
      * @param method is instance od {@link BaseRequest.RequestMethod} enum, this method is called for. it can be "GET", "POST", "PUT" ,"PATCH" or "DELETE".
@@ -105,9 +106,9 @@ public abstract class AbstractBaseDrupalEntity implements DrupalClient.OnRespons
 
 	public AbstractBaseDrupalEntity(DrupalClient client)
 	{
-		this.drupalClient = client;	
+		this.drupalClient = client;
 	}
-	
+
 	@Deprecated
 	/**
      * Method is deprecated. Use {@link #postToServer(boolean, Class, Object, com.ls.drupal.AbstractBaseDrupalEntity.OnEntityRequestListener)} method. instead
@@ -118,7 +119,7 @@ public abstract class AbstractBaseDrupalEntity implements DrupalClient.OnRespons
 	 * @param tag Object tag, passer to listener after request was finished or failed because of exception.
      *            Tag object can contain some additional data you may require while handling response and may appear useful in case if you are using same listener for multiple requests.
      *            You can pass null if no tag is needed
-	 * @param listener 
+	 * @param listener
 	 * @return @class ResponseData entity, containing server response string and
 	 *         code or error in case of synchronous request, null otherwise
 	 */
@@ -163,7 +164,8 @@ public abstract class AbstractBaseDrupalEntity implements DrupalClient.OnRespons
     {
         Assert.assertNotNull("You have to specify drupal client in order to perform requests", this.drupalClient);
         DrupalEntityTag drupalTag = new DrupalEntityTag(false, tag, listener);
-        ResponseData result = this.drupalClient.putObject(this, getRequestConfig(RequestMethod.PUT,resultClass), drupalTag, this, synchronous);
+        ResponseData result = this.drupalClient.putObject(this,
+                getRequestConfig(RequestMethod.PUT, resultClass), drupalTag, this, synchronous);
         return result;
     }
 
@@ -173,7 +175,7 @@ public abstract class AbstractBaseDrupalEntity implements DrupalClient.OnRespons
      * @param tag Object tag, passer to listener after request was finished or failed because of exception.
      *            Tag object can contain some additional data you may require while handling response and may appear useful in case if you are using same listener for multiple requests.
      *            You can pass null if no tag is needed
-	 * @param listener 
+	 * @param listener
 	 * @return @class ResponseData entity, containing server response or error
 	 *         in case of synchronous request, null otherwise
 	 */
@@ -188,7 +190,7 @@ public abstract class AbstractBaseDrupalEntity implements DrupalClient.OnRespons
         }else{
             result = this.drupalClient.postObject(this, getRequestConfig(RequestMethod.POST,this.getManagedDataClassSpecifyer()), drupalTag, this, synchronous);
         }
-		;		
+		;
 		return result;
 	}
 
@@ -196,11 +198,11 @@ public abstract class AbstractBaseDrupalEntity implements DrupalClient.OnRespons
 	 * @param synchronous
 	 *            if true - request will be performed synchronously.
 	 * @param resultClass
-	 *            class of result or null if no result needed. 
+	 *            class of result or null if no result needed.
      * @param tag Object tag, passer to listener after request was finished or failed because of exception.
      *            Tag object can contain some additional data you may require while handling response and may appear useful in case if you are using same listener for multiple requests.
      *            You can pass null if no tag is needed
-	 * @param listener 
+	 * @param listener
 	 * @return @class ResponseData entity, containing server response or error
 	 *         in case of synchronous request, null otherwise
 	 */
@@ -213,53 +215,58 @@ public abstract class AbstractBaseDrupalEntity implements DrupalClient.OnRespons
 	}
 
 	// OnResponseListener methods
-	
+
 	@Override
-	public void onResponseReceived(BaseRequest request,ResponseData data, Object tag)
-	{		
+	public void onResponseReceived(@NonNull final BaseRequest request,
+		@NonNull final ResponseData data,
+		@Nullable final Object tag)
+	{
 		DrupalEntityTag entityTag = (DrupalEntityTag)tag;
-		if (entityTag.consumeResponse)
+		if (entityTag != null && entityTag.consumeResponse)
 		{
 			this.consumeObject(data);
 		}
 
-		if(entityTag.listener != null)
+		if(entityTag != null && entityTag.listener != null)
 		{
 			entityTag.listener.onRequestCompleted(this, entityTag.requestTag, data);
 		}
         ConnectionManager.instance().setConnected(true);
 	}
-	
+
 	@Override
-	public void onError(BaseRequest request,ResponseData data, Object tag)
+	public void onError(@NonNull final BaseRequest request,
+                @Nullable final ResponseData data,
+                @Nullable final Object tag)
 	{
 		DrupalEntityTag entityTag = (DrupalEntityTag)tag;
-		if(entityTag.listener != null)
+		if(entityTag != null && entityTag.listener != null)
 		{
 			entityTag.listener.onRequestFailed(this,entityTag.requestTag,data);
 		}
 
-        if(VolleyResponseUtils.isNetworkingError(data.getError()))
+        if(data != null && VolleyResponseUtils.isNetworkingError(data.getError()))
         {
             ConnectionManager.instance().setConnected(false);
         }
 	}
 
 	@Override
-	public void onCancel(BaseRequest request,Object tag)
+	public void onCancel(@NonNull final BaseRequest request,
+                @Nullable final Object tag)
 	{
 		DrupalEntityTag entityTag = (DrupalEntityTag)tag;
-		if(entityTag.listener != null)
+		if(entityTag != null && entityTag.listener != null)
 		{
 			entityTag.listener.onRequestCanceled(this,entityTag.requestTag);
-		}	
+		}
 	}
 
 	/**
-	 * Method is used in order to apply server response result object to current instance 
+	 * Method is used in order to apply server response result object to current instance
 	 * and clone all fields of object specified to current one You can override this
 	 * method in order to perform custom cloning.
-	 *  
+	 *
 	 * @param data
 	 *            response data, containing object to be consumed
 	 */
@@ -294,7 +301,7 @@ public abstract class AbstractBaseDrupalEntity implements DrupalClient.OnRespons
         return config;
     }
 
-	
+
 	/**
 	 * Utility method, used to clone all entities non-transient fields to the consumer
 	 * @param consumer
@@ -339,7 +346,7 @@ public abstract class AbstractBaseDrupalEntity implements DrupalClient.OnRespons
 	 * You can override this method in order to gain custom classes from "GET"
 	 * Note:  you will also have to override {@link AbstractBaseDrupalEntity#consumeObject(com.ls.http.base.ResponseData)} method in order to apply modified response class
 	 * request response.
-	 * 
+	 *
 	 * @return Class or type of managed object.
 	 */
 	protected Object getManagedDataClassSpecifyer()
@@ -397,7 +404,7 @@ public abstract class AbstractBaseDrupalEntity implements DrupalClient.OnRespons
 	{
 		this.snapshot = getCurrentStateSnapshot();
 	}
-	
+
 	/**
 	 * Release current snapshot (is recommended to perform after successful patch request)
 	 */
@@ -413,13 +420,13 @@ public abstract class AbstractBaseDrupalEntity implements DrupalClient.OnRespons
 	}
 
 	/**
-	 * 
+	 *
 	 * @param synchronous
 	 *            if true - request will be performed synchronously.
 	 * @param resultClass
 	 *            class of result or null if no result needed.
 	 * @param tag Object tag, passer to listener after request was finished or failed because of exception
-	 * @param listener 
+	 * @param listener
 	 * @return @class ResponseData entity, containing server response and
 	 *         resultClass instance or error in case of synchronous request,
 	 *         null otherwise
@@ -430,7 +437,9 @@ public abstract class AbstractBaseDrupalEntity implements DrupalClient.OnRespons
 	public ResponseData patchServerData(boolean synchronous, Class<?> resultClass, Object tag, OnEntityRequestListener listener) throws IllegalStateException
 	{
 		DrupalEntityTag drupalTag = new DrupalEntityTag(false, tag, listener);
-		ResponseData result = this.drupalClient.patchObject(this, getRequestConfig(RequestMethod.PATCH,resultClass), drupalTag, this, synchronous);
+		ResponseData result = this.drupalClient.patchObject(this,
+                        getRequestConfig(RequestMethod.PATCH, resultClass), drupalTag, this,
+                        synchronous);
 		return result;
 	}
 
@@ -472,20 +481,20 @@ public abstract class AbstractBaseDrupalEntity implements DrupalClient.OnRespons
 		Assert.assertNotNull("You have to make initial objects snapshot in order to calculate changes", origin);
 		return comparator.getDifferencesJSON(origin, current);
 	}
-	
+
 	@NonNull
 	private Object getManagedDataChecked()
 	{
 		Assert.assertNotNull("You have to specify non null data object", this.getManagedData());
 		return getManagedData();
 	}
-	
+
 	protected final class DrupalEntityTag
 	{
 		public OnEntityRequestListener listener;
 		public Object requestTag;
 		public boolean  consumeResponse;
-		
+
 		public DrupalEntityTag(boolean consumeResponse,Object requestTag,OnEntityRequestListener listener)
 		{
 			this.consumeResponse = consumeResponse;
