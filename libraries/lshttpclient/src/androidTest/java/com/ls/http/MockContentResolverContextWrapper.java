@@ -21,6 +21,11 @@ final class MockContentResolverContextWrapper extends ContextWrapper {
     }
 
     @Override
+    public Context getApplicationContext() {
+        return this;
+    }
+
+    @Override
     @NonNull
     public ContentResolver getContentResolver() {
         return mContentResolver;
