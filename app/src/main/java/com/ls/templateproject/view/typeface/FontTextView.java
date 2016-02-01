@@ -23,7 +23,7 @@ public class FontTextView extends TextView implements TypefaceUtils.TypefaceHold
     }
 
     private void applyAttributes(AttributeSet attrs) {
-       TypefaceUtils.applyTypefaceAtts(attrs,this);
+        TypefaceUtils.applyTypefaceAtts(attrs, this);
     }
 
     @Override

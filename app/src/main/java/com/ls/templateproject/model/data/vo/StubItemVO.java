@@ -6,6 +6,7 @@ import com.ls.templateproject.model.data.base.AbstractVO;
  * Created on 22.05.2015.
  */
 public class StubItemVO extends AbstractVO<String> {
+
     private String imageURL;
     private String description;
     private Boolean isFavorite;

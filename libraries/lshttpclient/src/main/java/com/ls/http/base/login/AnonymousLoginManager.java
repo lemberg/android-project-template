@@ -1,5 +1,3 @@
-
-
 /*
  * The MIT License (MIT)
  *  Copyright (c) 2014 Lemberg Solutions Limited
@@ -27,14 +25,12 @@ package com.ls.http.base.login;
 import com.android.volley.RequestQueue;
 import com.ls.http.base.BaseRequest;
 
-public class AnonymousLoginManager implements ILoginManager
-{
+public class AnonymousLoginManager implements ILoginManager {
 
-	@Override
-	public Object login(String userName, String password, RequestQueue queue)
-	{
-		return null;
-	}
+    @Override
+    public Object login(String userName, String password, RequestQueue queue) {
+        return null;
+    }
 
     @Override
     public boolean shouldRestoreLogin() {
@@ -47,8 +43,8 @@ public class AnonymousLoginManager implements ILoginManager
     }
 
     @Override
-	public void applyLoginDataToRequest(BaseRequest request)
-	{}
+    public void applyLoginDataToRequest(BaseRequest request) {
+    }
 
     @Override
     public boolean restoreLoginData(RequestQueue queue) {
@@ -62,9 +58,8 @@ public class AnonymousLoginManager implements ILoginManager
     }
 
     @Override
-	public Object logout(RequestQueue queue)
-	{
-		return null;
-	}
+    public Object logout(RequestQueue queue) {
+        return null;
+    }
 
 }

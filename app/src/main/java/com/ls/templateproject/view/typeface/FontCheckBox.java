@@ -4,7 +4,7 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.CheckBox;
 
-public class FontCheckBox extends CheckBox implements TypefaceUtils.TypefaceHolder{
+public class FontCheckBox extends CheckBox implements TypefaceUtils.TypefaceHolder {
 
     public FontCheckBox(Context context) {
         super(context);
@@ -21,7 +21,7 @@ public class FontCheckBox extends CheckBox implements TypefaceUtils.TypefaceHold
     }
 
     private void applyAttributes(AttributeSet attrs) {
-        TypefaceUtils.applyTypefaceAtts(attrs,this);
+        TypefaceUtils.applyTypefaceAtts(attrs, this);
     }
 
     @Override

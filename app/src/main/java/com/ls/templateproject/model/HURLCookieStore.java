@@ -63,7 +63,7 @@ public class HURLCookieStore implements CookieStore {
         spePreferences = ctxContext.getSharedPreferences("CookiePrefsFile", 0);
         Map<String, ?> prefsMap = spePreferences.getAll();
 
-        for(Map.Entry<String, ?> entry : prefsMap.entrySet()) {
+        for (Map.Entry<String, ?> entry : prefsMap.entrySet()) {
 
             for (String strCookie : (HashSet<String>) entry.getValue()) {
 
@@ -114,8 +114,9 @@ public class HURLCookieStore implements CookieStore {
 
         List<HttpCookie> lstCookies = mapCookies.get(uri);
 
-        if (lstCookies == null)
+        if (lstCookies == null) {
             mapCookies.put(uri, new ArrayList<HttpCookie>());
+        }
 
         return mapCookies.get(uri);
 
@@ -164,8 +165,9 @@ public class HURLCookieStore implements CookieStore {
 
         List<HttpCookie> lstCookies = mapCookies.get(uri);
 
-        if (lstCookies == null)
+        if (lstCookies == null) {
             return false;
+        }
 
         return lstCookies.remove(cookie);
 

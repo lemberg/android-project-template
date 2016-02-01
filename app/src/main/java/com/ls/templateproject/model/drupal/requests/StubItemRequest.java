@@ -2,7 +2,6 @@ package com.ls.templateproject.model.drupal.requests;
 
 import com.ls.drupal.AbstractDrupalArrayEntity;
 import com.ls.drupal.DrupalClient;
-
 import com.ls.http.base.BaseRequest;
 import com.ls.templateproject.model.data.vo.StubItemVO;
 
@@ -31,7 +30,7 @@ public class StubItemRequest extends AbstractDrupalArrayEntity<StubItemVO> {
 
     @Override
     protected String getPath() {
-        return "demos/DrupalTemplate/stub_page_"+pageId+".txt";
+        return "demos/DrupalTemplate/stub_page_" + pageId + ".txt";
     }
 
     @Override

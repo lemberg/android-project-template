@@ -1,20 +1,22 @@
 package com.ls.templateproject.model.plain.managers;
 
-import com.ls.templateproject.model.data.base.DatabaseFacade;
 import com.ls.http.base.client.LSClient;
+import com.ls.templateproject.model.data.base.DatabaseFacade;
+
+import android.support.annotation.NonNull;
 
 /**
  * Created on 25.05.2015. Use for database-based storage only
  */
-public abstract class SynchrondizedDatabaseManager<ClassToManage,ParametersClass,TagClass> extends BaseItemManager<ClassToManage, ParametersClass,TagClass> {
+public abstract class SynchronizedDatabaseManager<ClassToManage, ParametersClass, TagClass> extends BaseItemManager<ClassToManage, ParametersClass, TagClass> {
 
-    protected SynchrondizedDatabaseManager(LSClient client) {
+    protected SynchronizedDatabaseManager(@NonNull final LSClient client) {
         super(client);
     }
 
     @Override
     protected final boolean storeResponse(ClassToManage response, TagClass tag) {
-        DatabaseFacade facade = DatabaseFacade.instance();
+        final DatabaseFacade facade = DatabaseFacade.instance();
         synchronized (facade) {
             try {
                 facade.open();
@@ -33,11 +35,11 @@ public abstract class SynchrondizedDatabaseManager<ClassToManage,ParametersClass
 
     @Override
     protected ClassToManage restoreResponse(TagClass tag) {
-        DatabaseFacade facade = DatabaseFacade.instance();
+        final DatabaseFacade facade = DatabaseFacade.instance();
         synchronized (facade) {
             try {
                 facade.open();
-                ClassToManage result = synchronizeddRetoreResponse(tag);
+                ClassToManage result = synchronizedRestoreResponse(tag);
                 return result;
             } finally {
                 facade.close();
@@ -47,5 +49,5 @@ public abstract class SynchrondizedDatabaseManager<ClassToManage,ParametersClass
 
     protected abstract boolean synchronizedStoreResponse(ClassToManage response, TagClass tag);
 
-    protected abstract ClassToManage synchronizeddRetoreResponse(TagClass tag);
+    protected abstract ClassToManage synchronizedRestoreResponse(TagClass tag);
 }

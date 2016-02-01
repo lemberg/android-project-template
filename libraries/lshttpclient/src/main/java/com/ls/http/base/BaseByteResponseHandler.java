@@ -29,27 +29,20 @@ import com.android.volley.toolbox.HttpHeaderParser;
 import java.util.HashMap;
 
 
-public abstract class BaseByteResponseHandler extends ResponseHandler
-{
+public abstract class BaseByteResponseHandler extends ResponseHandler {
 
     /**
      * No specifier class supported yet. Just byte[] is returned
-     * @param response
-     * @param theSpecifier
-     * @return
      */
-    protected Object itemFromResponseWithSpecifier(NetworkResponse response, Object theSpecifier)
-	{
-		Object result = null;
-		if(response != null && response.data != null && response.data.length > 0)
-		{
-			result = response.data;
-		}
-		return result;
-	}
+    protected Object itemFromResponseWithSpecifier(NetworkResponse response, Object theSpecifier) {
+        Object result = null;
+        if (response != null && response.data != null && response.data.length > 0) {
+            result = response.data;
+        }
+        return result;
+    }
 
-    protected Response<ResponseData> parseNetworkResponse(NetworkResponse response,Object responseClassSpecifier)
-    {
+    protected Response<ResponseData> parseNetworkResponse(NetworkResponse response, Object responseClassSpecifier) {
         ResponseData responseData = new ResponseData();
 
         responseData.data = this.itemFromResponseWithSpecifier(response, responseClassSpecifier);
@@ -62,6 +55,8 @@ public abstract class BaseByteResponseHandler extends ResponseHandler
         responseData.error = result.error;
 
         return result;
-    };
+    }
+
+    ;
 
 }

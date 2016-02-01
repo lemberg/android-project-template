@@ -22,7 +22,6 @@
 
 package com.ls.http.base.handler;
 
-class JSONHALResponseHandler extends JSONResponseHandler
-{
+class JSONHALResponseHandler extends JSONResponseHandler {
 
 }

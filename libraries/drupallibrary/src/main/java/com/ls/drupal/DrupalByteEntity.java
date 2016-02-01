@@ -35,6 +35,6 @@ public abstract class DrupalByteEntity extends AbstractDrupalByteEntity<byte[]> 
 
     @Override
     protected void consumeObject(ResponseData data) {
-       this.setManagedData((byte[])data.getData());
+        this.setManagedData((byte[]) data.getData());
     }
 }

@@ -35,8 +35,7 @@ public class StringMultipartEntityPart implements IMultiPartEntityPart {
 
     private String value;
 
-    public StringMultipartEntityPart(String value)
-    {
+    public StringMultipartEntityPart(String value) {
         this.value = value;
     }
 

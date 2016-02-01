@@ -42,8 +42,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.List;
 
-class MultipartRequestHandler extends RequestHandler
-{
+class MultipartRequestHandler extends RequestHandler {
 
     private MultipartEntityBuilder entity = MultipartEntityBuilder.create();
     private HttpEntity httpentity;
@@ -60,18 +59,14 @@ class MultipartRequestHandler extends RequestHandler
         formMultipartEntity(object);
     }
 
-    private void formMultipartEntity(Object source)
-    {
+    private void formMultipartEntity(Object source) {
         Class<?> currentClass = source.getClass();
-        while (!Object.class.equals(currentClass))
-        {
+        while (!Object.class.equals(currentClass)) {
             Field[] fields = currentClass.getDeclaredFields();
-            for (int counter = 0; counter < fields.length; counter++)
-            {
+            for (int counter = 0; counter < fields.length; counter++) {
                 Field field = fields[counter];
                 Expose expose = field.getAnnotation(Expose.class);
-                if (expose != null && !expose.deserialize() || Modifier.isTransient(field.getModifiers()))
-                {
+                if (expose != null && !expose.deserialize() || Modifier.isTransient(field.getModifiers())) {
                     continue;// We don't have to copy ignored fields.
                 }
                 field.setAccessible(true);
@@ -79,21 +74,17 @@ class MultipartRequestHandler extends RequestHandler
 
                 String name;
                 SerializedName serializableName = field.getAnnotation(SerializedName.class);
-                if(serializableName != null)
-                {
+                if (serializableName != null) {
                     name = serializableName.value();
-                }else{
+                } else {
                     name = field.getName();
                 }
-                try
-                {
+                try {
                     value = field.get(source);
-                   addEntity(name,value);
-                } catch (IllegalAccessException e)
-                {
+                    addEntity(name, value);
+                } catch (IllegalAccessException e) {
                     e.printStackTrace();
-                } catch (IllegalArgumentException e)
-                {
+                } catch (IllegalArgumentException e) {
                     e.printStackTrace();
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
@@ -104,52 +95,44 @@ class MultipartRequestHandler extends RequestHandler
         httpentity = entity.build();
     }
 
-    private void addEntity(String name, Object value ) throws UnsupportedEncodingException {
-        if(value != null)
-        {
-            if(value instanceof IMultiPartEntityPart) {
-                ContentBody body = ((IMultiPartEntityPart)value).getContentBody();
-                entity.addPart(name,body);
-            }else{
-                if(value instanceof List)
-                {
-                    for(Object item:(List)value)
-                    {
-                       addEntity(name+"[]",item);
+    private void addEntity(String name, Object value) throws UnsupportedEncodingException {
+        if (value != null) {
+            if (value instanceof IMultiPartEntityPart) {
+                ContentBody body = ((IMultiPartEntityPart) value).getContentBody();
+                entity.addPart(name, body);
+            } else {
+                if (value instanceof List) {
+                    for (Object item : (List) value) {
+                        addEntity(name + "[]", item);
                     }
                     return;
                 }
 
-                if(value.getClass().isArray())
-                {
-                    Object[]array = (Object[])value;
-                    for(int counter = 0;counter < array.length; counter++)
-                    {
+                if (value.getClass().isArray()) {
+                    Object[] array = (Object[]) value;
+                    for (int counter = 0; counter < array.length; counter++) {
                         Object item = array[counter];
-                        if(item != null)
-                        {
-                            addEntity(name+"[]",item);
+                        if (item != null) {
+                            addEntity(name + "[]", item);
                         }
                     }
                     return;
                 }
 
-                entity.addTextBody(name,value.toString());
+                entity.addTextBody(name, value.toString());
             }
         }
     }
 
     @Override
-	public String stringBodyFromItem()
-	{
-		if(implementsPostableInterface())
-		{
-			IPostableItem item = (IPostableItem)this.object;
-			return item.toPlainText();
-		}else{
-			return this.object.toString();
-		}
-	}
+    public String stringBodyFromItem() {
+        if (implementsPostableInterface()) {
+            IPostableItem item = (IPostableItem) this.object;
+            return item.toPlainText();
+        } else {
+            return this.object.toString();
+        }
+    }
 
     @Override
     public String getBodyContentType(String defaultCharset) {

@@ -8,7 +8,8 @@ import com.ls.templateproject.model.data.base.DatabaseFacade;
 /**
  * Created on 25.05.2015. Use for database-based storage only
  */
-public abstract class SynchrondizedDatabaseManager<ClassToManage, FetchRequestToManage extends AbstractBaseDrupalEntity,ParametersClass,TagClass> extends BaseItemManager<ClassToManage, FetchRequestToManage,ParametersClass,TagClass> {
+public abstract class SynchrondizedDatabaseManager<ClassToManage, FetchRequestToManage extends AbstractBaseDrupalEntity, ParametersClass, TagClass>
+        extends BaseItemManager<ClassToManage, FetchRequestToManage, ParametersClass, TagClass> {
 
     protected SynchrondizedDatabaseManager(DrupalClient client) {
         super(client);

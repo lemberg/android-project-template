@@ -1,12 +1,12 @@
 package com.ls.templateproject.view.typeface;
 
 
-
 import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.EditText;
 
 public class FontEditText extends EditText implements TypefaceUtils.TypefaceHolder {
+
     public FontEditText(Context context) {
         super(context);
     }
@@ -22,7 +22,7 @@ public class FontEditText extends EditText implements TypefaceUtils.TypefaceHold
     }
 
     private void applyAttributes(AttributeSet attrs) {
-        TypefaceUtils.applyTypefaceAtts(attrs,this);
+        TypefaceUtils.applyTypefaceAtts(attrs, this);
     }
 
     public void setTypeface(final String theName) {

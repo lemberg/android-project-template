@@ -12,10 +12,10 @@ import java.net.HttpURLConnection;
 /**
  * Created on 22.05.2015.
  */
-public abstract class BaseItemManager<ClassToManage, FetchRequestToManage extends AbstractBaseDrupalEntity,ParametersClass,TagClass> {
+public abstract class BaseItemManager<ClassToManage, FetchRequestToManage extends AbstractBaseDrupalEntity, ParametersClass, TagClass> {
 
     private DrupalClient client;
-    private ObserverHolder<OnDataFetchCompleteListener<ClassToManage,TagClass>> listeners;
+    private ObserverHolder<OnDataFetchCompleteListener<ClassToManage, TagClass>> listeners;
 
     protected abstract FetchRequestToManage getEntityToFetch(DrupalClient client, ParametersClass requestParams);
 
@@ -35,7 +35,7 @@ public abstract class BaseItemManager<ClassToManage, FetchRequestToManage extend
 
         @Override
         public void onRequestFailed(AbstractBaseDrupalEntity entity, Object tag, ResponseData data) {
-            applyDataUpdateFailed((FetchRequestToManage) entity,(TagClass) tag, data);
+            applyDataUpdateFailed((FetchRequestToManage) entity, (TagClass) tag, data);
         }
 
         @Override
@@ -56,11 +56,11 @@ public abstract class BaseItemManager<ClassToManage, FetchRequestToManage extend
         return tag;
     }
 
-    public void addDataFetchCompleteListener(OnDataFetchCompleteListener<ClassToManage,TagClass> listener) {
+    public void addDataFetchCompleteListener(OnDataFetchCompleteListener<ClassToManage, TagClass> listener) {
         this.listeners.registerObserver(listener);
     }
 
-    public void removeDataFetchCompleteListener(OnDataFetchCompleteListener<ClassToManage,TagClass> listener) {
+    public void removeDataFetchCompleteListener(OnDataFetchCompleteListener<ClassToManage, TagClass> listener) {
         this.listeners.unregisterObserver(listener);
     }
 
@@ -85,12 +85,11 @@ public abstract class BaseItemManager<ClassToManage, FetchRequestToManage extend
     }
 
     protected void applyDataUpdateFailed(FetchRequestToManage entity, TagClass tag, ResponseData data) {
-        restoreData(data, tag,false);
+        restoreData(data, tag, false);
     }
 
-    private void restoreData(final ResponseData data, final TagClass tag,final boolean successful) {
-        new AsyncTask<Void,Void,ClassToManage>()
-        {
+    private void restoreData(final ResponseData data, final TagClass tag, final boolean successful) {
+        new AsyncTask<Void, Void, ClassToManage>() {
 
             @Override
             protected ClassToManage doInBackground(Void... params) {
@@ -106,7 +105,7 @@ public abstract class BaseItemManager<ClassToManage, FetchRequestToManage extend
 
     private void notifyListeners(final ClassToManage result, final ResponseData data, final TagClass tag, final boolean success) {
 
-        listeners.notifyAllObservers(new ObserverHolder.ObserverNotifier<OnDataFetchCompleteListener<ClassToManage,TagClass>>() {
+        listeners.notifyAllObservers(new ObserverHolder.ObserverNotifier<OnDataFetchCompleteListener<ClassToManage, TagClass>>() {
             @Override
             public void onNotify(OnDataFetchCompleteListener observer) {
                 if (success) {
@@ -118,7 +117,7 @@ public abstract class BaseItemManager<ClassToManage, FetchRequestToManage extend
         });
     }
 
-    public interface OnDataFetchCompleteListener<ResultClass,TagClass> {
+    public interface OnDataFetchCompleteListener<ResultClass, TagClass> {
 
         void onDataFetchComplete(ResultClass result, ResponseData data, TagClass requestTag);
 

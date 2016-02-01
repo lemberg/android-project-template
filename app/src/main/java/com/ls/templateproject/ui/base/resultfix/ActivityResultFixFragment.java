@@ -16,15 +16,15 @@ import java.util.List;
  * Provides workaround for nested fragment's activity execution for result issue
  * NOTE: parent activity must be inherited from corresponding {@link ActivityResultFixActivity}
  */
-public class ActivityResultFixFragment extends CallbackFragment
-{
+public class ActivityResultFixFragment extends CallbackFragment {
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         FragmentManager manager = getChildFragmentManager();
         List<Fragment> fragements = manager.getFragments();
-        if(fragements != null) {
+        if (fragements != null) {
             for (Fragment fragment : fragements) {
-                if(fragment != null) {
+                if (fragment != null) {
                     fragment.onActivityResult(requestCode, resultCode, data);
                 }
             }
@@ -35,10 +35,9 @@ public class ActivityResultFixFragment extends CallbackFragment
     @Override
     public void startActivityForResult(Intent intent, int requestCode) {
         Activity activity = getActivity();
-        if(activity != null)
-        {
-            activity.startActivityForResult(intent,requestCode);
-        }else{
+        if (activity != null) {
+            activity.startActivityForResult(intent, requestCode);
+        } else {
             Log.e(BaseRequest.class.getName(), "No activity context available to perform execution for result");
         }
     }

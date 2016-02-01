@@ -35,8 +35,7 @@ public class StreamMultipartEntityPart implements IMultiPartEntityPart {
 
     private InputStream value;
 
-    public StreamMultipartEntityPart(InputStream value)
-    {
+    public StreamMultipartEntityPart(InputStream value) {
         this.value = value;
     }
 

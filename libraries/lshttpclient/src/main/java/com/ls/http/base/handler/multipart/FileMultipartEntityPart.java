@@ -34,8 +34,7 @@ public class FileMultipartEntityPart implements IMultiPartEntityPart {
 
     private File value;
 
-    public FileMultipartEntityPart(File value)
-    {
+    public FileMultipartEntityPart(File value) {
         this.value = value;
     }
 

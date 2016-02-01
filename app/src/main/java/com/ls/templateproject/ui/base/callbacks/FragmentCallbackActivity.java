@@ -9,12 +9,10 @@ import android.support.v7.app.ActionBarActivity;
  * Provides workaround for nested fragment's callbacks listening issue
  * NOTE:child fragments must be inherited from corresponding {@link CallbackFragment} to trigger/handle events
  */
-public class FragmentCallbackActivity extends ActionBarActivity implements OnFragmentCallbackListener
-{
+public class FragmentCallbackActivity extends ActionBarActivity implements OnFragmentCallbackListener {
 
     @Override
-    public void onFragmentCallback(Fragment fragment, String action, Object data)
-    {
+    public void onFragmentCallback(Fragment fragment, String action, Object data) {
         FragmentManager manager = getSupportFragmentManager();
         FragmentCallbackUtils.notifyAllFragmentsAboutCallback(manager, fragment, action, data);
     }
