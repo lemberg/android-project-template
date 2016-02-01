@@ -101,7 +101,8 @@ public class ContentResolverRequestQueue extends RequestQueue {
                     }
                 } else {
                     final byte[] buff = new byte[4096];
-                    os = new ByteArrayOutputStream(buff.length);
+                    final int available = is.available();
+                    os = new ByteArrayOutputStream(available > 0 ? available : buff.length);
 
                     int read;
                     while ((read = is.read(buff, 0, buff.length)) != -1) {
