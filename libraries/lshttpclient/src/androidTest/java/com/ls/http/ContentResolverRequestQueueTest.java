@@ -63,8 +63,8 @@ public final class ContentResolverRequestQueueTest extends ProviderTestCase2<Fil
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
     public void testContentUri() throws Exception {
-        final LSClient client = new LSClient(
-                new MockContentResolverContextWrapper(getContext(), getMockContentResolver()));
+        final LSClient client = new LSClient.Builder(
+                new MockContentResolverContextWrapper(getContext(), getMockContentResolver())).build();
 
         final BaseRequest request = new BaseRequestBuilder()
                 .setRequestURL(FileProvider.getUriForFile(TEST_FILE_NAME).toString())
@@ -78,7 +78,7 @@ public final class ContentResolverRequestQueueTest extends ProviderTestCase2<Fil
     }
 
     public void testFileUri() throws Exception {
-        final LSClient client = new LSClient(getContext());
+        final LSClient client = new LSClient.Builder(getContext()).build();
 
         final URI uri = getContext().getFileStreamPath(TEST_FILE_NAME).toURI();
 
@@ -94,7 +94,7 @@ public final class ContentResolverRequestQueueTest extends ProviderTestCase2<Fil
     }
 
     public void testAssetFileUri() throws Exception {
-        final LSClient client = new LSClient(getContext());
+        final LSClient client = new LSClient.Builder(getContext()).build();
 
         final Uri uri = UriFactory.makeAssetUri("test");
 
@@ -110,7 +110,7 @@ public final class ContentResolverRequestQueueTest extends ProviderTestCase2<Fil
     }
 
     public void testAssetFolderFileUri() throws Exception {
-        final LSClient client = new LSClient(getContext());
+        final LSClient client = new LSClient.Builder(getContext()).build();
 
         final Uri uri = UriFactory.makeAssetUri("testFolder/test");
 
@@ -126,7 +126,7 @@ public final class ContentResolverRequestQueueTest extends ProviderTestCase2<Fil
     }
 
     public void testDrawableResourceUri() throws Exception {
-        final LSClient client = new LSClient(getContext());
+        final LSClient client = new LSClient.Builder(getContext()).build();
 
         final Uri uri = UriFactory.makeDrawableResourceUri(getContext().getResources(), R.drawable.ic_hexagon_outline_black_24dp);
 
@@ -142,7 +142,7 @@ public final class ContentResolverRequestQueueTest extends ProviderTestCase2<Fil
     }
 
     public void testXmlResourceUri() throws Exception {
-        final LSClient client = new LSClient(getContext());
+        final LSClient client = new LSClient.Builder(getContext()).build();
 
         final Uri uri = UriFactory.makeXmlResourceUri(getContext().getResources(), R.xml.test);
 
@@ -159,7 +159,7 @@ public final class ContentResolverRequestQueueTest extends ProviderTestCase2<Fil
     }
 
     public void testRawResourceUri() throws Exception {
-        final LSClient client = new LSClient(getContext());
+        final LSClient client = new LSClient.Builder(getContext()).build();
 
         final Uri uri = UriFactory.makeRawResourceUri(getContext().getResources(), R.raw.test);
 

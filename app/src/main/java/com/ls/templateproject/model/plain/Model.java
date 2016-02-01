@@ -87,7 +87,10 @@ public class Model {
     private Model(Context context) {
         loginManager = new LoginManager();
         queue = createNewQueue(context);
-        client = new LSClient(context, queue, loginManager);
+        client = new LSClient.Builder(context)
+                .setRequestQueue(queue)
+                .setLoginManager(loginManager)
+                .build();
 
         stubManager = new StubItemManager(client);
     }

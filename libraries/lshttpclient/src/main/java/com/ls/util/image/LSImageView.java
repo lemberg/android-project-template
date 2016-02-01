@@ -48,10 +48,10 @@ public class LSImageView extends ImageView {
 
     private static LSClient sharedClient;
 
-    private static LSClient getSharedClient(Context context) {
+    private static LSClient getSharedClient(@NonNull final Context context) {
         synchronized (LSImageView.class) {
             if (sharedClient == null) {
-                sharedClient = new LSClient(context);
+                sharedClient = new LSClient.Builder(context).build();
             }
         }
 

@@ -1,10 +1,12 @@
 package com.ls.util.internal;
 
+import com.android.volley.Cache;
 import com.android.volley.Network;
 import com.android.volley.NetworkResponse;
 import com.android.volley.NoConnectionError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
+import com.android.volley.ResponseDelivery;
 import com.android.volley.ServerError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.NoCache;
@@ -37,7 +39,19 @@ public class ContentResolverRequestQueue extends RequestQueue {
         super(new NoCache(), new ContentResolverNetwork(context.getApplicationContext()));
     }
 
-    private static final class ContentResolverNetwork implements Network {
+    public ContentResolverRequestQueue(@NonNull Cache cache, @NonNull ContentResolverNetwork network) {
+        super(cache, network);
+    }
+
+    public ContentResolverRequestQueue(@NonNull Cache cache, @NonNull ContentResolverNetwork network, int threadPoolSize) {
+        super(cache, network, threadPoolSize);
+    }
+
+    public ContentResolverRequestQueue(@NonNull Cache cache, @NonNull ContentResolverNetwork network, int threadPoolSize, ResponseDelivery delivery) {
+        super(cache, network, threadPoolSize, delivery);
+    }
+
+    public static final class ContentResolverNetwork implements Network {
 
         @NonNull
         private final ContentResolver mContentResolver;

@@ -32,7 +32,7 @@ public abstract class BaseItemManager<ClassToManage, ParametersClass, TagClass> 
 
     protected abstract ClassToManage restoreResponse(TagClass tag);
 
-    private LSClient.OnResponseListener updateResponseListener = new LSClient.OnResponseListener() {
+    private final LSClient.OnResponseListener updateResponseListener = new LSClient.OnResponseListener() {
         @Override
         public void onResponseReceived(@NonNull final BaseRequest request,
                 @NonNull final ResponseData data,
