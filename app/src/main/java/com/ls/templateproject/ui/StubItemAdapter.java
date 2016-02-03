@@ -32,7 +32,7 @@ public final class StubItemAdapter extends BaseAdapter {
     private boolean mCanLoadMore;
     private boolean mOnLoad;
 
-    private BaseItemManager.OnDataFetchCompleteListener<List<StubItemVO>, String> listener
+    private final BaseItemManager.OnDataFetchCompleteListener<List<StubItemVO>, String> listener
             = new BaseItemManager.OnDataFetchCompleteListener<List<StubItemVO>, String>() {
 
         @Override
@@ -100,7 +100,7 @@ public final class StubItemAdapter extends BaseAdapter {
         final StubItemVO item = getItem(position);
 
         final LSImageView imageView = (LSImageView) convertView.findViewById(R.id.image_view);
-        imageView.setImageWithURL(item.getImageURL());
+        imageView.setImageUri(item.getImageURL());
 
         final TextView text = (TextView) convertView.findViewById(R.id.textView);
         text.setText(item.getDescription());

@@ -1,6 +1,7 @@
 package com.ls.http.base;
 
-import junit.framework.Assert;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -15,7 +16,7 @@ public class BaseRequestBuilder {
 
     private String mDefaultCharset;
 
-    private String mRequestURL;
+    private String mRequestUri;
     private BaseRequest.RequestMethod mRequestMethod;
 
     private Map<String, String> mRequestHeaders;
@@ -24,19 +25,24 @@ public class BaseRequestBuilder {
     private Object mObjectToPost;
 
     private Object mResponseClassSpecifier;
-    private Object mErrorResponseClasSpecifier;
+    private Object mErrorResponseClassSpecifier;
 
+    @NonNull
     public BaseRequest create() {
-        Assert.assertNotNull("Request method must be provided", mRequestMethod);
-        Assert.assertNotNull("Request url must be provided", mRequestURL);
+        if (mRequestMethod == null) {
+            throw new IllegalStateException("Request method must be provided");
+        }
+        if (mRequestUri == null) {
+            throw new IllegalStateException("Request Uri must be provided");
+        }
 
-        RequestConfig config = new RequestConfig();
+        final RequestConfig config = new RequestConfig();
         config.setResponseFormat(mResponseFormat);
-        config.setErrorResponseClassSpecifier(mErrorResponseClasSpecifier);
+        config.setErrorResponseClassSpecifier(mErrorResponseClassSpecifier);
         config.setRequestFormat(mRequestFormat);
         config.setResponseClassSpecifier(mResponseClassSpecifier);
 
-        BaseRequest request = new BaseRequest(mRequestMethod, mRequestURL, config);
+        final BaseRequest request = new BaseRequest(mRequestMethod, mRequestUri, config);
         request.setObjectToPost(mObjectToPost);
         request.setDefaultCharset(mDefaultCharset);
         request.setGetParameters(mGetParameters);
@@ -47,9 +53,17 @@ public class BaseRequestBuilder {
 
     }
 
-
+    /**
+     * @deprecated use {@link #setRequestUri(String)} instead
+     */
+    @Deprecated
     public BaseRequestBuilder setRequestURL(String requestURL) {
-        this.mRequestURL = requestURL;
+        setRequestUri(requestURL);
+        return this;
+    }
+
+    public BaseRequestBuilder setRequestUri(@NonNull final String uri) {
+        mRequestUri = uri;
         return this;
     }
 
@@ -168,10 +182,18 @@ public class BaseRequestBuilder {
     }
 
     /**
-     * @param errorResponseClasSpecifier Class or Type, returned as error field of ResultData object, can be null if you don't need one.
+     * @param errorResponseClassSpecifier Class or Type, returned as error field of ResultData object, can be null if you don't need one.
+     * @deprecated use {@link #setErrorResponseClassSpecifier(Object)}
      */
-    public BaseRequestBuilder setErrorResponseClasSpecifier(Object errorResponseClasSpecifier) {
-        this.mErrorResponseClasSpecifier = errorResponseClasSpecifier;
+    public BaseRequestBuilder setErrorResponseClasSpecifier(@Nullable final Object errorResponseClassSpecifier) {
+        return setErrorResponseClassSpecifier(errorResponseClassSpecifier);
+    }
+
+    /**
+     * @param errorResponseClassSpecifier Class or Type, returned as error field of ResultData object, can be null if you don't need one.
+     */
+    public BaseRequestBuilder setErrorResponseClassSpecifier(@Nullable final Object errorResponseClassSpecifier) {
+        this.mErrorResponseClassSpecifier = errorResponseClassSpecifier;
         return this;
     }
 }

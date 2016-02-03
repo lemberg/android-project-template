@@ -27,12 +27,10 @@ import com.ls.http.base.BaseRequestBuilder;
 import com.ls.http.base.ResponseData;
 import com.ls.http.base.client.LSClient;
 import com.ls.httpclient.R;
-import com.ls.util.BitmapUtils;
+import com.ls.util.UriFactory;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.support.annotation.NonNull;
@@ -46,16 +44,17 @@ import android.widget.ImageView;
  */
 public class LSImageView extends ImageView {
 
-    private static LSClient sharedClient;
+    private static volatile LSClient sSharedClient;
 
-    private static LSClient getSharedClient(Context context) {
-        synchronized (LSImageView.class) {
-            if (sharedClient == null) {
-                sharedClient = new LSClient(context);
+    private static LSClient getSharedClient(@NonNull final Context context) {
+        if (sSharedClient == null) {
+            synchronized (LSImageView.class) {
+                if (sSharedClient == null) {
+                    sSharedClient = new LSClient.Builder(context).build();
+                }
             }
         }
-
-        return sharedClient;
+        return sSharedClient;
     }
 
     /**
@@ -63,15 +62,15 @@ public class LSImageView extends ImageView {
      *
      * @param client to be used in order to load images.
      */
-    public static void setupSharedClient(LSClient client) {
+    public static void setupSharedClient(final LSClient client) {
         synchronized (LSImageView.class) {
-            LSImageView.sharedClient = client;
+            LSImageView.sSharedClient = client;
         }
     }
 
     private LSClient localClient;
 
-    private ImageContainer imageContainer;
+    private ImageContainer mImageContainer;
 
     private Drawable noImageDrawable;
 
@@ -97,14 +96,14 @@ public class LSImageView extends ImageView {
         if (this.isInEditMode()) {
             return;
         }
-        TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.LSImageView);
 
-        Drawable noImageDrawable = array.getDrawable(R.styleable.LSImageView_noImageResource);
+        final TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.LSImageView);
+        final Drawable noImageDrawable = array.getDrawable(R.styleable.LSImageView_noImageResource);
         if (noImageDrawable != null) {
             this.setNoImageDrawable(noImageDrawable);
         }
 
-        String imagePath = array.getString(R.styleable.LSImageView_srcPath);
+        final String imagePath = array.getString(R.styleable.LSImageView_srcPath);
         if (!TextUtils.isEmpty(imagePath)) {
             this.setImageWithURL(imagePath);
         }
@@ -114,12 +113,41 @@ public class LSImageView extends ImageView {
         array.recycle();
     }
 
-    public void setImageWithURL(@Nullable String imagePath) {
+    /**
+     * @deprecated use {@link #setImageUri(String)} instead
+     */
+    @Deprecated
+    public void setImageWithURL(@Nullable final String imageUri) {
+        setImageUri(imageUri);
+    }
+
+    /**
+     * Sets image Uri. This method is overridden
+     *
+     * Unlike {@link ImageView's} implementation, the request will not be performed in UI thread.
+     * See {@link UriFactory} for special uris.
+     *
+     * @param uri The Uri to set
+     */
+    @Override
+    public void setImageURI(@Nullable final Uri uri) {
+        setImageUri(uri != null ? uri.toString() : null);
+    }
+
+    /**
+     * Sets image Uri. This method is overridden
+     *
+     * The request will not be performed in UI thread.
+     * See {@link UriFactory} for special uris.
+     *
+     * @param imageUri The Uri to set
+     */
+    public void setImageUri(@Nullable final String imageUri) {
         if (this.isInEditMode()) {
             return;
         }
 
-        if (this.imageContainer != null && this.imageContainer.url.equals(imagePath)) {
+        if (this.mImageContainer != null && this.mImageContainer.uri.equals(imageUri)) {
             return;
         }
 
@@ -128,7 +156,7 @@ public class LSImageView extends ImageView {
 
 
         // null URL means no image
-        if (TextUtils.isEmpty(imagePath)) {
+        if (TextUtils.isEmpty(imageUri)) {
             return;
         }
 
@@ -138,21 +166,27 @@ public class LSImageView extends ImageView {
                     "No DrupalClient set. Please provide local or shared DrupalClient to perform loading");
         }
 
-        this.imageContainer = new ImageContainer(this, imagePath, client);
+        this.mImageContainer = new ImageContainer(imageUri, client);
         this.startLoading();
     }
 
+    /**
+     * @deprecated use {@link #getImageUri()} instead
+     */
+    @Nullable
     public String getImageURL() {
-        if (this.imageContainer != null) {
-            return this.imageContainer.url;
-        }
-        return null;
+        return getImageUri();
+    }
+
+    @Nullable
+    public String getImageUri() {
+        return mImageContainer != null ? mImageContainer.uri : null;
     }
 
     @Override
-    public void setImageDrawable(Drawable drawable) {
+    public void setImageDrawable(@Nullable final Drawable drawable) {
         cancelLoading();
-        this.imageContainer = null;
+        this.mImageContainer = null;
         superSetImageDrawable(drawable);
     }
 
@@ -227,19 +261,19 @@ public class LSImageView extends ImageView {
     }
 
     public void cancelLoading() {
-        if (this.imageContainer != null) {
-            this.imageContainer.cancelLoad();
+        if (this.mImageContainer != null) {
+            this.mImageContainer.cancelLoad();
         }
     }
 
     public void startLoading() {
-        if (this.imageContainer != null) {
+        if (this.mImageContainer != null) {
             if (imageLoadingListener != null) {
                 imageLoadingListener.onImageLoadingStarted(LSImageView.this,
-                        this.imageContainer.url);
+                        this.mImageContainer.uri);
             }
-            this.imageContainer.loadImage(
-                    getInternalImageLoadingListenerForContainer(this.imageContainer));
+            this.mImageContainer.loadImage(
+                    getInternalImageLoadingListenerForContainer(this.mImageContainer));
         }
     }
 
@@ -287,82 +321,56 @@ public class LSImageView extends ImageView {
 
     private InternalImageLoadingListener getInternalImageLoadingListenerForContainer(
             ImageContainer container) {
-        return new InternalImageLoadingListener(container.url);
+        return new InternalImageLoadingListener(container.uri);
     }
 
-    private static class ImageContainer {
+    private static final class ImageContainer {
 
-        private final ImageView mImageView;
+        @NonNull
+        private final String uri;
 
-        private final String url;
+        @NonNull
         private final LSClient client;
         private LSClient.OnResponseListener listener;
 
-        ImageContainer(@NonNull final ImageView imageView, final String url,
-                final LSClient client) {
-            mImageView = imageView;
-            this.url = url;
+        ImageContainer(@NonNull final String uri,
+                @NonNull final LSClient client) {
+            this.uri = uri;
             this.client = client;
         }
 
         void cancelLoad() {
-            client.cancelAllRequestsForListener(listener, url);
+            client.cancelAllRequestsForListener(listener, uri);
         }
 
         void loadImage(final LSClient.OnResponseListener listener) {
             this.listener = listener;
-            if (url.startsWith("content://") || url.startsWith("file://")) {
-                loadImageFromContentOrFileUri(listener);
-            } else {
-                loadImageFromHttpUrl();
-            }
-        }
-
-        private void loadImageFromHttpUrl() {
             final BaseRequest imageRequest = new BaseRequestBuilder()
                     .setRequestMethod(BaseRequest.RequestMethod.GET)
                     .setResponseFormat(BaseRequest.ResponseFormat.IMAGE)
-                    .setRequestURL(url)
+                    .setRequestUri(uri)
                     .create();
-            this.client.performRequest(imageRequest, url, listener, false);
-        }
-
-        private void loadImageFromContentOrFileUri(LSClient.OnResponseListener listener) {
-            final Bitmap bitmap = BitmapUtils.loadBitmap(Uri.parse(url), mImageView.getContext(),
-                    mImageView.getWidth(), mImageView.getHeight());
-            final BaseRequest imageRequest = new BaseRequestBuilder()
-                    .setRequestMethod(BaseRequest.RequestMethod.GET)
-                    .setResponseFormat(BaseRequest.ResponseFormat.IMAGE)
-                    .setRequestURL(url)
-                    .create();
-            if (bitmap == null) {
-                listener.onError(imageRequest, null, null);
-            } else {
-                final Drawable drawable = new BitmapDrawable(mImageView.getResources(), bitmap);
-                final ResponseData data = new ResponseData();
-                data.setData(drawable);
-                listener.onResponseReceived(imageRequest, data, null);
-            }
+            this.client.performRequest(imageRequest, uri, listener, false);
         }
     }
 
-    private class InternalImageLoadingListener implements LSClient.OnResponseListener {
+    private final class InternalImageLoadingListener implements LSClient.OnResponseListener {
 
-        private String acceptableURL;
+        @NonNull
+        private final String acceptableUri;
 
-        InternalImageLoadingListener(String url) {
-            this.acceptableURL = url;
+        InternalImageLoadingListener(@NonNull final String url) {
+            this.acceptableUri = url;
         }
 
-        private boolean checkCurrentURL() {
-            return imageContainer != null && imageContainer.url != null && imageContainer.url
-                    .equals(acceptableURL);
+        private boolean checkCurrentUri() {
+            return mImageContainer != null && mImageContainer.uri.equals(acceptableUri);
         }
 
         @Override
         public void onResponseReceived(@NonNull BaseRequest request, @NonNull ResponseData data, @Nullable Object tag) {
-            Drawable image = (Drawable) data.getData();
-            if (checkCurrentURL()) {
+            final Drawable image = (Drawable) data.getData();
+            if (checkCurrentUri()) {
                 superSetDrawableSkippingLayoutUpdate(image);
                 applyNoImageDrawableIfNeeded();
             }
@@ -374,7 +382,7 @@ public class LSImageView extends ImageView {
 
         @Override
         public void onError(@NonNull BaseRequest request, @Nullable ResponseData data, @Nullable Object tag) {
-            if (checkCurrentURL()) {
+            if (checkCurrentUri()) {
                 applyNoImageDrawableIfNeeded();
             }
             if (imageLoadingListener != null) {
@@ -384,11 +392,11 @@ public class LSImageView extends ImageView {
 
         @Override
         public void onCancel(@NonNull BaseRequest request, @Nullable Object tag) {
-            if (checkCurrentURL()) {
+            if (checkCurrentUri()) {
                 applyNoImageDrawableIfNeeded();
             }
             if (imageLoadingListener != null) {
-                imageLoadingListener.onImageLoadingCancelled(LSImageView.this, this.acceptableURL);
+                imageLoadingListener.onImageLoadingCancelled(LSImageView.this, this.acceptableUri);
             }
         }
     }
