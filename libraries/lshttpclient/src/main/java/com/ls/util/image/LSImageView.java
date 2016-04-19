@@ -231,7 +231,7 @@ public class LSImageView extends ImageView {
     }
 
     public void setNoImageDrawableResource(int resource) {
-        this.setImageDrawable(this.getContext().getResources().getDrawable(resource));
+        this.setNoImageDrawable(this.getContext().getResources().getDrawable(resource));
     }
 
     public void setNoImageDrawable(Drawable noImageDrawable) {
