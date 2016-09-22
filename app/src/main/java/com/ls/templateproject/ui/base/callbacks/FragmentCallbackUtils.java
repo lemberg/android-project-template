@@ -8,14 +8,13 @@ import java.util.List;
 /**
  * Created on 14.12.2015.
  */
-class FragmentCallbackUtils
-{
-    static void notifyAllFragmentsAboutCallback(FragmentManager fragmentManager,Fragment fragment, String action, Object data)
-    {
+class FragmentCallbackUtils {
+
+    static void notifyAllFragmentsAboutCallback(FragmentManager fragmentManager, Fragment fragment, String action, Object data) {
         List<Fragment> fragements = fragmentManager.getFragments();
-        if(fragements != null) {
+        if (fragements != null) {
             for (Fragment aFragment : fragements) {
-                if(aFragment != null && aFragment instanceof OnFragmentCallbackListener) {
+                if (aFragment != null && aFragment instanceof OnFragmentCallbackListener) {
                     ((OnFragmentCallbackListener) aFragment).onFragmentCallback(fragment, action, data);
                 }
             }

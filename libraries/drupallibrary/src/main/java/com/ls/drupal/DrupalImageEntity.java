@@ -65,10 +65,10 @@ public class DrupalImageEntity extends AbstractDrupalByteEntity<Drawable> {
 
     @Override
     protected void consumeObject(ResponseData entity) {
-        byte[] data = (byte[])entity.getData();
-        if(data != null) {
+        byte[] data = (byte[]) entity.getData();
+        if (data != null) {
             Bitmap imageBitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
-            Drawable imageDrawable = new BitmapDrawable(Resources.getSystem(),imageBitmap);
+            Drawable imageDrawable = new BitmapDrawable(Resources.getSystem(), imageBitmap);
             this.setManagedData(imageDrawable);
         }
     }

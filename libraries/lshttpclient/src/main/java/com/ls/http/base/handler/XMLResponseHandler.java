@@ -36,8 +36,7 @@ class XMLResponseHandler extends BaseStringResponseHandler {
     @Override
     protected Object itemFromResponse(@NonNull String response, @NonNull Class<?> theClass) {
         Object result = createInstanceByInterface(response, theClass);
-        if (result == null)
-        {
+        if (result == null) {
             //TODO: implement some additional handling for that case
         }
         return result;
@@ -48,8 +47,7 @@ class XMLResponseHandler extends BaseStringResponseHandler {
         Class<?> theClass = theType.getClass();
 
         Object result = createInstanceByInterface(json, theClass);
-        if (result == null)
-        {
+        if (result == null) {
             //TODO: implement some additional handling for that case
         }
         return result;

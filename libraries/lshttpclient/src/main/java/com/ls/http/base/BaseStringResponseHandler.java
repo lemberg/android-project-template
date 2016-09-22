@@ -34,38 +34,34 @@ import java.lang.reflect.Type;
 import java.util.HashMap;
 
 
-public abstract class BaseStringResponseHandler extends ResponseHandler
-{
+public abstract class BaseStringResponseHandler extends ResponseHandler {
+
     protected abstract Object itemFromResponse(@NonNull String response, @NonNull Class<?> theClass);
+
     protected abstract Object itemFromResponse(@NonNull String response, @NonNull Type theType);
 
-    protected Object itemFromResponseWithSpecifier(String response, Object theSpecifier)
-	{
-		Object result = null;
-		if(response != null && theSpecifier != null)
-		{
-			if(theSpecifier instanceof Class<?>)
-			{
-                result = itemFromResponse(response, (Class<?>)theSpecifier);
-			}else if(theSpecifier instanceof Type){
-                result = itemFromResponse(response, (Type)theSpecifier);
-			}else{
-				throw new IllegalArgumentException("You have to specify Class<?> or Type instance");
-			}
-		}
-		return result;
-	}
+    protected Object itemFromResponseWithSpecifier(String response, Object theSpecifier) {
+        Object result = null;
+        if (response != null && theSpecifier != null) {
+            if (theSpecifier instanceof Class<?>) {
+                result = itemFromResponse(response, (Class<?>) theSpecifier);
+            } else if (theSpecifier instanceof Type) {
+                result = itemFromResponse(response, (Type) theSpecifier);
+            } else {
+                throw new IllegalArgumentException("You have to specify Class<?> or Type instance");
+            }
+        }
+        return result;
+    }
 
-    protected Response<ResponseData> parseNetworkResponse(NetworkResponse response,Object responseClassSpecifier)
-    {
+    protected Response<ResponseData> parseNetworkResponse(NetworkResponse response, Object responseClassSpecifier) {
         String resultStr = parseResponseString(response);
         ResponseData responseData = new ResponseData();
 
         responseData.statusCode = response.statusCode;
         responseData.headers = new HashMap<String, String>(response.headers);
 
-        if(!TextUtils.isEmpty(resultStr))
-        {
+        if (!TextUtils.isEmpty(resultStr)) {
             responseData.data = this.itemFromResponseWithSpecifier(resultStr, responseClassSpecifier);
         }
 
@@ -74,11 +70,13 @@ public abstract class BaseStringResponseHandler extends ResponseHandler
         responseData.error = result.error;
 
         return result;
-    };
+    }
+
+    ;
 
     protected String parseResponseString(NetworkResponse response) {
         String parsed = null;
-        if(response.data != null) {
+        if (response.data != null) {
             try {
                 parsed = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
             } catch (UnsupportedEncodingException e) {

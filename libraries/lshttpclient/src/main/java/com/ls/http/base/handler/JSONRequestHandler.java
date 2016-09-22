@@ -31,20 +31,18 @@ import com.ls.http.base.SharedGson;
 import java.io.UnsupportedEncodingException;
 
 
-class JSONRequestHandler extends RequestHandler
-{
-	@Override
-	public String stringBodyFromItem()
-	{
-		if(implementsPostableInterface())
-		{
-			IPostableItem item = (IPostableItem)this.object;
-			return item.toJsonString();
-		}else{
-			Gson gson = SharedGson.getGson();
-			return gson.toJson(this.object);
-		}
-	}
+class JSONRequestHandler extends RequestHandler {
+
+    @Override
+    public String stringBodyFromItem() {
+        if (implementsPostableInterface()) {
+            IPostableItem item = (IPostableItem) this.object;
+            return item.toJsonString();
+        } else {
+            Gson gson = SharedGson.getGson();
+            return gson.toJson(this.object);
+        }
+    }
 
     @Override
     public String getBodyContentType(String defaultCharset) {

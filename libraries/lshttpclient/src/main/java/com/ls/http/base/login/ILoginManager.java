@@ -1,5 +1,3 @@
-
-
 /*
  * The MIT License (MIT)
  *  Copyright (c) 2014 Lemberg Solutions Limited
@@ -29,14 +27,14 @@ import com.ls.http.base.BaseRequest;
 
 
 public interface ILoginManager {
-	/**
-	 * Login request, responsible for login data fetch
-	 * @param userName
-	 * @param password
-	 * @param queue operation queue to perform login within
-	 * @return login result object
-	 */
-	Object login(String userName, String password, RequestQueue queue);
+
+    /**
+     * Login request, responsible for login data fetch
+     *
+     * @param queue operation queue to perform login within
+     * @return login result object
+     */
+    Object login(String userName, String password, RequestQueue queue);
 
     /**
      * @return true if manager has to perform login restore attempt in case of 401 error
@@ -48,29 +46,30 @@ public interface ILoginManager {
      */
     boolean canRestoreLogin();
 
-	/**
-	 * Add necessary authentication data to request headers or post/get parameters
-	 * @param request
-	 */
-	void applyLoginDataToRequest(BaseRequest request);
-	/**
-	 * Restore login data, if possible.
+    /**
+     * Add necessary authentication data to request headers or post/get parameters
+     */
+    void applyLoginDataToRequest(BaseRequest request);
+
+    /**
+     * Restore login data, if possible.
      * Note: this call should be performed synchronously
+     *
      * @param queue operation queue you can to perform login within (but it isn't necessary)
      * @return true if restore succeeded (or you can't define a result) false in case of failure
-	 */
-	boolean restoreLoginData(RequestQueue queue);
+     */
+    boolean restoreLoginData(RequestQueue queue);
 
     /**
      * Method will be called in case if {@link #restoreLoginData restoreLoginData} returned false or we get 401 exception after login was restored
      */
     void onLoginRestoreFailed();
 
-	/**
-	 * Perform logout operation
-	 * @param queue
-	 * @return logout request result
-	 */
-	Object logout(RequestQueue queue);
+    /**
+     * Perform logout operation
+     *
+     * @return logout request result
+     */
+    Object logout(RequestQueue queue);
 
 }

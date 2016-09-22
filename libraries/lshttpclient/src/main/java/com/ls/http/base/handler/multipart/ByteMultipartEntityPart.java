@@ -34,13 +34,11 @@ public class ByteMultipartEntityPart implements IMultiPartEntityPart {
     private String fileName;
     private String mimeType;
 
-    public ByteMultipartEntityPart(byte[] value)
-    {
-        this(value,null,null);
+    public ByteMultipartEntityPart(byte[] value) {
+        this(value, null, null);
     }
 
-    public ByteMultipartEntityPart(byte[] value, String fileName, String mimeType)
-    {
+    public ByteMultipartEntityPart(byte[] value, String fileName, String mimeType) {
         this.value = value;
         this.fileName = fileName;
         this.mimeType = mimeType;

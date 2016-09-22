@@ -41,8 +41,7 @@ public class Handler {
 
     public static RequestHandler getRequestHandlerForFormat(BaseRequest.RequestFormat requestFormat) {
 
-        if(requestFormat == null)
-        {
+        if (requestFormat == null) {
             requestFormat = BaseRequest.RequestFormat.TEXT;
         }
 
@@ -62,10 +61,8 @@ public class Handler {
         }
     }
 
-    public static ResponseHandler getResponseHandlerForFormat(BaseRequest.ResponseFormat responseFormat)
-    {
-        if(responseFormat == null)
-        {
+    public static ResponseHandler getResponseHandlerForFormat(BaseRequest.ResponseFormat responseFormat) {
+        if (responseFormat == null) {
             responseFormat = BaseRequest.ResponseFormat.TEXT;
         }
 
@@ -83,7 +80,7 @@ public class Handler {
             case IMAGE:
                 return new ImageReponseHandler();
             default: {
-                throw new IllegalArgumentException("Unrecognised request responseFormat:"+responseFormat.name());
+                throw new IllegalArgumentException("Unrecognised request responseFormat:" + responseFormat.name());
             }
         }
     }

@@ -41,8 +41,8 @@ import java.util.Map;
  *
  * @author lemberg
  */
-public class DrupalClient extends LSClient
-{
+public class DrupalClient extends LSClient {
+
     private final BaseRequest.RequestFormat requestFormat;
     private String baseURL;
 
@@ -50,8 +50,7 @@ public class DrupalClient extends LSClient
      * @param theBaseURL this URL will be appended with {@link AbstractBaseDrupalEntity#getPath()}
      * @param theContext application context, used to create request queue
      */
-    public DrupalClient(@NonNull String theBaseURL, @NonNull Context theContext)
-    {
+    public DrupalClient(@NonNull String theBaseURL, @NonNull Context theContext) {
         this(theBaseURL, theContext, null);
     }
 
@@ -60,8 +59,7 @@ public class DrupalClient extends LSClient
      * @param theContext application context, used to create request queue
      * @param theFormat  server request/response format. Defines format of serialized objects and server response format, see {@link BaseRequest.RequestFormat}
      */
-    public DrupalClient(@NonNull String theBaseURL, @NonNull Context theContext, @Nullable BaseRequest.RequestFormat theFormat)
-    {
+    public DrupalClient(@NonNull String theBaseURL, @NonNull Context theContext, @Nullable BaseRequest.RequestFormat theFormat) {
         this(theBaseURL, theContext, theFormat, null);
     }
 
@@ -71,8 +69,7 @@ public class DrupalClient extends LSClient
      * @param theFormat       server request/response format. Defines format of serialized objects and server response format, see {@link BaseRequest.RequestFormat}
      * @param theLoginManager contains user profile data and can update request parameters and headers in order to apply it.
      */
-    public DrupalClient(@NonNull String theBaseURL, @NonNull Context theContext, @Nullable BaseRequest.RequestFormat theFormat, @Nullable ILoginManager theLoginManager)
-    {
+    public DrupalClient(@NonNull String theBaseURL, @NonNull Context theContext, @Nullable BaseRequest.RequestFormat theFormat, @Nullable ILoginManager theLoginManager) {
         this(theBaseURL, getDefaultQueue(theContext), theFormat, theLoginManager);
     }
 
@@ -83,8 +80,7 @@ public class DrupalClient extends LSClient
      * @param theLoginManager contains user profile data and can update request parameters and headers in order to apply it.
      */
     public DrupalClient(@NonNull String theBaseURL, @NonNull RequestQueue theQueue, @Nullable BaseRequest.RequestFormat theFormat,
-            @Nullable ILoginManager theLoginManager)
-    {
+            @Nullable ILoginManager theLoginManager) {
         super(theQueue, theLoginManager);
         this.setBaseURL(theBaseURL);
         if (theFormat != null) {
@@ -96,10 +92,10 @@ public class DrupalClient extends LSClient
 
 
     /**
-     * @param entity                 Object, specifying request parameters, retrieved data will be merged to this object.
-     * @param config                 Entity, containing additional request parameters
-     * @param tag                    will be attached to request and returned in listener callback, can be used in order to cancel request
-     * @param synchronous            if true - result will be returned synchronously.
+     * @param entity      Object, specifying request parameters, retrieved data will be merged to this object.
+     * @param config      Entity, containing additional request parameters
+     * @param tag         will be attached to request and returned in listener callback, can be used in order to cancel request
+     * @param synchronous if true - result will be returned synchronously.
      * @return ResponseData object or null if request was asynchronous.
      */
     public ResponseData getObject(AbstractBaseDrupalEntity entity, RequestConfig config, Object tag, OnResponseListener listener, boolean synchronous) {
@@ -110,14 +106,14 @@ public class DrupalClient extends LSClient
     }
 
     /**
-     * @param entity                 Object, specifying request parameters
-     * @param config                 Entity, containing additional request parameters
-     * @param tag                    will be attached to request and returned in listener callback, can be used in order to cancel request
-     * @param synchronous            if true - result will be returned synchronously.
+     * @param entity      Object, specifying request parameters
+     * @param config      Entity, containing additional request parameters
+     * @param tag         will be attached to request and returned in listener callback, can be used in order to cancel request
+     * @param synchronous if true - result will be returned synchronously.
      * @return ResponseData object or null if request was asynchronous.
      */
     public ResponseData postObject(AbstractBaseDrupalEntity entity, RequestConfig config, Object tag, OnResponseListener listener, boolean synchronous) {
-        BaseRequest request = new BaseRequest(BaseRequest.RequestMethod.POST, getURLForEntity(entity),  applyDefaultFormat(config));
+        BaseRequest request = new BaseRequest(BaseRequest.RequestMethod.POST, getURLForEntity(entity), applyDefaultFormat(config));
         Map<String, String> postParams = entity.getItemRequestPostParameters();
         if (postParams == null || postParams.isEmpty()) {
             request.setObjectToPost(entity.getManagedData());
@@ -130,10 +126,10 @@ public class DrupalClient extends LSClient
     }
 
     /**
-     * @param entity                 Object, specifying request parameters
-     * @param config                 Entity, containing additional request parameters
-     * @param tag                    will be attached to request and returned in listener callback, can be used in order to cancel request
-     * @param synchronous            if true - result will be returned synchronously.
+     * @param entity      Object, specifying request parameters
+     * @param config      Entity, containing additional request parameters
+     * @param tag         will be attached to request and returned in listener callback, can be used in order to cancel request
+     * @param synchronous if true - result will be returned synchronously.
      * @return ResponseData object or null if request was asynchronous.
      */
     public ResponseData putObject(AbstractBaseDrupalEntity entity, RequestConfig config, Object tag, OnResponseListener listener, boolean synchronous) {
@@ -151,10 +147,10 @@ public class DrupalClient extends LSClient
 
 
     /**
-     * @param entity                 Object, specifying request parameters, must have "createFootPrint" called before.
-     * @param config                 Entity, containing additional request parameters
-     * @param tag                    will be attached to request and returned in listener callback, can be used in order to cancel request
-     * @param synchronous            if true - result will be returned synchronously.
+     * @param entity      Object, specifying request parameters, must have "createFootPrint" called before.
+     * @param config      Entity, containing additional request parameters
+     * @param tag         will be attached to request and returned in listener callback, can be used in order to cancel request
+     * @param synchronous if true - result will be returned synchronously.
      * @return ResponseData object or null if request was asynchronous.
      */
     public ResponseData patchObject(AbstractBaseDrupalEntity entity, RequestConfig config, Object tag, OnResponseListener listener, boolean synchronous) {
@@ -166,10 +162,10 @@ public class DrupalClient extends LSClient
     }
 
     /**
-     * @param entity                 Object, specifying request parameters
-     * @param config                 Entity, containing additional request parameters
-     * @param tag                    will be attached to request and returned in listener callback, can be used in order to cancel request
-     * @param synchronous            if true - result will be returned synchronously.
+     * @param entity      Object, specifying request parameters
+     * @param config      Entity, containing additional request parameters
+     * @param tag         will be attached to request and returned in listener callback, can be used in order to cancel request
+     * @param synchronous if true - result will be returned synchronously.
      * @return ResponseData object or null if request was asynchronous.
      */
     public ResponseData deleteObject(AbstractBaseDrupalEntity entity, RequestConfig config, Object tag, OnResponseListener listener,
@@ -184,10 +180,11 @@ public class DrupalClient extends LSClient
     private String getURLForEntity(AbstractBaseDrupalEntity entity) {
         String path = entity.getPath();
 
-        if(TextUtils.isEmpty(baseURL))
-        {
+        boolean pathAlreadyHasDomain = !TextUtils.isEmpty(path) && (path.startsWith("http://") || path.startsWith("https://"));
+
+        if (TextUtils.isEmpty(baseURL) || pathAlreadyHasDomain) {
             return path;
-        }else {
+        } else {
             if (!TextUtils.isEmpty(path) && path.charAt(0) == '/') {
                 path = path.substring(1);
             }
@@ -196,15 +193,12 @@ public class DrupalClient extends LSClient
     }
 
 
-    private RequestConfig applyDefaultFormat(RequestConfig config)
-    {
-        if(config == null)
-        {
+    private RequestConfig applyDefaultFormat(RequestConfig config) {
+        if (config == null) {
             config = new RequestConfig();
         }
 
-        if(config.getRequestFormat()==null)
-        {
+        if (config.getRequestFormat() == null) {
             config.setRequestFormat(this.requestFormat);
         }
 

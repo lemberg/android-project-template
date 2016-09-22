@@ -31,9 +31,13 @@ import com.ls.http.base.BaseRequest.OnResponseListener;
 import com.ls.http.base.ResponseData;
 import com.ls.http.base.login.AnonymousLoginManager;
 import com.ls.http.base.login.ILoginManager;
+import com.ls.util.internal.ContentResolverRequestQueue;
 import com.ls.util.internal.VolleyResponseUtils;
 
+import android.content.ContentResolver;
 import android.content.Context;
+import android.net.Uri;
+import android.support.annotation.IntRange;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
@@ -45,27 +49,31 @@ import java.util.List;
  * @author lemberg
  */
 public class LSClient implements OnResponseListener {
-    public enum DuplicateRequestPolicy {ALLOW,ATTACH,REJECT}
 
+    public enum DuplicateRequestPolicy {ALLOW, ATTACH, REJECT}
 
-    private RequestQueue queue;
-    private ResponseListenersSet listeners;
-    private String defaultCharset;
+    @NonNull
+    private final ResponseListenersSet listeners = new ResponseListenersSet();
 
-    private ILoginManager loginManager;
+    private RequestQueue mDefaultQueue;
+    private RequestQueue mContentResolverQueue;
+
+    private String mDefaultCharset;
+
+    private ILoginManager mLoginManager;
     private RequestProgressListener progressListener;
 
-    private int requestTimeout = 1500;
+    private int mRequestTimeout = 1500;
 
-    private DuplicateRequestPolicy duplicateRequestPolicy = DuplicateRequestPolicy.ATTACH;
+    private DuplicateRequestPolicy mDuplicateRequestPolicy = DuplicateRequestPolicy.ATTACH;
 
     public interface OnResponseListener {
 
-        void onResponseReceived(BaseRequest request,ResponseData data, Object tag);
+        void onResponseReceived(@NonNull BaseRequest request, @NonNull ResponseData data, @Nullable Object tag);
 
         void onError(@NonNull BaseRequest request, @Nullable ResponseData data, @Nullable Object tag);
 
-        void onCancel(BaseRequest request,Object tag);
+        void onCancel(@NonNull BaseRequest request, @Nullable Object tag);
     }
 
     /**
@@ -90,9 +98,15 @@ public class LSClient implements OnResponseListener {
         void onRequestFinished(LSClient theClient, int activeRequests);
     }
 
+    private LSClient() {
+
+    }
+
     /**
      * @param theContext application context, used to create request queue
+     * @deprecated use {@link Builder} instead
      */
+    @Deprecated
     public LSClient(@NonNull Context theContext) {
         this(theContext, null);
     }
@@ -100,7 +114,9 @@ public class LSClient implements OnResponseListener {
     /**
      * @param theContext      application context, used to create request queue
      * @param theLoginManager contains user profile data and can update request parameters and headers in order to apply it.
+     * @deprecated use {@link Builder} instead
      */
+    @Deprecated
     public LSClient(@NonNull Context theContext, @Nullable ILoginManager theLoginManager) {
         this(getDefaultQueue(theContext), theLoginManager);
     }
@@ -113,10 +129,11 @@ public class LSClient implements OnResponseListener {
     /**
      * @param theQueue        queue to execute requests. You can customize cache management, by setting custom queue
      * @param theLoginManager contains user profile data and can update request parameters and headers in order to apply it.
+     * @deprecated use {@link #LSClient(Context, ILoginManager)} instead
      */
+    @Deprecated
     public LSClient(@NonNull RequestQueue theQueue, @Nullable ILoginManager theLoginManager) {
-        this.listeners = new ResponseListenersSet();
-        this.queue = theQueue;
+        this.mDefaultQueue = theQueue;
 
         if (theLoginManager != null) {
             this.setLoginManager(theLoginManager);
@@ -141,8 +158,8 @@ public class LSClient implements OnResponseListener {
      * @return {@link ResponseData} object, containing request result code and string or error and deserialized object, specified in request.
      */
     public ResponseData performRequest(BaseRequest request, Object tag, final OnResponseListener listener, boolean synchronous) {
-        request.setRetryPolicy(new DefaultRetryPolicy(requestTimeout, 1, 1));
-        if (!loginManager.shouldRestoreLogin()) {
+        request.setRetryPolicy(new DefaultRetryPolicy(mRequestTimeout, 1, 1));
+        if (!mLoginManager.shouldRestoreLogin()) {
             return performRequestNoLoginRestore(request, tag, listener, synchronous);
         } else {
             return performRequestLoginRestore(request, tag, listener, synchronous);
@@ -152,24 +169,44 @@ public class LSClient implements OnResponseListener {
     protected ResponseData performRequestNoLoginRestore(BaseRequest request, Object tag, OnResponseListener listener, boolean synchronous) {
         request.setTag(tag);
         request.setResponseListener(this);
-        this.loginManager.applyLoginDataToRequest(request);
-        request.setSmartComparisonEnabled(this.duplicateRequestPolicy != DuplicateRequestPolicy.ALLOW);
+        this.mLoginManager.applyLoginDataToRequest(request);
+        request.setSmartComparisonEnabled(this.mDuplicateRequestPolicy != DuplicateRequestPolicy.ALLOW);
 
-        boolean wasRegisterred ;
-        boolean skipDuplicateRequestListeners = this.duplicateRequestPolicy == LSClient.DuplicateRequestPolicy.REJECT;
+        boolean wasRegisterred;
+        boolean skipDuplicateRequestListeners = this.mDuplicateRequestPolicy == LSClient.DuplicateRequestPolicy.REJECT;
         synchronized (listeners) {
-            wasRegisterred = this.listeners.registerListenerForRequest(request, listener,tag,skipDuplicateRequestListeners);
+            wasRegisterred = this.listeners.registerListenerForRequest(request, listener, tag, skipDuplicateRequestListeners);
         }
 
-        if(wasRegisterred||synchronous) {
+        if (wasRegisterred || synchronous) {
             this.onNewRequestStarted();
-            return request.performRequest(synchronous, queue);
-        }else{
-            if(skipDuplicateRequestListeners && listener != null)
-            {
-                listener.onCancel(request,tag);
+            return request.performRequest(synchronous, getRequestQueueForRequest(request));
+        } else {
+            if (skipDuplicateRequestListeners && listener != null) {
+                listener.onCancel(request, tag);
             }
             return null;
+        }
+    }
+
+    @NonNull
+    private RequestQueue getRequestQueueForRequest(@NonNull final Request request) {
+        if (mDefaultQueue == null) {
+            throw new IllegalStateException("mDefaultQueue was not initialized");
+        }
+        final Uri uri = Uri.parse(request.getUrl());
+        switch (uri.getScheme()) {
+            case ContentResolver.SCHEME_ANDROID_RESOURCE:
+            case ContentResolver.SCHEME_CONTENT:
+            case ContentResolver.SCHEME_FILE:
+            case ContentResolverRequestQueue.SCHEME_ASSETS:
+                if (mContentResolverQueue == null) {
+                    throw new IllegalStateException("mContentResolverQueue was not initialized. Make sure you don't use a deprecated constructor");
+                }
+                return mContentResolverQueue;
+
+            default:
+                return mDefaultQueue;
         }
     }
 
@@ -184,34 +221,39 @@ public class LSClient implements OnResponseListener {
     private ResponseData performRequestLoginRestoreAsynchrounous(final BaseRequest request, Object tag, final OnResponseListener listener) {
         final OnResponseListener loginRestoreResponseListener = new OnResponseListener() {
             @Override
-            public void onResponseReceived(BaseRequest request,ResponseData data, Object tag) {
+            public void onResponseReceived(@NonNull final BaseRequest request,
+                    @NonNull final ResponseData data,
+                    @Nullable final Object tag) {
                 if (listener != null) {
-                    listener.onResponseReceived(request,data, tag);
+                    listener.onResponseReceived(request, data, tag);
                 }
             }
 
             @Override
-            public void onError(BaseRequest request,ResponseData data, Object tag) {
-                if (VolleyResponseUtils.isAuthError(data.getError())) {
-                    if (loginManager.canRestoreLogin()) {
+            public void onError(@NonNull final BaseRequest request,
+                    @Nullable final ResponseData data,
+                    @Nullable final Object tag) {
+                if (data != null && VolleyResponseUtils.isAuthError(data.getError())) {
+                    if (mLoginManager.canRestoreLogin()) {
                         new RestoreLoginAttemptTask(request, listener, tag, data).execute();
                     } else {
-                        loginManager.onLoginRestoreFailed();
+                        mLoginManager.onLoginRestoreFailed();
                         if (listener != null) {
-                            listener.onError(request,data, tag);
+                            listener.onError(request, data, tag);
                         }
                     }
                 } else {
                     if (listener != null) {
-                        listener.onError(request,data, tag);
+                        listener.onError(request, data, tag);
                     }
                 }
             }
 
             @Override
-            public void onCancel(BaseRequest request,Object tag) {
+            public void onCancel(@NonNull final BaseRequest request,
+                    @Nullable final Object tag) {
                 if (listener != null) {
-                    listener.onCancel(request,tag);
+                    listener.onCancel(request, tag);
                 }
             }
         };
@@ -222,46 +264,51 @@ public class LSClient implements OnResponseListener {
     private ResponseData performRequestLoginRestoreSynchrounous(final BaseRequest request, Object tag, final OnResponseListener listener) {
         final OnResponseListener loginRestoreResponseListener = new OnResponseListener() {
             @Override
-            public void onResponseReceived(BaseRequest request,ResponseData data, Object tag) {
+            public void onResponseReceived(@NonNull final BaseRequest request,
+                    @NonNull final ResponseData data,
+                    @Nullable final Object tag) {
                 if (listener != null) {
-                    listener.onResponseReceived(request,data, tag);
+                    listener.onResponseReceived(request, data, tag);
                 }
             }
 
             @Override
-            public void onError(BaseRequest request,ResponseData data, Object tag) {
-                if (VolleyResponseUtils.isAuthError(data.getError())) {
-                    if (!loginManager.canRestoreLogin()) {
+            public void onError(@NonNull final BaseRequest request,
+                    @Nullable final ResponseData data,
+                    @Nullable final Object tag) {
+                if (data != null && VolleyResponseUtils.isAuthError(data.getError())) {
+                    if (!mLoginManager.canRestoreLogin()) {
                         if (listener != null) {
-                            listener.onError(request,data, tag);
+                            listener.onError(request, data, tag);
                         }
                     }
                 } else {
                     if (listener != null) {
-                        listener.onError(request,data, tag);
+                        listener.onError(request, data, tag);
                     }
                 }
             }
 
             @Override
-            public void onCancel(BaseRequest request,Object tag) {
+            public void onCancel(@NonNull final BaseRequest request,
+                    @Nullable final Object tag) {
                 if (listener != null) {
-                    listener.onCancel(request,tag);
+                    listener.onCancel(request, tag);
                 }
             }
         };
 
         ResponseData result = performRequestNoLoginRestore(request, tag, loginRestoreResponseListener, true);
         if (VolleyResponseUtils.isAuthError(result.getError())) {
-            if (loginManager.canRestoreLogin()) {
-                boolean restored = loginManager.restoreLoginData(queue);
+            if (mLoginManager.canRestoreLogin()) {
+                boolean restored = mLoginManager.restoreLoginData(getRequestQueueForRequest(request));
                 if (restored) {
                     result = performRequestNoLoginRestore(request, tag, new OnResponseAuthListenerDecorator(listener), true);
                 } else {
-                    listener.onError(request,result, tag);
+                    listener.onError(request, result, tag);
                 }
             } else {
-                loginManager.onLoginRestoreFailed();
+                mLoginManager.onLoginRestoreFailed();
             }
         }
         return result;
@@ -272,14 +319,14 @@ public class LSClient implements OnResponseListener {
      * @return request timeout millis
      */
     public int getRequestTimeout() {
-        return requestTimeout;
+        return mRequestTimeout;
     }
 
     /**
      * @param requestTimeout request timeout millis
      */
     public void setRequestTimeout(int requestTimeout) {
-        this.requestTimeout = requestTimeout;
+        this.mRequestTimeout = requestTimeout;
     }
 
 
@@ -287,29 +334,29 @@ public class LSClient implements OnResponseListener {
      * This request is always synchronous and has no callback
      */
     public final Object login(final String userName, final String password) {
-        return this.loginManager.login(userName, password, queue);
+        return this.mLoginManager.login(userName, password, mDefaultQueue);
     }
 
     /**
      * This request is always synchronous
      */
     public final void logout() {
-        this.loginManager.logout(queue);
+        this.mLoginManager.logout(mDefaultQueue);
     }
 
     /**
      * @return true all necessary user id data is fetched and login can be restored automatically
      */
     public boolean isLogged() {
-        return this.loginManager.canRestoreLogin();
+        return this.mLoginManager.canRestoreLogin();
     }
 
     public ILoginManager getLoginManager() {
-        return loginManager;
+        return mLoginManager;
     }
 
     public void setLoginManager(ILoginManager loginManager) {
-        this.loginManager = loginManager;
+        this.mLoginManager = loginManager;
     }
 
     /**
@@ -318,8 +365,8 @@ public class LSClient implements OnResponseListener {
      * @return false if login restore failed.
      */
     public boolean restoreLogin() {
-        if (this.loginManager.canRestoreLogin()) {
-            return this.loginManager.restoreLoginData(queue);
+        if (this.mLoginManager.canRestoreLogin()) {
+            return this.mLoginManager.restoreLoginData(mDefaultQueue);
         }
         return false;
     }
@@ -332,7 +379,7 @@ public class LSClient implements OnResponseListener {
             this.onRequestComplete();
             if (listenerList != null) {
                 for (ResponseListenersSet.ListenerHolder holder : listenerList) {
-                    holder.getListener().onResponseReceived(request,data, holder.getTag());
+                    holder.getListener().onResponseReceived(request, data, holder.getTag());
                 }
             }
         }
@@ -346,7 +393,7 @@ public class LSClient implements OnResponseListener {
             this.onRequestComplete();
             if (listenerList != null) {
                 for (ResponseListenersSet.ListenerHolder holder : listenerList) {
-                    holder.getListener().onError(request,data, holder.getTag());
+                    holder.getListener().onError(request, data, holder.getTag());
                 }
             }
         }
@@ -356,14 +403,14 @@ public class LSClient implements OnResponseListener {
      * @return Charset, used to encode/decode server request post body and response.
      */
     public String getDefaultCharset() {
-        return defaultCharset;
+        return mDefaultCharset;
     }
 
     /**
      * @param defaultCharset Charset, used to encode/decode server request post body and response.
      */
     public void setDefaultCharset(String defaultCharset) {
-        this.defaultCharset = defaultCharset;
+        this.mDefaultCharset = defaultCharset;
     }
 
     /**
@@ -384,19 +431,21 @@ public class LSClient implements OnResponseListener {
      * @return current duplicate request policy
      */
     public DuplicateRequestPolicy getDuplicateRequestPolicy() {
-        return duplicateRequestPolicy;
+        return mDuplicateRequestPolicy;
     }
 
     /**
      * Sets duplicate request handling policy according to parameter provided. Only simultaneous requests are compared (executing at the same time).
+     *
      * @param duplicateRequestPolicy in case if
-     *      "ALLOW" - all requests are performed
-     *      "ATTACH" - only first unique request from queue will be performed all other listeners will be attached to this request and triggered.
-     *      "REJECT" - only first unique request from queue will be performed and it's listener triggered. "onCancel()" listener method will be called for all requests skipped.
-     * Default value is "ALLOW"
+     *                               "ALLOW" - all requests are performed
+     *                               "ATTACH" - only first unique request from queue will be performed all other listeners will be attached to this request and triggered.
+     *                               "REJECT" - only first unique request from queue will be performed and it's listener triggered. "onCancel()" listener method will be called for all requests
+     *                               skipped.
+     *                               Default value is "ALLOW"
      */
     public void setDuplicateRequestPolicy(DuplicateRequestPolicy duplicateRequestPolicy) {
-        this.duplicateRequestPolicy = duplicateRequestPolicy;
+        this.mDuplicateRequestPolicy = duplicateRequestPolicy;
     }
 
     /**
@@ -406,18 +455,36 @@ public class LSClient implements OnResponseListener {
      * @param theTag      to cancel requests for, in case if null passed- all requests for given listener will be canceled
      */
     public void cancelAllRequestsForListener(final @Nullable OnResponseListener theListener, final @Nullable Object theTag) {
-        this.queue.cancelAll(new RequestQueue.RequestFilter() {
+        cancelAllRequestsForListener(mDefaultQueue, theListener, theTag);
+        if (mContentResolverQueue != null) {
+            cancelAllRequestsForListener(mContentResolverQueue, theListener, theTag);
+        }
+    }
+
+    /**
+     * Cancel all requests for given listener with tag
+     *
+     * @param theListener listener to cancel requests for in case if null passed- all requests for given tag will be canceled
+     * @param theTag      to cancel requests for, in case if null passed- all requests for given listener will be canceled
+     */
+    private void cancelAllRequestsForListener(@NonNull final RequestQueue requestQueue,
+            final @Nullable OnResponseListener theListener,
+            final @Nullable Object theTag) {
+        requestQueue.cancelAll(new RequestQueue.RequestFilter() {
             @Override
             public boolean apply(Request<?> request) {
                 if (theTag == null || theTag.equals(request.getTag())) {
                     synchronized (listeners) {
-                        List<ResponseListenersSet.ListenerHolder> listenerList = listeners.getListenersForRequest(request);
+                        List<ResponseListenersSet.ListenerHolder> listenerList = listeners
+                                .getListenersForRequest(request);
 
-                        if (theListener == null || (listenerList != null &&  holderListContainsListener(listenerList,theListener))) {
+                        if (theListener == null || (listenerList != null
+                                && holderListContainsListener(listenerList, theListener))) {
                             if (listenerList != null) {
                                 listeners.removeListenersForRequest(request);
                                 for (ResponseListenersSet.ListenerHolder holder : listenerList) {
-                                    holder.getListener().onCancel((BaseRequest) request, holder.getTag());
+                                    holder.getListener()
+                                            .onCancel((BaseRequest) request, holder.getTag());
                                 }
                                 LSClient.this.onRequestComplete();
                             }
@@ -431,18 +498,14 @@ public class LSClient implements OnResponseListener {
         });
     }
 
-    protected static boolean holderListContainsListener( List<ResponseListenersSet.ListenerHolder> listenerList,OnResponseListener theListener)
-    {
-        if(theListener == null)
-        {
+    protected static boolean holderListContainsListener(List<ResponseListenersSet.ListenerHolder> listenerList, OnResponseListener theListener) {
+        if (theListener == null) {
             return false;
         }
 
         boolean listContainsListener = false;
-        for(ResponseListenersSet.ListenerHolder holder:listenerList)
-        {
-            if(theListener.equals(holder.getListener()))
-            {
+        for (ResponseListenersSet.ListenerHolder holder : listenerList) {
+            if (theListener.equals(holder.getListener())) {
                 listContainsListener = true;
             }
         }
@@ -494,26 +557,31 @@ public class LSClient implements OnResponseListener {
         }
 
         @Override
-        public void onResponseReceived(BaseRequest request,ResponseData data, Object tag) {
+        public void onResponseReceived(@NonNull final BaseRequest request,
+                @NonNull final ResponseData data,
+                @Nullable final Object tag) {
             if (listener != null) {
-                this.listener.onResponseReceived(request,data, tag);
+                this.listener.onResponseReceived(request, data, tag);
             }
         }
 
         @Override
-        public void onError(BaseRequest request,ResponseData data, Object tag) {
-            if (VolleyResponseUtils.isAuthError(data.getError())) {
-                loginManager.onLoginRestoreFailed();
+        public void onError(@NonNull final BaseRequest request,
+                @Nullable final ResponseData data,
+                @Nullable final Object tag) {
+            if (data != null && VolleyResponseUtils.isAuthError(data.getError())) {
+                mLoginManager.onLoginRestoreFailed();
             }
             if (listener != null) {
-                this.listener.onError(request,data, tag);
+                this.listener.onError(request, data, tag);
             }
         }
 
         @Override
-        public void onCancel(BaseRequest request,Object tag) {
+        public void onCancel(@NonNull final BaseRequest request,
+                @Nullable final Object tag) {
             if (listener != null) {
-                this.listener.onCancel(request,tag);
+                this.listener.onCancel(request, tag);
             }
         }
     }
@@ -537,15 +605,77 @@ public class LSClient implements OnResponseListener {
                 @Override
                 public void run() {
 
-                    boolean restored = loginManager.restoreLoginData(queue);
+                    boolean restored = mLoginManager.restoreLoginData(mDefaultQueue);
                     if (restored) {
                         performRequestNoLoginRestore(request, tag, new OnResponseAuthListenerDecorator(listener), false);
                     } else {
-                        listener.onError(request,originData, tag);
+                        listener.onError(request, originData, tag);
                     }
                 }
             }.start();
         }
     }
 
+    public static final class Builder {
+
+        @NonNull
+        private final Context mContext;
+
+        private RequestQueue mDefaultQueue;
+        private RequestQueue mContentResolverQueue;
+        private String mDefaultCharset;
+
+        private ILoginManager mLoginManager;
+        private int mRequestTimeout = 1500;
+
+        private DuplicateRequestPolicy mDuplicateRequestPolicy = DuplicateRequestPolicy.ATTACH;
+
+        public Builder(@NonNull final Context context) {
+            mContext = context.getApplicationContext();
+        }
+
+        public Builder setRequestQueue(@NonNull final RequestQueue defaultQueue) {
+            mDefaultQueue = defaultQueue;
+            return this;
+        }
+
+        public Builder setContentResolverRequestQueue(@NonNull final ContentResolverRequestQueue contentResolverQueue) {
+            mContentResolverQueue = contentResolverQueue;
+            return this;
+        }
+
+        public Builder setDefaultCharset(@NonNull final String defaultCharset) {
+            this.mDefaultCharset = defaultCharset;
+            return this;
+        }
+
+        public Builder setLoginManager(@NonNull final ILoginManager loginManager) {
+            this.mLoginManager = loginManager;
+            return this;
+        }
+
+        public Builder setRequestTimeout(@IntRange(from = 0) final int requestTimeout) {
+            this.mRequestTimeout = requestTimeout;
+            return this;
+        }
+
+        public Builder setDuplicateRequestPolicy(@NonNull final DuplicateRequestPolicy duplicateRequestPolicy) {
+            this.mDuplicateRequestPolicy = duplicateRequestPolicy;
+            return this;
+        }
+
+        @NonNull
+        public LSClient build() {
+            final LSClient client = new LSClient();
+            client.mDefaultQueue = mDefaultQueue != null ? mDefaultQueue : getDefaultQueue(mContext);
+            client.mContentResolverQueue = mContentResolverQueue != null ? mContentResolverQueue : new ContentResolverRequestQueue(mContext);
+            client.mDefaultCharset = mDefaultCharset;
+            client.mLoginManager = mLoginManager != null ? mLoginManager : new AnonymousLoginManager();
+            client.mRequestTimeout = mRequestTimeout;
+            client.mDuplicateRequestPolicy = mDuplicateRequestPolicy;
+
+            client.mContentResolverQueue.start();
+            return client;
+        }
+    }
 }

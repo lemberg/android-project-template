@@ -1,5 +1,3 @@
-
-
 /*
  * The MIT License (MIT)
  *  Copyright (c) 2014 Lemberg Solutions Limited
@@ -34,182 +32,152 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
-public abstract class AbstractDrupalArrayEntity<E> extends AbstractDrupalEntity implements Collection<E>
-{
-	private transient final ArrayList<E> innerItems;
+public abstract class AbstractDrupalArrayEntity<E> extends AbstractDrupalEntity implements Collection<E> {
 
-	public AbstractDrupalArrayEntity(DrupalClient client, int itemCount)
-	{
-		super(client);
-		innerItems = new ArrayList<E>(itemCount);
-	}
+    private transient final ArrayList<E> innerItems;
 
-	@Override
-	public boolean add(E object)
-	{
-		return innerItems.add(object);
-	}
+    public AbstractDrupalArrayEntity(DrupalClient client, int itemCount) {
+        super(client);
+        innerItems = new ArrayList<E>(itemCount);
+    }
 
-	@Override
-	public boolean addAll(Collection<? extends E> collection)
-	{
-		return this.innerItems.addAll(collection);
-	}
+    @Override
+    public boolean add(E object) {
+        return innerItems.add(object);
+    }
 
-	@Override
-	public void clear()
-	{
-		this.innerItems.clear();
-	}
+    @Override
+    public boolean addAll(Collection<? extends E> collection) {
+        return this.innerItems.addAll(collection);
+    }
 
-	@Override
-	public boolean contains(Object object)
-	{
-		return innerItems.contains(object);
-	}
+    @Override
+    public void clear() {
+        this.innerItems.clear();
+    }
 
-	@Override
-	public boolean containsAll(Collection<?> collection)
-	{
-		return innerItems.containsAll(collection);
-	}
+    @Override
+    public boolean contains(Object object) {
+        return innerItems.contains(object);
+    }
 
-	@Override
-	public boolean isEmpty()
-	{
-		return innerItems.isEmpty();
-	}
+    @Override
+    public boolean containsAll(Collection<?> collection) {
+        return innerItems.containsAll(collection);
+    }
 
-	@Override
-	public Iterator<E> iterator()
-	{
-		return innerItems.iterator();
-	}
+    @Override
+    public boolean isEmpty() {
+        return innerItems.isEmpty();
+    }
 
-	@Override
-	public boolean remove(Object object)
-	{
-		return innerItems.remove(object);
-	}
+    @Override
+    public Iterator<E> iterator() {
+        return innerItems.iterator();
+    }
 
-	@Override
-	public boolean removeAll(Collection<?> collection)
-	{
-		return innerItems.removeAll(collection);
-	}
+    @Override
+    public boolean remove(Object object) {
+        return innerItems.remove(object);
+    }
 
-	@Override
-	public boolean retainAll(Collection<?> collection)
-	{
-		return innerItems.retainAll(collection);
-	}
+    @Override
+    public boolean removeAll(Collection<?> collection) {
+        return innerItems.removeAll(collection);
+    }
 
-	@Override
-	public int size()
-	{
-		return innerItems.size();
-	}
+    @Override
+    public boolean retainAll(Collection<?> collection) {
+        return innerItems.retainAll(collection);
+    }
 
-	@Override
-	public Object[] toArray()
-	{
-		return innerItems.toArray();
-	}
+    @Override
+    public int size() {
+        return innerItems.size();
+    }
 
-	@Override
-	public <T> T[] toArray(T[] array)
-	{
-		return innerItems.toArray(array);
-	}
+    @Override
+    public Object[] toArray() {
+        return innerItems.toArray();
+    }
 
-	/**
-	 * Returns the element at the specified location in this list.
-	 * 
-	 * @param index
-	 *            the index of the element to return.
-	 * @return the element at the specified index.
-	 */
-	public E get(int index)
-	{
-		return innerItems.get(index);
-	}
+    @Override
+    public <T> T[] toArray(T[] array) {
+        return innerItems.toArray(array);
+    }
 
-	/**
-	 * Replaces the element at the specified location in this ArrayList with the
-	 * specified object.
-	 * 
-	 * @param index
-	 * @param object
-	 * @return the previous element at the index.
-	 * @throws IndexOutOfBoundsException
-	 *             - when location < 0 || location >= size()
-	 */
-	public E set(int index, E object)
-	{
-		return innerItems.set(index, object);
-	}
+    /**
+     * Returns the element at the specified location in this list.
+     *
+     * @param index the index of the element to return.
+     * @return the element at the specified index.
+     */
+    public E get(int index) {
+        return innerItems.get(index);
+    }
 
-	/**
-	 * Removes the object at the specified location from this list.
-	 * 
-	 * @param index
-	 *            the index of the object to remove.
-	 * @return the removed object.
-	 * @throws IndexOutOfBoundsException
-	 *             - when location < 0 || location >= size()
-	 */
-	public E remove(int index)
-	{
-		return innerItems.remove(index);
-	}
+    /**
+     * Replaces the element at the specified location in this ArrayList with the
+     * specified object.
+     *
+     * @return the previous element at the index.
+     * @throws IndexOutOfBoundsException - when location < 0 || location >= size()
+     */
+    public E set(int index, E object) {
+        return innerItems.set(index, object);
+    }
 
-	// Replacing this with items set
+    /**
+     * Removes the object at the specified location from this list.
+     *
+     * @param index the index of the object to remove.
+     * @return the removed object.
+     * @throws IndexOutOfBoundsException - when location < 0 || location >= size()
+     */
+    public E remove(int index) {
+        return innerItems.remove(index);
+    }
 
-	@SuppressWarnings("null")
-	@Override
-	public @NonNull
-    Object getManagedData()
-	{
-		return this.innerItems;
-	}
+    // Replacing this with items set
 
-	@Override
-	protected void consumeObject(ResponseData entity)
-	{	
-		@SuppressWarnings("unchecked")
-		E[] items = (E[]) entity.getData();
-		for (E item : items)
-		{
-			this.add(item);
-		}
-	}
+    @SuppressWarnings("null")
+    @Override
+    public
+    @NonNull
+    Object getManagedData() {
+        return this.innerItems;
+    }
 
-	@Override
-	protected Object getManagedDataClassSpecifyer()
-	{
-		Class<?> itemsArrayClass = this.getClass();
-		Type classType = null;
+    @Override
+    protected void consumeObject(ResponseData entity) {
+        @SuppressWarnings("unchecked")
+        E[] items = (E[]) entity.getData();
+        for (E item : items) {
+            this.add(item);
+        }
+    }
 
-		while (classType == null)
-		{
-			if (itemsArrayClass.getSuperclass().equals(AbstractDrupalArrayEntity.class))
-			{
-				classType = itemsArrayClass.getGenericSuperclass();
-			}
-			itemsArrayClass = itemsArrayClass.getSuperclass();
-		}
+    @Override
+    protected Object getManagedDataClassSpecifyer() {
+        Class<?> itemsArrayClass = this.getClass();
+        Type classType = null;
 
-		Type genericArgType = ((ParameterizedType) classType).getActualTypeArguments()[0];
+        while (classType == null) {
+            if (itemsArrayClass.getSuperclass().equals(AbstractDrupalArrayEntity.class)) {
+                classType = itemsArrayClass.getGenericSuperclass();
+            }
+            itemsArrayClass = itemsArrayClass.getSuperclass();
+        }
 
+        Type genericArgType = ((ParameterizedType) classType).getActualTypeArguments()[0];
 
-			if(genericArgType instanceof Class)
-			{
-				Class<?> genericArgClass = (Class<?>) (genericArgType);
-				@SuppressWarnings("unchecked")
-				E[] array = (E[]) java.lang.reflect.Array.newInstance(genericArgClass, 0);
-				return array.getClass();	
-			}else{
-				throw new IllegalArgumentException(AbstractDrupalArrayEntity.class.getName()+" doesn't support RAW types deserialization");
-			}
-	}
+        if (genericArgType instanceof Class) {
+            Class<?> genericArgClass = (Class<?>) (genericArgType);
+            @SuppressWarnings("unchecked")
+            E[] array = (E[]) java.lang.reflect.Array.newInstance(genericArgClass, 0);
+            return array.getClass();
+        } else {
+            throw new IllegalArgumentException(AbstractDrupalArrayEntity.class.getName() + " doesn't support RAW types deserialization");
+        }
+    }
 }

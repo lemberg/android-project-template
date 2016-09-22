@@ -28,7 +28,7 @@ import com.ls.http.base.ResponseData;
 /**
  * Created on 22.04.2015.
  */
-public abstract class AbstractDrupalByteEntity<T> extends AbstractBaseDrupalEntity{
+public abstract class AbstractDrupalByteEntity<T> extends AbstractBaseDrupalEntity {
 
     private T data;
 
@@ -61,13 +61,11 @@ public abstract class AbstractDrupalByteEntity<T> extends AbstractBaseDrupalEnti
         return byte[].class;
     }
 
-    protected void setManagedData(T data)
-    {
+    protected void setManagedData(T data) {
         this.data = data;
     }
 
-    public T getManagedData()
-    {
+    public T getManagedData() {
         return data;
     }
 

@@ -35,17 +35,14 @@ import android.graphics.drawable.Drawable;
  * Created on 22.04.2015.
  * Returns image Drawable object as a result
  */
-public class ImageReponseHandler extends BaseByteResponseHandler
-{
+public class ImageReponseHandler extends BaseByteResponseHandler {
 
     @Override
-    protected String getAcceptValueType()
-    {
+    protected String getAcceptValueType() {
         return "image/*";
     }
 
-    protected Object itemFromResponseWithSpecifier(NetworkResponse response, Object theSpecifier)
-    {
+    protected Object itemFromResponseWithSpecifier(NetworkResponse response, Object theSpecifier) {
         Object result = null;
         if (response != null && response.data != null && response.data.length > 0) {
 

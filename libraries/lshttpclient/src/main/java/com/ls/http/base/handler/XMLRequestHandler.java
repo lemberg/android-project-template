@@ -28,23 +28,21 @@ import com.ls.http.base.RequestHandler;
 
 import java.io.UnsupportedEncodingException;
 
-class XMLRequestHandler extends RequestHandler
-{
-	@Override
-	public String stringBodyFromItem()
-	{
-        if(implementsPostableInterface())
-        {
-            IPostableItem item = (IPostableItem)this.object;
+class XMLRequestHandler extends RequestHandler {
+
+    @Override
+    public String stringBodyFromItem() {
+        if (implementsPostableInterface()) {
+            IPostableItem item = (IPostableItem) this.object;
             return item.toXMLString();
-        }else{
+        } else {
             return this.object.toString();
         }
-	}
+    }
 
     @Override
     public String getBodyContentType(String defaultCharset) {
-        return Handler.PROTOCOL_REQUEST_APP_TYPE_XML +  Handler.CONTENT_TYPE_CHARSET_PREFIX + this.getCharset(defaultCharset);
+        return Handler.PROTOCOL_REQUEST_APP_TYPE_XML + Handler.CONTENT_TYPE_CHARSET_PREFIX + this.getCharset(defaultCharset);
     }
 
     @Override
