@@ -236,10 +236,16 @@ public class BaseRequest extends Request<ResponseData> {
     }
 
     public void addRequestHeaders(Map<String, String> theRequestHeaders) {
+        if(this.requestHeaders == null){
+            this.requestHeaders = new HashMap<>();
+        }
         this.requestHeaders.putAll(theRequestHeaders);
     }
 
     public void addRequestHeader(String key, String value) {
+        if(this.requestHeaders == null){
+            this.requestHeaders = new HashMap<>();
+        }
         this.requestHeaders.put(key, value);
     }
 
