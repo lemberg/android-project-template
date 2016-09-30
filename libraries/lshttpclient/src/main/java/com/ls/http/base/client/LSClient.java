@@ -329,14 +329,6 @@ public class LSClient implements OnResponseListener {
         this.mRequestTimeout = requestTimeout;
     }
 
-
-    /**
-     * This request is always synchronous and has no callback
-     */
-    public final Object login(final String userName, final String password) {
-        return this.mLoginManager.login(userName, password, mDefaultQueue);
-    }
-
     /**
      * This request is always synchronous
      */

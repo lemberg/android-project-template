@@ -27,7 +27,7 @@ import com.ls.http.base.BaseRequest;
 
 public class AnonymousLoginManager implements ILoginManager {
 
-    @Override
+
     public Object login(String userName, String password, RequestQueue queue) {
         return null;
     }

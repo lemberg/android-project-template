@@ -13,7 +13,6 @@ import com.ls.templateproject.ApplicationConfig;
  */
 public class LoginManager implements ILoginManager {
 
-    @Override
     public ResponseData login(String userName, String password, RequestQueue queue) {
         RequestConfig config = new RequestConfig();
         config.setResponseFormat(BaseRequest.ResponseFormat.JSON);

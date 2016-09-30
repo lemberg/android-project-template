@@ -29,14 +29,6 @@ import com.ls.http.base.BaseRequest;
 public interface ILoginManager {
 
     /**
-     * Login request, responsible for login data fetch
-     *
-     * @param queue operation queue to perform login within
-     * @return login result object
-     */
-    Object login(String userName, String password, RequestQueue queue);
-
-    /**
      * @return true if manager has to perform login restore attempt in case of 401 error
      */
     boolean shouldRestoreLogin();
