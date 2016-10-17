@@ -41,6 +41,7 @@ import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.List;
+import java.util.Map;
 
 class MultipartRequestHandler extends RequestHandler {
 
@@ -59,7 +60,15 @@ class MultipartRequestHandler extends RequestHandler {
         formMultipartEntity(object);
     }
 
-    private void formMultipartEntity(Object source) {
+    private void formMultipartEntity(Object source){
+        if (source instanceof Map){
+            formMultipartEntityMap((Map)source);
+        }else{
+            formMultipartEntityObject(source);
+        }
+    }
+
+    private void formMultipartEntityObject(Object source) {
         Class<?> currentClass = source.getClass();
         while (!Object.class.equals(currentClass)) {
             Field[] fields = currentClass.getDeclaredFields();
@@ -91,6 +100,23 @@ class MultipartRequestHandler extends RequestHandler {
                 }
             }
             currentClass = currentClass.getSuperclass();
+        }
+        httpentity = entity.build();
+    }
+
+    private void formMultipartEntityMap(Map<Object,Object> source){
+        for (Map.Entry entry : source.entrySet()) {
+
+            Object value = entry.getValue();
+
+            String name = entry.getKey().toString();
+
+            try {
+                addEntity(name, value);
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+
         }
         httpentity = entity.build();
     }

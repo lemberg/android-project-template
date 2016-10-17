@@ -36,6 +36,7 @@ public class Handler {
     protected static final String PROTOCOL_REQUEST_APP_TYPE_XML = "application/xml";
     protected static final String PROTOCOL_REQUEST_APP_TYPE_JSON_HAL = "application/hal+json";
     protected static final String PROTOCOL_REQUEST_APP_TYPE_TEXT = "text/plain";
+    protected static final String PROTOCOL_REQUEST_APP_TYPE_URL_ENCODED = "application/x-www-form-urlencoded";
 
     protected static final String CONTENT_TYPE_CHARSET_PREFIX = "; charset=";
 
@@ -54,6 +55,8 @@ public class Handler {
                 return new JSONRequestHandler();
             case TEXT:
                 return new TextRequestHandler();
+            case URL_ENCODED:
+                return new UrlEncodedRequestHandler();
             case MULTIPART:
                 return new MultipartRequestHandler();
             default:

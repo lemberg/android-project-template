@@ -20,16 +20,33 @@
  *   SOFTWARE.
  */
 
-package com.ls.http.base;
+package com.ls.http.base.handler;
 
+import com.ls.http.base.IPostableItem;
+import com.ls.http.base.RequestHandler;
 
-public interface IPostableItem {
+import java.io.UnsupportedEncodingException;
 
-    public String toJsonString();
+class UrlEncodedRequestHandler extends RequestHandler {
 
-    public String toXMLString();
+    @Override
+    public String stringBodyFromItem() {
+        if (implementsPostableInterface()) {
+            IPostableItem item = (IPostableItem) this.object;
+            return item.toUrlEncodedText();
+        } else {
+            return this.object.toString();
+        }
+    }
 
-    public String toPlainText();
+    @Override
+    public String getBodyContentType(String defaultCharset) {
+        return Handler.PROTOCOL_REQUEST_APP_TYPE_URL_ENCODED + Handler.CONTENT_TYPE_CHARSET_PREFIX + getCharset(defaultCharset);
+    }
 
-    public String toUrlEncodedText();
+    @Override
+    public byte[] getBody(String defaultCharset) throws UnsupportedEncodingException {
+        String content = this.stringBodyFromItem();
+        return content.getBytes(getCharset(defaultCharset));
+    }
 }

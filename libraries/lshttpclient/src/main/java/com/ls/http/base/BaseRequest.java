@@ -56,7 +56,7 @@ public class BaseRequest extends Request<ResponseData> {
     }
 
     public enum RequestFormat {
-        JSON, XML, JSON_HAL, TEXT,
+        JSON, XML, JSON_HAL, TEXT, URL_ENCODED,
         /**
          * Note: Multipart entity serializer is checking if non-transient field implements {@link com.ls.http.base.handler.multipart.IMultiPartEntityPart} interface if so
          * - {@link com.ls.http.base.handler.multipart.IMultiPartEntityPart@getContentBody()} method is called and `toString` otherwise
