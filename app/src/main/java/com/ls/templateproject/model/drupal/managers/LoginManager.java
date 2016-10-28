@@ -1,5 +1,6 @@
 package com.ls.templateproject.model.drupal.managers;
 
+import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.ls.http.base.BaseRequest;
 import com.ls.http.base.RequestConfig;
@@ -21,6 +22,7 @@ public class LoginManager implements ILoginManager {
         BaseRequest loginRequest = new BaseRequest(BaseRequest.RequestMethod.POST, ApplicationConfig.LOGIN_URL, config);
         loginRequest.addPostParameter("username", userName);
         loginRequest.addGetParameter("password", password);
+        loginRequest.setPriority(Request.Priority.IMMEDIATE);
         ResponseData loginResponseData = loginRequest.performRequest(true, queue);
         return loginResponseData;
     }

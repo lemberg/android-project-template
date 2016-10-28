@@ -102,6 +102,8 @@ public class BaseRequest extends Request<ResponseData> {
     private OnResponseListener responseListener;
     private boolean smartComparisonEnabled = false;
 
+    private Priority priority = Priority.NORMAL;
+
     /**
      * @param requestConfig Additional request configuration entity, used to provide some additional parameters
      */
@@ -213,6 +215,15 @@ public class BaseRequest extends Request<ResponseData> {
 
     public void setResponseListener(OnResponseListener responseListener) {
         this.responseListener = responseListener;
+    }
+
+    @Override
+    public Priority getPriority() {
+        return priority;
+    }
+
+    public void setPriority(Priority priority) {
+        this.priority = priority;
     }
 
     // Header parameters handling

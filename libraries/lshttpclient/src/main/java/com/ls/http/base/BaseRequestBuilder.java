@@ -1,5 +1,7 @@
 package com.ls.http.base;
 
+import com.android.volley.Request;
+
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
@@ -27,6 +29,8 @@ public class BaseRequestBuilder {
     private Object mResponseClassSpecifier;
     private Object mErrorResponseClassSpecifier;
 
+    private Request.Priority priority = Request.Priority.NORMAL;
+
     @NonNull
     public BaseRequest create() {
         if (mRequestMethod == null) {
@@ -48,6 +52,7 @@ public class BaseRequestBuilder {
         request.setGetParameters(mGetParameters);
         request.setPostParameters(mPostParameters);
         request.setRequestHeaders(mRequestHeaders);
+        request.setPriority(this.priority);
 
         return request;
 
@@ -195,5 +200,15 @@ public class BaseRequestBuilder {
     public BaseRequestBuilder setErrorResponseClassSpecifier(@Nullable final Object errorResponseClassSpecifier) {
         this.mErrorResponseClassSpecifier = errorResponseClassSpecifier;
         return this;
+    }
+
+    public Request.Priority getPriority()
+    {
+        return priority;
+    }
+
+    public void setPriority(Request.Priority priority)
+    {
+        this.priority = priority;
     }
 }
