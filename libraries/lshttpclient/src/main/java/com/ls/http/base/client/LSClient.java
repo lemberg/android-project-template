@@ -63,7 +63,7 @@ public class LSClient implements OnResponseListener {
     private ILoginManager mLoginManager;
     private RequestProgressListener progressListener;
 
-    private int mRequestTimeout = 1500;
+    private int mRequestTimeout = 15000;
 
     private DuplicateRequestPolicy mDuplicateRequestPolicy = DuplicateRequestPolicy.ATTACH;
 
